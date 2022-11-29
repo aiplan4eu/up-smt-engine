@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unified_planning.model.fnode &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">unified_planning.model.fnode</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for unified_planning.model.fnode</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 AIPlan4EU project</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="sd">&quot;&quot;&quot;FNode are the building blocks of expressions.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">unified_planning</span>
+<span class="kn">import</span> <span class="nn">unified_planning.model.fluent</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">unified_planning.environment</span> <span class="kn">import</span> <span class="n">Environment</span>
+<span class="kn">from</span> <span class="nn">unified_planning.model.operators</span> <span class="kn">import</span> <span class="n">OperatorKind</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">fractions</span> <span class="kn">import</span> <span class="n">Fraction</span>
+
+<span class="n">FNodeContent</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s2">&quot;FNodeContent&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;node_type&quot;</span><span class="p">,</span> <span class="s2">&quot;args&quot;</span><span class="p">,</span> <span class="s2">&quot;payload&quot;</span><span class="p">])</span>
+
+
+<div class="viewcode-block" id="FNode"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode">[docs]</a><span class="k">class</span> <span class="nc">FNode</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The `FNode` class represents an `expression tree` in the `unified_planning` library.</span>
+
+<span class="sd">    Since the `FNode` is immutable and the same `expression` can be used in more than one `expression tree`, it</span>
+<span class="sd">    is actually a `DAG`, but the `single expression` can be seen as a `tree` for simplicity.</span>
+
+<span class="sd">    All the expressions are managed by the :func:`ExpressionManager &lt;unified_planning.Environment.expression_manager&gt;` in the `Environment`, so this class should never</span>
+<span class="sd">    be instantiated or modified by the user.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="vm">__slots__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;_content&quot;</span><span class="p">,</span> <span class="s2">&quot;_node_id&quot;</span><span class="p">,</span> <span class="s2">&quot;_env&quot;</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content</span><span class="p">:</span> <span class="n">FNodeContent</span><span class="p">,</span> <span class="n">node_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">environment</span><span class="p">:</span> <span class="n">Environment</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_content</span> <span class="o">=</span> <span class="n">content</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_node_id</span> <span class="o">=</span> <span class="n">node_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_env</span> <span class="o">=</span> <span class="n">environment</span>
+        <span class="k">return</span>
+
+    <span class="c1"># __eq__ is left as default while __hash__ uses the node id. This</span>
+    <span class="c1"># is because we always have shared FNodes, hence in a single</span>
+    <span class="c1"># environment two nodes have always different ids, but in</span>
+    <span class="c1"># different environments they can have the same id. This is not an</span>
+    <span class="c1"># issue since, by default, equality coincides with identity.</span>
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node_id</span>
+
+<div class="viewcode-block" id="FNode.get_nary_expression_string"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.get_nary_expression_string">[docs]</a>    <span class="k">def</span> <span class="nf">get_nary_expression_string</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">op</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;FNode&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;(&quot;</span><span class="p">)</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;)&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">p</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bool_constant</span><span class="p">():</span>
+            <span class="k">return</span> <span class="s2">&quot;true&quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_true</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;false&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_int_constant</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constant_value</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_real_constant</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">constant_value</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fluent_exp</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluent</span><span class="p">()</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot;, &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_dot</span><span class="p">():</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">agent</span><span class="p">()</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">arg</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_parameter_exp</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameter</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_variable_exp</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">variable</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_object_exp</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">object</span><span class="p">()</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_timing_exp</span><span class="p">():</span>
+            <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">timing</span><span class="p">())</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_and</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; and &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_or</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; or &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_not</span><span class="p">():</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;(not </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arg</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_implies</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; implies &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_iff</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; iff &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_exists</span><span class="p">():</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">())</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Exists (</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">) </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arg</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_forall</span><span class="p">():</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">variables</span><span class="p">())</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;Forall (</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">) </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">arg</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_plus</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; + &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_minus</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; - &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_times</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; * &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_div</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; / &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_le</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; &lt;= &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_lt</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; &lt; &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_equals</span><span class="p">():</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_nary_expression_string</span><span class="p">(</span><span class="s2">&quot; == &quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">node_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the `id` of this expression.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_node_id</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">node_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OperatorKind</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the `OperatorKind` that defines the semantic of this expression.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">node_type</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">environment</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Environment</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the `Environment` in which this expression exists.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">args</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;FNode&quot;</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the subexpressions of this expression.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">args</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;unified_planning.model.Type&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the `Type` of this expression.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">type_checker</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FNode.arg"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.arg">[docs]</a>    <span class="k">def</span> <span class="nf">arg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FNode&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Return the given subexpression at the given position.</span>
+
+<span class="sd">        :param idx: The `index` of the wanted subexpression.</span>
+<span class="sd">        :return: The expression at the position `idx`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FNode.is_constant"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_constant">[docs]</a>    <span class="k">def</span> <span class="nf">is_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Returns `True` if the expression is a constant, `False` otherwise.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">BOOL_CONSTANT</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">INT_CONSTANT</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">REAL_CONSTANT</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">OBJECT_EXP</span>
+        <span class="p">)</span></div>
+
+<div class="viewcode-block" id="FNode.constant_value"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.constant_value">[docs]</a>    <span class="k">def</span> <span class="nf">constant_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="nb">bool</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="n">Fraction</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the constant value stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_constant</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.bool_constant_value"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.bool_constant_value">[docs]</a>    <span class="k">def</span> <span class="nf">bool_constant_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return constant `boolean` value stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bool_constant</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.int_constant_value"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.int_constant_value">[docs]</a>    <span class="k">def</span> <span class="nf">int_constant_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return constant `integer` value stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_int_constant</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.real_constant_value"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.real_constant_value">[docs]</a>    <span class="k">def</span> <span class="nf">real_constant_value</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Fraction</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return constant `real` value stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_real_constant</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.fluent"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.fluent">[docs]</a>    <span class="k">def</span> <span class="nf">fluent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;unified_planning.model.fluent.Fluent&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the `Fluent` stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_fluent_exp</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.parameter"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.parameter">[docs]</a>    <span class="k">def</span> <span class="nf">parameter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;unified_planning.model.parameter.Parameter&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the `Parameter` stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_parameter_exp</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.variable"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.variable">[docs]</a>    <span class="k">def</span> <span class="nf">variable</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;unified_planning.model.variable.Variable&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the `Variable` stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_variable_exp</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.variables"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.variables">[docs]</a>    <span class="k">def</span> <span class="nf">variables</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="s2">&quot;unified_planning.model.variable.Variable&quot;</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Return the `Variables` of the `Exists` or `Forall`.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_exists</span><span class="p">()</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_forall</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FNode.object"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.object">[docs]</a>    <span class="k">def</span> <span class="nf">object</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;unified_planning.model.object.Object&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the `Object` stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_object_exp</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.timing"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.timing">[docs]</a>    <span class="k">def</span> <span class="nf">timing</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;unified_planning.model.timing.Timing&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the `Timing` stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_timing_exp</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.agent"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.agent">[docs]</a>    <span class="k">def</span> <span class="nf">agent</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;unified_planning.model.multi_agent.Agent&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Return the `Agent` stored in this expression.&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_dot</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_content</span><span class="o">.</span><span class="n">payload</span></div>
+
+<div class="viewcode-block" id="FNode.simplify"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.simplify">[docs]</a>    <span class="k">def</span> <span class="nf">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FNode&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns the simplified version of this expression.</span>
+
+<span class="sd">        The simplification is done just by constant propagation by the :class:`~unified_planning.model.walkers.Simplifier`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">simplifier</span><span class="o">.</span><span class="n">simplify</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FNode.is_bool_constant"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_bool_constant">[docs]</a>    <span class="k">def</span> <span class="nf">is_bool_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the expression is a `boolean` constant.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">BOOL_CONSTANT</span></div>
+
+<div class="viewcode-block" id="FNode.is_int_constant"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_int_constant">[docs]</a>    <span class="k">def</span> <span class="nf">is_int_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the expression is an `integer` constant.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">INT_CONSTANT</span></div>
+
+<div class="viewcode-block" id="FNode.is_real_constant"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_real_constant">[docs]</a>    <span class="k">def</span> <span class="nf">is_real_constant</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the expression is a `real` constant.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">REAL_CONSTANT</span></div>
+
+<div class="viewcode-block" id="FNode.is_true"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_true">[docs]</a>    <span class="k">def</span> <span class="nf">is_true</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the expression is the `True` Boolean constant.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bool_constant</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant_value</span><span class="p">()</span> <span class="o">==</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="FNode.is_false"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_false">[docs]</a>    <span class="k">def</span> <span class="nf">is_false</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the expression is the `False` Boolean constant.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_bool_constant</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">constant_value</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="FNode.is_and"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_and">[docs]</a>    <span class="k">def</span> <span class="nf">is_and</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `And` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">AND</span></div>
+
+<div class="viewcode-block" id="FNode.is_or"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_or">[docs]</a>    <span class="k">def</span> <span class="nf">is_or</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Or` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">OR</span></div>
+
+<div class="viewcode-block" id="FNode.is_not"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_not">[docs]</a>    <span class="k">def</span> <span class="nf">is_not</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Not` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">NOT</span></div>
+
+<div class="viewcode-block" id="FNode.is_implies"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_implies">[docs]</a>    <span class="k">def</span> <span class="nf">is_implies</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Implies` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">IMPLIES</span></div>
+
+<div class="viewcode-block" id="FNode.is_iff"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_iff">[docs]</a>    <span class="k">def</span> <span class="nf">is_iff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Iff` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">IFF</span></div>
+
+<div class="viewcode-block" id="FNode.is_exists"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_exists">[docs]</a>    <span class="k">def</span> <span class="nf">is_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Exists` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">EXISTS</span></div>
+
+<div class="viewcode-block" id="FNode.is_forall"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_forall">[docs]</a>    <span class="k">def</span> <span class="nf">is_forall</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Forall` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">FORALL</span></div>
+
+<div class="viewcode-block" id="FNode.is_fluent_exp"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_fluent_exp">[docs]</a>    <span class="k">def</span> <span class="nf">is_fluent_exp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is a :class:`~unified_planning.model.Fluent` Expression.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">FLUENT_EXP</span></div>
+
+<div class="viewcode-block" id="FNode.is_parameter_exp"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_parameter_exp">[docs]</a>    <span class="k">def</span> <span class="nf">is_parameter_exp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is an :func:`action parameter &lt;unified_planning.model.Action.parameters&gt;`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">PARAM_EXP</span></div>
+
+<div class="viewcode-block" id="FNode.is_variable_exp"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_variable_exp">[docs]</a>    <span class="k">def</span> <span class="nf">is_variable_exp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is a :class:`~unified_planning.model.Variable` Expression.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">VARIABLE_EXP</span></div>
+
+<div class="viewcode-block" id="FNode.is_object_exp"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_object_exp">[docs]</a>    <span class="k">def</span> <span class="nf">is_object_exp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is an :class:`~unified_planning.model.Object` Expression.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">OBJECT_EXP</span></div>
+
+<div class="viewcode-block" id="FNode.is_timing_exp"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_timing_exp">[docs]</a>    <span class="k">def</span> <span class="nf">is_timing_exp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is a :class:`~unified_planning.model.Timing` Expression.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">TIMING_EXP</span></div>
+
+<div class="viewcode-block" id="FNode.is_plus"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_plus">[docs]</a>    <span class="k">def</span> <span class="nf">is_plus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Plus` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">PLUS</span></div>
+
+<div class="viewcode-block" id="FNode.is_minus"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_minus">[docs]</a>    <span class="k">def</span> <span class="nf">is_minus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Minus` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">MINUS</span></div>
+
+<div class="viewcode-block" id="FNode.is_times"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_times">[docs]</a>    <span class="k">def</span> <span class="nf">is_times</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Times` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">TIMES</span></div>
+
+<div class="viewcode-block" id="FNode.is_div"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_div">[docs]</a>    <span class="k">def</span> <span class="nf">is_div</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Div` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">DIV</span></div>
+
+<div class="viewcode-block" id="FNode.is_equals"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_equals">[docs]</a>    <span class="k">def</span> <span class="nf">is_equals</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `Equals` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">EQUALS</span></div>
+
+<div class="viewcode-block" id="FNode.is_le"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_le">[docs]</a>    <span class="k">def</span> <span class="nf">is_le</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `LE` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">LE</span></div>
+
+<div class="viewcode-block" id="FNode.is_lt"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_lt">[docs]</a>    <span class="k">def</span> <span class="nf">is_lt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `LT` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">LT</span></div>
+
+<div class="viewcode-block" id="FNode.is_dot"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_dot">[docs]</a>    <span class="k">def</span> <span class="nf">is_dot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;Test whether the node is the `DOT` operator.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_type</span> <span class="o">==</span> <span class="n">OperatorKind</span><span class="o">.</span><span class="n">DOT</span></div>
+
+    <span class="c1">#</span>
+    <span class="c1"># Infix operators</span>
+    <span class="c1">#</span>
+
+    <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Plus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__radd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Plus</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Minus</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Minus</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Times</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Times</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__floordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__rfloordiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">left</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Div</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__gt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">GT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__ge__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">GE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__lt__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">LT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">LE</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__pos__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Plus</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Minus</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FNode.Equals"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Equals">[docs]</a>    <span class="k">def</span> <span class="nf">Equals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Equals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FNode.And"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.And">[docs]</a>    <span class="k">def</span> <span class="nf">And</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__and__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__rand__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="o">*</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FNode.Or"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Or">[docs]</a>    <span class="k">def</span> <span class="nf">Or</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__or__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__ror__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="o">*</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FNode.Not"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Not">[docs]</a>    <span class="k">def</span> <span class="nf">Not</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Not</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="fm">__invert__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Not</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+<div class="viewcode-block" id="FNode.Xor"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Xor">[docs]</a>    <span class="k">def</span> <span class="nf">Xor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+        <span class="n">em</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span>
+        <span class="k">return</span> <span class="n">em</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">),</span> <span class="n">em</span><span class="o">.</span><span class="n">Not</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">)))</span></div>
+
+    <span class="k">def</span> <span class="fm">__xor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">):</span>
+        <span class="n">em</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span>
+        <span class="k">return</span> <span class="n">em</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">),</span> <span class="n">em</span><span class="o">.</span><span class="n">Not</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">other</span><span class="p">)))</span>
+
+    <span class="k">def</span> <span class="fm">__rxor__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="n">em</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span>
+        <span class="k">return</span> <span class="n">em</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">Or</span><span class="p">(</span><span class="o">*</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">),</span> <span class="n">em</span><span class="o">.</span><span class="n">Not</span><span class="p">(</span><span class="n">em</span><span class="o">.</span><span class="n">And</span><span class="p">(</span><span class="o">*</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="p">)))</span>
+
+<div class="viewcode-block" id="FNode.Implies"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Implies">[docs]</a>    <span class="k">def</span> <span class="nf">Implies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Implies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FNode.Iff"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FNODEHelperFunctions.html#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Iff">[docs]</a>    <span class="k">def</span> <span class="nf">Iff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_env</span><span class="o">.</span><span class="n">expression_manager</span><span class="o">.</span><span class="n">Iff</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">unified_planning.model.fnode</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

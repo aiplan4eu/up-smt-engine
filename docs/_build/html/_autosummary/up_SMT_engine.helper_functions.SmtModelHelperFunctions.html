@@ -1,0 +1,630 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>up_SMT_engine.helper_functions.SmtModelHelperFunctions &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="up_SMT_engine.helper_functions.PartialOrderPlanFix" href="up_SMT_engine.helper_functions.PartialOrderPlanFix.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.helper_functions.PartialOrderPlanFix.html" title="up_SMT_engine.helper_functions.PartialOrderPlanFix"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.helper_functions.html" accesskey="U">up_SMT_engine.helper_functions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.helper_functions.SmtModelHelperFunctions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-up_SMT_engine.helper_functions.SmtModelHelperFunctions">
+<span id="up-smt-engine-helper-functions-smtmodelhelperfunctions"></span><h1>up_SMT_engine.helper_functions.SmtModelHelperFunctions<a class="headerlink" href="#module-up_SMT_engine.helper_functions.SmtModelHelperFunctions" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.convert_action_sequence_to_plan" title="up_SMT_engine.helper_functions.SmtModelHelperFunctions.convert_action_sequence_to_plan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">convert_action_sequence_to_plan</span></code></a>(actions, ...)</p></td>
+<td><p>Function used to convert a list or list of sets to a corresponding unified-planning Plan object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.find_action_in_ordered_list" title="up_SMT_engine.helper_functions.SmtModelHelperFunctions.find_action_in_ordered_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_action_in_ordered_list</span></code></a>(action_instance, ...)</p></td>
+<td><p>Custom index finding function, for finding the action of an action_instance in an ordered list Uses the action's name to find the action</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_action_by_name" title="up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_action_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_action_by_name</span></code></a>(name, grounded_actions)</p></td>
+<td><p>Function used to find corresponding action to string action name in grounded_actions, if one exists</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_goal_actions_list" title="up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_goal_actions_list"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_goal_actions_list</span></code></a>(solution, ...)</p></td>
+<td><p>Using the full z3 solution model compare each True boolean variable against the name of a grounded_action If the names match then the variable shows that action is executed at time x, given the variable name is <a class="reference external" href="mailto:'action_&#37;&#52;&#48;tx">'action_<span>&#64;</span>tx</a>' Iterate over each variable in the model, setting the corresponding ground action to index x in the plan array Return the plan array 'solution' parameter should be a Solver.model() object</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_z3_FuncDecl_name" title="up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_z3_FuncDecl_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_z3_FuncDecl_name</span></code></a>(obj)</p></td>
+<td><p>Function used to get the string name of a variable in the Model result</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.split_stated_action_name" title="up_SMT_engine.helper_functions.SmtModelHelperFunctions.split_stated_action_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_stated_action_name</span></code></a>(action_name)</p></td>
+<td><p>Splits action name from <a class="reference external" href="mailto:'action_&#37;&#52;&#48;tx">'action_<span>&#64;</span>tx</a>' to ['action', 'x'], giving the action basename, and time of execution</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.SmtModelHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">BoolRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#BoolRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ExprRef</span></code></p>
+<p>All Boolean expressions are instances of this class.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sort">
+<span class="sig-name descname"><span class="pre">sort</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#BoolRef.sort"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sort" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sort of expression <cite>self</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="go">Int</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">sort</span><span class="p">()</span>
+<span class="go">Real</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.arg">
+<span class="sig-name descname"><span class="pre">arg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.arg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return argument <cite>idx</cite> of the application <cite>self</cite>.</p>
+<p>This method assumes that <cite>self</cite> is a function application with at least <cite>idx+1</cite> arguments.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">arg</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">a</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">arg</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">b</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">arg</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.as_ast">
+<span class="sig-name descname"><span class="pre">as_ast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.as_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a pointer to the corresponding C Z3_ast object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.children">
+<span class="sig-name descname"><span class="pre">children</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a list containing the children of the given expression</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">children</span><span class="p">()</span>
+<span class="go">[a, b, 0]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.ctx_ref">
+<span class="sig-name descname"><span class="pre">ctx_ref</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.ctx_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a reference to the C context where this AST node is stored.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.decl">
+<span class="sig-name descname"><span class="pre">decl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.decl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the Z3 function declaration associated with a Z3 application.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">eq</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">decl</span><span class="p">(),</span> <span class="n">f</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">decl</span><span class="p">()</span>
+<span class="go">+</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <cite>True</cite> if <cite>self</cite> and <cite>other</cite> are structurally identical.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">n2</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="n">n1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n2</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="n">n2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">n2</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.from_string">
+<span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.from_string" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.get_id">
+<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.get_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return unique identifier for object. It can be used for hash-tables and maps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.hash">
+<span class="sig-name descname"><span class="pre">hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a hashcode for the <cite>self</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n2</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span><span class="o">.</span><span class="n">hash</span><span class="p">()</span> <span class="o">==</span> <span class="n">n2</span><span class="o">.</span><span class="n">hash</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.num_args">
+<span class="sig-name descname"><span class="pre">num_args</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.num_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of arguments of a Z3 application.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">b</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;b&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">num_args</span><span class="p">()</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span><span class="o">.</span><span class="n">num_args</span><span class="p">()</span>
+<span class="go">3</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.params">
+<span class="sig-name descname"><span class="pre">params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.serialize">
+<span class="sig-name descname"><span class="pre">serialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.serialize" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sexpr">
+<span class="sig-name descname"><span class="pre">sexpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sexpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string representing the AST node in s-expression notation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sexpr</span><span class="p">()</span>
+<span class="go">&#39;(* (+ x 1) x)&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sort_kind">
+<span class="sig-name descname"><span class="pre">sort_kind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sort_kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Shorthand for <cite>self.sort().kind()</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Array</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">sort_kind</span><span class="p">()</span> <span class="o">==</span> <span class="n">Z3_ARRAY_SORT</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span><span class="o">.</span><span class="n">sort_kind</span><span class="p">()</span> <span class="o">==</span> <span class="n">Z3_INT_SORT</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.translate">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate <cite>self</cite> to the context <cite>target</cite>. That is, return a copy of <cite>self</cite> in the context <cite>target</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c2</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>  <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">c1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>  <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Nodes in different contexts can&#39;t be mixed.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># However, we can translate nodes from one context to another.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span>
+<span class="go">x + y</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.use_pp">
+<span class="sig-name descname"><span class="pre">use_pp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.use_pp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.SmtModelHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">FuncDeclRef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ast</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">AstRef</span></code></p>
+<p>Function declaration. Every constant and function have an associated declaration.</p>
+<p>The declaration assigns a name, a sort (i.e., type), and for function
+the sort (i.e., type) of each of its arguments. Note that, in Z3,
+a constant is a function with 0 arguments.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.as_ast">
+<span class="sig-name descname"><span class="pre">as_ast</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.as_ast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.as_ast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a pointer to the corresponding C Z3_ast object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.get_id">
+<span class="sig-name descname"><span class="pre">get_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.get_id"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.get_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return unique identifier for object. It can be used for hash-tables and maps.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.as_func_decl">
+<span class="sig-name descname"><span class="pre">as_func_decl</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.as_func_decl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.as_func_decl" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.name">
+<span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the name of the function declaration <cite>self</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+<span class="go">&#39;f&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">name</span><span class="p">(),</span> <span class="nb">str</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.arity">
+<span class="sig-name descname"><span class="pre">arity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.arity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.arity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the number of arguments of a function declaration.
+If <cite>self</cite> is a constant, then <cite>self.arity()</cite> is 0.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">RealSort</span><span class="p">(),</span> <span class="n">BoolSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">arity</span><span class="p">()</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.domain">
+<span class="sig-name descname"><span class="pre">domain</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.domain"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.domain" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sort of the argument <cite>i</cite> of a function declaration.
+This method assumes that <cite>0 &lt;= i &lt; self.arity()</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">RealSort</span><span class="p">(),</span> <span class="n">BoolSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">domain</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="go">Int</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">domain</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">Real</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.range">
+<span class="sig-name descname"><span class="pre">range</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.range"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.range" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the sort of the range of a function declaration.
+For constants, this is the sort of the constant.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">RealSort</span><span class="p">(),</span> <span class="n">BoolSort</span><span class="p">())</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">f</span><span class="o">.</span><span class="n">range</span><span class="p">()</span>
+<span class="go">Bool</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.kind">
+<span class="sig-name descname"><span class="pre">kind</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.kind"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.kind" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the internal kind of a function declaration.
+It can be used to identify Z3 built-in functions such as addition, multiplication, etc.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">decl</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">kind</span><span class="p">()</span> <span class="o">==</span> <span class="n">Z3_OP_ADD</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">d</span><span class="o">.</span><span class="n">kind</span><span class="p">()</span> <span class="o">==</span> <span class="n">Z3_OP_MUL</span>
+<span class="go">False</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.params">
+<span class="sig-name descname"><span class="pre">params</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#FuncDeclRef.params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.params" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.ctx_ref">
+<span class="sig-name descname"><span class="pre">ctx_ref</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.ctx_ref" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a reference to the C context where this AST node is stored.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.eq">
+<span class="sig-name descname"><span class="pre">eq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.eq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return <cite>True</cite> if <cite>self</cite> and <cite>other</cite> are structurally identical.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">n2</span><span class="p">)</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="n">n1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n2</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="n">n2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">n2</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.hash">
+<span class="sig-name descname"><span class="pre">hash</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.hash" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a hashcode for the <cite>self</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n2</span> <span class="o">=</span> <span class="n">simplify</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">n1</span><span class="o">.</span><span class="n">hash</span><span class="p">()</span> <span class="o">==</span> <span class="n">n2</span><span class="o">.</span><span class="n">hash</span><span class="p">()</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.sexpr">
+<span class="sig-name descname"><span class="pre">sexpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.sexpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string representing the AST node in s-expression notation.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">sexpr</span><span class="p">()</span>
+<span class="go">&#39;(* (+ x 1) x)&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.translate">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate <cite>self</cite> to the context <cite>target</cite>. That is, return a copy of <cite>self</cite> in the context <cite>target</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c2</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span>  <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">c1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span>  <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">c2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Nodes in different contexts can&#39;t be mixed.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># However, we can translate nodes from one context to another.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span> <span class="o">+</span> <span class="n">y</span>
+<span class="go">x + y</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.use_pp">
+<span class="sig-name descname"><span class="pre">use_pp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.use_pp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_z3_FuncDecl_name">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.SmtModelHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">get_z3_FuncDecl_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/SmtModelHelperFunctions.html#get_z3_FuncDecl_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_z3_FuncDecl_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function used to get the string name of a variable in the Model result</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>obj: object to check</p>
+</dd>
+<dt>Returns:</dt><dd><p>String: The object’s name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.split_stated_action_name">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.SmtModelHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">split_stated_action_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/SmtModelHelperFunctions.html#split_stated_action_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.split_stated_action_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Splits action name from <a class="reference external" href="mailto:'action_&#37;&#52;&#48;tx">‘action_<span>&#64;</span>tx</a>’ to [‘action’, ‘x’], giving the action basename, and time of execution</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>action_name (String): An action basename with time of execution</p>
+</dd>
+<dt>Returns:</dt><dd><p>String: The action basename</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_action_by_name">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.SmtModelHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">get_action_by_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grounded_actions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/SmtModelHelperFunctions.html#get_action_by_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_action_by_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function used to find corresponding action to string action name in grounded_actions, if one exists</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>name (String): Action name
+grounded_actions (List of InstantaneousAction objects): List of grounded actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>InstantaneousAction: The grounded InstantaneousAction corresponding to the name</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_goal_actions_list">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.SmtModelHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">get_goal_actions_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grounded_actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelism</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/SmtModelHelperFunctions.html#get_goal_actions_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_goal_actions_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using the full z3 solution model compare each True boolean variable against the name of a grounded_action
+If the names match then the variable shows that action is executed at time x, given the variable name is <a class="reference external" href="mailto:'action_&#37;&#52;&#48;tx">‘action_<span>&#64;</span>tx</a>’
+Iterate over each variable in the model, setting the corresponding ground action to index x in the plan array
+Return the plan array
+‘solution’ parameter should be a Solver.model() object</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Args:</dt><dd><p>solution (z3.Model): The model satisfying the problem as SMT
+grounded_actions (List of InstantaneousAction objects): List of grounded actions
+plan_len (int): Plan length
+parallelism (String): The type of parallelism chosen</p>
+</dd>
+<dt>Returns:</dt><dd><p>List or List of sets: If sequential this returns a list of actions in the order the appear in the plan. Otherwise this returns a list of sets, each set corresponding to the parallel actions taken at that timestep</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.find_action_in_ordered_list">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.SmtModelHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">find_action_in_ordered_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/SmtModelHelperFunctions.html#find_action_in_ordered_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.find_action_in_ordered_list" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom index finding function, for finding the action of an action_instance in an ordered list
+Uses the action’s name to find the action</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Args:</dt><dd><p>action_instance (ActionInstance): a unified-planning Action instance
+ordered_list (List): ordered list of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>int: action index</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.SmtModelHelperFunctions.convert_action_sequence_to_plan">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.SmtModelHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">convert_action_sequence_to_plan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelism</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ForAll_get_sets</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/SmtModelHelperFunctions.html#convert_action_sequence_to_plan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.convert_action_sequence_to_plan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function used to convert a list or list of sets to a corresponding unified-planning Plan object.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>actions (list or list of sets): list or list of sets of InstantaneousActions
+parallelism (String): Choice of parallelism
+ForAll_get_sets (Boolean): True if the user wants to maintain the sets of parallel actions
+ordered_list (list): Ordered list of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>PartialOrderPlan or SequentialPlan: If ForAll_get_sets is true we return a PartialOrderPlan. Otherwise we return a SequentialPlan</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">up_SMT_engine.helper_functions.SmtModelHelperFunctions</a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef"><code class="docutils literal notranslate"><span class="pre">BoolRef</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sort"><code class="docutils literal notranslate"><span class="pre">BoolRef.sort()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.arg"><code class="docutils literal notranslate"><span class="pre">BoolRef.arg()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.as_ast"><code class="docutils literal notranslate"><span class="pre">BoolRef.as_ast()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.children"><code class="docutils literal notranslate"><span class="pre">BoolRef.children()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.ctx_ref"><code class="docutils literal notranslate"><span class="pre">BoolRef.ctx_ref()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.decl"><code class="docutils literal notranslate"><span class="pre">BoolRef.decl()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.eq"><code class="docutils literal notranslate"><span class="pre">BoolRef.eq()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.from_string"><code class="docutils literal notranslate"><span class="pre">BoolRef.from_string()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.get_id"><code class="docutils literal notranslate"><span class="pre">BoolRef.get_id()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.hash"><code class="docutils literal notranslate"><span class="pre">BoolRef.hash()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.num_args"><code class="docutils literal notranslate"><span class="pre">BoolRef.num_args()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.params"><code class="docutils literal notranslate"><span class="pre">BoolRef.params()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.serialize"><code class="docutils literal notranslate"><span class="pre">BoolRef.serialize()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sexpr"><code class="docutils literal notranslate"><span class="pre">BoolRef.sexpr()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.sort_kind"><code class="docutils literal notranslate"><span class="pre">BoolRef.sort_kind()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.translate"><code class="docutils literal notranslate"><span class="pre">BoolRef.translate()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.BoolRef.use_pp"><code class="docutils literal notranslate"><span class="pre">BoolRef.use_pp()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.as_ast"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.as_ast()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.get_id"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.get_id()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.as_func_decl"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.as_func_decl()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.name"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.name()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.arity"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.arity()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.domain"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.domain()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.range"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.range()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.kind"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.kind()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.params"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.params()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.ctx_ref"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.ctx_ref()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.eq"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.eq()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.hash"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.hash()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.sexpr"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.sexpr()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.translate"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.translate()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.FuncDeclRef.use_pp"><code class="docutils literal notranslate"><span class="pre">FuncDeclRef.use_pp()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_z3_FuncDecl_name"><code class="docutils literal notranslate"><span class="pre">get_z3_FuncDecl_name()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.split_stated_action_name"><code class="docutils literal notranslate"><span class="pre">split_stated_action_name()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_action_by_name"><code class="docutils literal notranslate"><span class="pre">get_action_by_name()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.get_goal_actions_list"><code class="docutils literal notranslate"><span class="pre">get_goal_actions_list()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.find_action_in_ordered_list"><code class="docutils literal notranslate"><span class="pre">find_action_in_ordered_list()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.SmtModelHelperFunctions.convert_action_sequence_to_plan"><code class="docutils literal notranslate"><span class="pre">convert_action_sequence_to_plan()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="up_SMT_engine.helper_functions.PartialOrderPlanFix.html"
+                          title="previous chapter">up_SMT_engine.helper_functions.PartialOrderPlanFix</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/up_SMT_engine.helper_functions.SmtModelHelperFunctions.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.helper_functions.PartialOrderPlanFix.html" title="up_SMT_engine.helper_functions.PartialOrderPlanFix"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.helper_functions.html" >up_SMT_engine.helper_functions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.helper_functions.SmtModelHelperFunctions</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

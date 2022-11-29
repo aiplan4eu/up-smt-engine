@@ -1,0 +1,316 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>up_SMT_engine.fluents.BaseFluent &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.fluents.BaseFluent</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for up_SMT_engine.fluents.BaseFluent</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">Or</span><span class="p">,</span> <span class="n">Implies</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.FNODEHelperFunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_FNODE_to_Z3</span><span class="p">,</span>
+    <span class="n">create_stated_action_instance</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="BaseFluent"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent">[docs]</a><span class="k">class</span> <span class="nc">BaseFluent</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Custom fluent object used to generate Frame Axiom constraints, value bound constraints and to handle variables and chained variables for Fluents.</span>
+<span class="sd">    Able to handle all methods for sequential, and therefore most parallel plans</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">API_fluent</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">API_type</span> <span class="o">=</span> <span class="n">API_fluent</span><span class="o">.</span><span class="n">type</span>
+        <span class="k">if</span> <span class="n">API_type</span><span class="o">.</span><span class="n">is_real_type</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="n">API_type</span><span class="o">.</span><span class="n">lower_bound</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="n">API_type</span><span class="o">.</span><span class="n">upper_bound</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fluent_type</span> <span class="o">=</span> <span class="s2">&quot;Real&quot;</span>
+        <span class="k">elif</span> <span class="n">API_type</span><span class="o">.</span><span class="n">is_int_type</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="n">API_type</span><span class="o">.</span><span class="n">lower_bound</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="n">API_type</span><span class="o">.</span><span class="n">upper_bound</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fluent_type</span> <span class="o">=</span> <span class="s2">&quot;Int&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fluent_type</span> <span class="o">=</span> <span class="s2">&quot;Bool&quot;</span>
+        <span class="c1"># Used for creating frame axiom constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_condition_pairs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BaseFluent.check_name_match"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent.check_name_match">[docs]</a>    <span class="k">def</span> <span class="nf">check_name_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return true/false if name matches this fluent&#39;s base name</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (String): name to match</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Bool: True if match, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">==</span> <span class="n">name</span></div>
+
+    <span class="c1"># Override equality method for use in sets</span>
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return true/false if this fluent is the same fluent as the other fluent</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            other (BaseFluent): Other BaseFluent to compare with</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Bool: True if match, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseFluent</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseFluent</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">check_name_match</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">base_name</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__get_predicate_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to generate this fluent&#39;s Bool representing its state at t = &#39;timestep&#39;</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Timestep value for the variable</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3.Real or z3.Int or z3.Bool: Variable expression of value of Fluent at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">predicate_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">+</span> <span class="s2">&quot;_@t&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluent_type</span> <span class="o">==</span> <span class="s2">&quot;Real&quot;</span><span class="p">:</span>
+            <span class="n">predicate</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="n">predicate_name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluent_type</span> <span class="o">==</span> <span class="s2">&quot;Int&quot;</span><span class="p">:</span>
+            <span class="n">predicate</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="n">predicate_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">predicate</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="n">predicate_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">predicate</span>
+
+<div class="viewcode-block" id="BaseFluent.get_fluents_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_fluents_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_fluents_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method for finding the list of state predicates corresponding to this fluent&#39;s variables in each state from t = 0, to t = timestep</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Last timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List: List of variables expressing this fluent&#39;s values from timestep 0 to timestep</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fluent_array</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="n">fluent_array</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_predicate_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">fluent_array</span></div>
+
+<div class="viewcode-block" id="BaseFluent.add_action_condition"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent.add_action_condition">[docs]</a>    <span class="k">def</span> <span class="nf">add_action_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">,</span> <span class="n">condition</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Used by actions to register as effecting this fluent</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (BaseAction or BaseAction subclass): Action which may affect this fluent when executed</span>
+<span class="sd">            condition (FNODE): FNODE expression for action&#39;s effect condition affecting this fluent</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">action_condition_tuple</span> <span class="o">=</span> <span class="p">(</span><span class="n">action</span><span class="p">,</span> <span class="n">condition</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_condition_pairs</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">action_condition_tuple</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseFluent.get_action_conditions"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_action_conditions">[docs]</a>    <span class="k">def</span> <span class="nf">get_action_conditions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return set of actions that may affect this fluent, with their conditions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List: List of (BaseAction or BaseAction subclass, FNODE) pairs. The Action is an action which affects this fluent as part of its effects. The FNODE is the condition of the effect, if it has one</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_condition_pairs</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_bound_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">is_lower</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to generate bound constraints for either upper, or lower bound at timestep t</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Timestep value</span>
+<span class="sd">            bound (Numeric type): upper or lower bound value</span>
+<span class="sd">            is_lower (bool): True if is lower, False if is upper bound</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            _type_: _description_</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pred_at_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_predicate_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="n">bound</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="k">if</span> <span class="p">(</span><span class="n">is_lower</span><span class="p">)</span> <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span>
+        <span class="k">if</span> <span class="n">is_lower</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pred_at_t</span> <span class="o">&gt;=</span> <span class="n">bound</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">pred_at_t</span> <span class="o">&lt;=</span> <span class="n">bound</span>
+
+<div class="viewcode-block" id="BaseFluent.get_bound_constraints_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_bound_constraints_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to generate all bound constraints up to timestep t, can be called if no constraints are needed</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Last timestep value</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List: List of bound constraints up to t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bound_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">bound_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_bound_constraints_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="kc">True</span><span class="p">))</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+                    <span class="n">bound_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">__get_bound_constraints_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">return</span> <span class="n">bound_constraints</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="BaseFluent.get_bound_constraints_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_bound_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns bound constraints at t. Used for incremental solving.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expression for bound constraints at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bound_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">bound_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__get_bound_constraints_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">bound_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">__get_bound_constraints_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="n">And</span><span class="p">(</span><span class="n">bound_constraints</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">__generate_frame_axiom_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used internally to generate the frame axiom constraints for this fluent at time timestep</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expression for Frame axiom constraints at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">current_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_predicate_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="n">future_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_predicate_at_t</span><span class="p">(</span><span class="n">timestep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="c1"># No actions effect this fluent, so assert no changes of value between states</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_condition_pairs</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># return Implies((current_state != future_state), False)</span>
+            <span class="c1"># Same meaning, but shorter</span>
+            <span class="k">return</span> <span class="n">current_state</span> <span class="o">==</span> <span class="n">future_state</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Actions exist that effect this fluent, assert a change of value implies the action (and effect condition)</span>
+        <span class="k">for</span> <span class="n">action_tuple</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_condition_pairs</span><span class="p">:</span>
+            <span class="n">action_bool</span> <span class="o">=</span> <span class="n">create_stated_action_instance</span><span class="p">(</span>
+                <span class="n">action_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">timestep</span>
+            <span class="p">)</span>
+            <span class="n">constraint_as_Z3</span> <span class="o">=</span> <span class="n">convert_FNODE_to_Z3</span><span class="p">(</span><span class="n">action_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">timestep</span><span class="p">)</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">constraint_as_Z3</span><span class="p">,</span> <span class="n">action_bool</span><span class="p">))</span>
+        <span class="c1"># Essentially: change in value implies at least one (action, precondition) tuple is true</span>
+        <span class="k">return</span> <span class="n">Implies</span><span class="p">((</span><span class="n">current_state</span> <span class="o">!=</span> <span class="n">future_state</span><span class="p">),</span> <span class="n">Or</span><span class="p">(</span><span class="n">constraints</span><span class="p">))</span>
+
+<div class="viewcode-block" id="BaseFluent.generate_frame_axiom_constraints_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">generate_frame_axiom_constraints_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate frame axiom constraints for each timestep point up to t</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): final timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): List of z3 expressions for frame axiom constraints up to timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Only need to handle frame axiom constraints for states 1 ... (n - 1), where n is final state</span>
+        <span class="c1"># Because we don&#39;t care what happens in state n + 1</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+            <span class="n">axiom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generate_frame_axiom_constraints_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+            <span class="n">constraints_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">axiom</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">constraints_list</span></div>
+
+<div class="viewcode-block" id="BaseFluent.generate_frame_axiom_constraints_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">generate_frame_axiom_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns frame axioms at t. Used for incremental solving.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expressions for frame axiom constraints at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># No frame axiom constraints necessary when there is only one timestep</span>
+        <span class="k">if</span> <span class="n">timestep</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="c1"># Only need to handle frame axiom constraints for states 1 ... (n - 1), where n is final state</span>
+        <span class="c1"># Because we don&#39;t care what happens in state n + 1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generate_frame_axiom_constraints_at_t</span><span class="p">(</span><span class="n">timestep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.fluents.BaseFluent</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,269 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>up_SMT_engine.actions.ThereExistsAction &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.actions.ThereExistsAction</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for up_SMT_engine.actions.ThereExistsAction</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">search_FNODE_for_Fluents</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">Not</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.FNODEHelperFunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_FNODE_to_Z3</span><span class="p">,</span>
+    <span class="n">search_fluents_list</span><span class="p">,</span>
+    <span class="n">create_stated_action_instance</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.actions.BaseAction</span> <span class="kn">import</span> <span class="n">BaseAction</span>
+
+
+<div class="viewcode-block" id="ThereExistsAction"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction">[docs]</a><span class="k">class</span> <span class="nc">ThereExistsAction</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Extension of BaseAction to support ThereExists parallelism, allowing more parallelism than ForAll&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grounded_action</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">grounded_action</span><span class="p">)</span>
+        <span class="c1"># For a coarse grained version of parallelism, where shared fluents imply affectation</span>
+        <span class="c1"># An action has variables in the preconditions, effect preconditions, and effected variables</span>
+        <span class="c1"># Affectation occurs if another action affects any of these</span>
+        <span class="c1"># This set is the set of all fluents related to this action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_fluents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="c1"># ThereExists parallelism implementation uses an arbitrary ordering over actions, then requires that earlier</span>
+        <span class="c1"># actions do not affect later actions in the same parallel step.</span>
+        <span class="c1"># For this we need a set of affecting fluents, which we can compare against a later action&#39;s all_fluents set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">affecting_fluents</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__get_matching_fluent_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">,</span> <span class="n">name_set</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to find the set of fluents matching a set of basenames</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</span>
+<span class="sd">            name_set (Set(String)): Set of basenames</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Set(BaseFluent or BaseFluent subclass): Set of fluents matching the basenames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fluent_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">basename</span> <span class="ow">in</span> <span class="n">name_set</span><span class="p">:</span>
+            <span class="n">matched_fluent</span> <span class="o">=</span> <span class="n">search_fluents_list</span><span class="p">(</span><span class="n">fluents_list</span><span class="p">,</span> <span class="n">basename</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">matched_fluent</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">fluent_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">matched_fluent</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fluent_set</span>
+
+    <span class="k">def</span> <span class="nf">__get_precondition_fluent_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to find all fluents mentioned in preconditions. This is a coarse grained approach because</span>
+<span class="sd">        each fluent&#39;s semantics are discarded</span>
+<span class="sd">        Used with __get_matching_fluent_set to get matching fluent objects</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Set(String): Set of fluent basenames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># It&#39;s useful to use sets because we don&#39;t care about repeated occurences of the same fluent</span>
+        <span class="c1"># We use syntactic based parallelism, so any semantic information is redundant anyway</span>
+        <span class="n">fluent_basename_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">precondition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preconditions</span><span class="p">:</span>
+            <span class="n">search_FNODE_for_Fluents</span><span class="p">(</span><span class="n">precondition</span><span class="p">,</span> <span class="n">fluent_basename_set</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fluent_basename_set</span>
+
+    <span class="k">def</span> <span class="nf">__get_effect_precondition_fluent_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to find all fluents mentioned in effect preconditions. This is a coarse grained approach because</span>
+<span class="sd">        each fluent&#39;s semantics are discarded.</span>
+<span class="sd">        Effects without preconditions are skipped.</span>
+<span class="sd">        Used with __get_matching_fluent_set to get matching fluent objects</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Set(String): Set of fluent basenames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fluent_basename_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">effects</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">effect</span><span class="o">.</span><span class="n">is_conditional</span><span class="p">():</span>
+                <span class="n">effect_precondition</span> <span class="o">=</span> <span class="n">effect</span><span class="o">.</span><span class="n">condition</span>
+                <span class="n">search_FNODE_for_Fluents</span><span class="p">(</span><span class="n">effect_precondition</span><span class="p">,</span> <span class="n">fluent_basename_set</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fluent_basename_set</span>
+
+    <span class="k">def</span> <span class="nf">__get_effect_fluent_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to find all fluents affected by an effect, including conditional effects</span>
+<span class="sd">        This is also a coarse grained approach.</span>
+<span class="sd">        Used with __get_matching_fluent_set to get matching fluent objects</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Set(String): Set of fluent basenames</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fluent_basename_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">effects</span><span class="p">:</span>
+            <span class="n">search_FNODE_for_Fluents</span><span class="p">(</span><span class="n">effect</span><span class="o">.</span><span class="n">fluent</span><span class="p">,</span> <span class="n">fluent_basename_set</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fluent_basename_set</span>
+
+<div class="viewcode-block" id="ThereExistsAction.populate_affecting_fluents_set"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.populate_affecting_fluents_set">[docs]</a>    <span class="k">def</span> <span class="nf">populate_affecting_fluents_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to populate the affecting_fluents set for an action</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fluents_list (List(BaseFluent or BaseFluent subclass)): List of all fluents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Add fluents mentioned in effects:</span>
+        <span class="n">effect_fluent_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_effect_fluent_names</span><span class="p">()</span>
+        <span class="c1"># Create set of all fluents mentioned</span>
+        <span class="n">fluents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_matching_fluent_set</span><span class="p">(</span><span class="n">fluents_list</span><span class="p">,</span> <span class="n">effect_fluent_names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">affecting_fluents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fluents</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">fluents</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ThereExistsAction.populate_all_fluents_set"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.populate_all_fluents_set">[docs]</a>    <span class="k">def</span> <span class="nf">populate_all_fluents_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to populate the all_fluents set for an action</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fluents_list (List(BaseFluent or BaseFluent subclass)): List of all fluents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fluent_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="c1"># Add fluents mentioned in preconditions:</span>
+        <span class="n">precondition_fluent_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_precondition_fluent_names</span><span class="p">()</span>
+        <span class="c1"># Add fluents mentioned in effect preconditions:</span>
+        <span class="n">effect_precondition_fluent_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_effect_precondition_fluent_names</span><span class="p">()</span>
+        <span class="c1"># Effects set is already populated, skip searching for fluents again and just copy the set.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_fluents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fluents</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">affecting_fluents</span><span class="p">)</span>
+        <span class="c1"># Create set of all fluent names mentioned</span>
+        <span class="n">fluent_names</span> <span class="o">=</span> <span class="n">fluent_names</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">precondition_fluent_names</span><span class="p">)</span>
+        <span class="n">fluent_names</span> <span class="o">=</span> <span class="n">fluent_names</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">effect_precondition_fluent_names</span><span class="p">)</span>
+        <span class="c1"># Create set of all fluents mentioned</span>
+        <span class="n">fluents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_matching_fluent_set</span><span class="p">(</span><span class="n">fluents_list</span><span class="p">,</span> <span class="n">fluent_names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">all_fluents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fluents</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">fluents</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_ThereExists_constraints_at_time_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">ordered_actions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to generate all parallelism constraints for this action for a ThereExists encoding</span>
+<span class="sd">        Affecting actions are found by finding affecting actions of fluents in all_fluents set</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+<span class="sd">            ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">later_action_bool</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_action_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">fluent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">all_fluents</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">action_tuple</span> <span class="ow">in</span> <span class="n">fluent</span><span class="o">.</span><span class="n">get_action_conditions</span><span class="p">():</span>
+                <span class="c1"># index == i means it&#39;s the current action, which should be ignored</span>
+                <span class="c1"># index &gt; i means we ignore this, because later actions are allowed to affect current ones</span>
+                <span class="c1"># effects are kept consistent because if a later effect alters an earlier effect, then</span>
+                <span class="c1"># the earlier effect alters the later one, and so they cannot execute together</span>
+                <span class="k">if</span> <span class="n">ordered_actions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">action_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">ordered_actions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+                    <span class="n">earlier_action_bool</span> <span class="o">=</span> <span class="n">create_stated_action_instance</span><span class="p">(</span>
+                        <span class="n">action_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">timestep</span>
+                    <span class="p">)</span>
+                    <span class="n">condition_as_Z3</span> <span class="o">=</span> <span class="n">convert_FNODE_to_Z3</span><span class="p">(</span>
+                        <span class="n">action_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">timestep</span><span class="p">,</span> <span class="kc">None</span>
+                    <span class="p">)</span>
+                    <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">Not</span><span class="p">(</span>
+                            <span class="n">And</span><span class="p">(</span><span class="n">later_action_bool</span><span class="p">,</span> <span class="n">earlier_action_bool</span><span class="p">,</span> <span class="n">condition_as_Z3</span><span class="p">)</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="k">return</span> <span class="n">constraints</span>
+
+<div class="viewcode-block" id="ThereExistsAction.get_ThereExists_constraints_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_ThereExists_constraints_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_ThereExists_constraints_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">ordered_actions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to get all ThereExists parallelism constraints over simultaneous actions up to timestep t</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Final timestep</span>
+<span class="sd">            ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ThereExists_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># We don&#39;t consider actions occuring at the final timestep</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+            <span class="n">ThereExists_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__get_ThereExists_constraints_at_time_t</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">ordered_actions</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">ThereExists_constraints</span></div>
+
+<div class="viewcode-block" id="ThereExistsAction.get_ThereExists_constraints_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_ThereExists_constraints_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_ThereExists_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">ordered_actions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to get all ThereExists parallelism constraints over simultaneous actions at timestep t</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+<span class="sd">            ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># We add new actions at timestep = timestep - 1</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_ThereExists_constraints_at_time_t</span><span class="p">(</span>
+            <span class="n">timestep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ordered_actions</span>
+        <span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.actions.ThereExistsAction</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

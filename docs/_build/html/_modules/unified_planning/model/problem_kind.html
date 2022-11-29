@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unified_planning.model.problem_kind &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">unified_planning.model.problem_kind</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for unified_planning.model.problem_kind</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 AIPlan4EU project</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partialmethod</span><span class="p">,</span> <span class="n">total_ordering</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Set</span>
+<span class="kn">import</span> <span class="nn">unified_planning</span> <span class="k">as</span> <span class="nn">up</span>
+
+
+<span class="c1"># TODO: This features map needs to be extended with all the problem characterizations.</span>
+<span class="n">FEATURES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;PROBLEM_CLASS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">,</span> <span class="s2">&quot;HIERARCHICAL&quot;</span><span class="p">,</span> <span class="s2">&quot;CONTINGENT&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;PROBLEM_TYPE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SIMPLE_NUMERIC_PLANNING&quot;</span><span class="p">,</span> <span class="s2">&quot;GENERAL_NUMERIC_PLANNING&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;TIME&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;CONTINUOUS_TIME&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DISCRETE_TIME&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;INTERMEDIATE_CONDITIONS_AND_EFFECTS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;TIMED_EFFECT&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;TIMED_GOALS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DURATION_INEQUALITIES&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;EXPRESSION_DURATION&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;STATIC_FLUENTS_IN_DURATION&quot;</span><span class="p">,</span> <span class="s2">&quot;FLUENTS_IN_DURATION&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;NUMBERS&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CONTINUOUS_NUMBERS&quot;</span><span class="p">,</span> <span class="s2">&quot;DISCRETE_NUMBERS&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;CONDITIONS_KIND&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;NEGATIVE_CONDITIONS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;DISJUNCTIVE_CONDITIONS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;EQUALITY&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;EXISTENTIAL_CONDITIONS&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;UNIVERSAL_CONDITIONS&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;EFFECTS_KIND&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;CONDITIONAL_EFFECTS&quot;</span><span class="p">,</span> <span class="s2">&quot;INCREASE_EFFECTS&quot;</span><span class="p">,</span> <span class="s2">&quot;DECREASE_EFFECTS&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;TYPING&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">,</span> <span class="s2">&quot;HIERARCHICAL_TYPING&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;FLUENTS_TYPE&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;NUMERIC_FLUENTS&quot;</span><span class="p">,</span> <span class="s2">&quot;OBJECT_FLUENTS&quot;</span><span class="p">],</span>
+    <span class="s2">&quot;QUALITY_METRICS&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;ACTIONS_COST&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;FINAL_VALUE&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;MAKESPAN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;PLAN_LENGTH&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;OVERSUBSCRIPTION&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="s2">&quot;SIMULATED_ENTITIES&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;SIMULATED_EFFECTS&quot;</span><span class="p">],</span>
+<span class="p">}</span>
+
+
+<span class="k">class</span> <span class="nc">ProblemKindMeta</span><span class="p">(</span><span class="nb">type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Meta class used to interpret the nodehandler decorator.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">_set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">possible_features</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">possible_features</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_unset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">possible_features</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">possible_features</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="o">.</span><span class="n">discard</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">_has</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span>
+
+        <span class="n">obj</span> <span class="o">=</span> <span class="nb">type</span><span class="o">.</span><span class="fm">__new__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bases</span><span class="p">,</span> <span class="n">dct</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">FEATURES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;set_&quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">partialmethod</span><span class="p">(</span><span class="n">_set</span><span class="p">,</span> <span class="n">possible_features</span><span class="o">=</span><span class="n">l</span><span class="p">))</span>
+            <span class="nb">setattr</span><span class="p">(</span>
+                <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;unset_&quot;</span> <span class="o">+</span> <span class="n">m</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">partialmethod</span><span class="p">(</span><span class="n">_unset</span><span class="p">,</span> <span class="n">possible_features</span><span class="o">=</span><span class="n">l</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">l</span><span class="p">:</span>
+                <span class="nb">setattr</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;has_&quot;</span> <span class="o">+</span> <span class="n">f</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">partialmethod</span><span class="p">(</span><span class="n">_has</span><span class="p">,</span> <span class="n">feature</span><span class="o">=</span><span class="n">f</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+
+<div class="viewcode-block" id="ProblemKind"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.ProblemKind">[docs]</a><span class="nd">@total_ordering</span>
+<span class="k">class</span> <span class="nc">ProblemKind</span><span class="p">(</span><span class="n">up</span><span class="o">.</span><span class="n">AnyBaseClass</span><span class="p">,</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ProblemKindMeta</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class represents the main interesting feature that a :class:`planning Problem &lt;unified_planning.model.AbstractProblem&gt;` can have in order to understand</span>
+<span class="sd">    if an :class:`~unified_planning.engines.Engine` is capable of solving the `Problem` or not; some features might also help the `Engine`, allowing</span>
+<span class="sd">    some assumptions to be made.</span>
+
+<span class="sd">    The `ProblemKind` of a `Problem` is calculated by it&#39;s :func:`kind &lt;unified_planning.model.Problem.kind&gt;` property.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">features</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">:</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">features_gen</span> <span class="o">=</span> <span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">feature</span><span class="si">}</span><span class="s2">&#39;&quot;</span> <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s1">&#39;ProblemKind([</span><span class="si">{</span><span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">features_gen</span><span class="p">)</span><span class="si">}</span><span class="s1">])&#39;</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">features_mapped</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">FEATURES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">feature</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">feature</span> <span class="ow">in</span> <span class="n">fl</span><span class="p">:</span>
+                    <span class="n">feature_list</span> <span class="o">=</span> <span class="n">features_mapped</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">feature_list</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">features_mapped</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">feature</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">feature_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">feature</span><span class="p">)</span>
+        <span class="n">result_str</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">fl</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">fl</span> <span class="ow">in</span> <span class="n">features_mapped</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">result_str</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oth</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">oth</span><span class="p">,</span> <span class="n">ProblemKind</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span> <span class="o">==</span> <span class="n">oth</span><span class="o">.</span><span class="n">_features</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="p">:</span>
+            <span class="n">res</span> <span class="o">+=</span> <span class="nb">hash</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">res</span>
+
+    <span class="k">def</span> <span class="fm">__le__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oth</span><span class="p">:</span> <span class="nb">object</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">oth</span><span class="p">,</span> <span class="n">ProblemKind</span><span class="p">):</span>
+            <span class="k">raise</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">oth</span><span class="o">.</span><span class="n">_features</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">features</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="sd">&quot;&quot;&quot;Returns the features contained by this `ProblemKind`.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_features</span>
+
+<div class="viewcode-block" id="ProblemKind.union"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.ProblemKind.union">[docs]</a>    <span class="k">def</span> <span class="nf">union</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oth</span><span class="p">:</span> <span class="s2">&quot;ProblemKind&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ProblemKind&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a new `ProblemKind` that is the union of this `ProblemKind` and</span>
+<span class="sd">        the `ProblemKind` given as parameter.</span>
+
+<span class="sd">        :param oth: the `ProblemKind` that must be united to this `ProblemKind`.</span>
+<span class="sd">        :return: a new `ProblemKind` that is the union of this `ProblemKind` and `oth`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ProblemKind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">oth</span><span class="o">.</span><span class="n">features</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ProblemKind.intersection"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.ProblemKind.intersection">[docs]</a>    <span class="k">def</span> <span class="nf">intersection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oth</span><span class="p">:</span> <span class="s2">&quot;ProblemKind&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ProblemKind&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a new `ProblemKind` that is the intersection of this `ProblemKind` and</span>
+<span class="sd">        the `ProblemKind` given as parameter.</span>
+
+<span class="sd">        :param oth: the `ProblemKind` that must be intersected with this `ProblemKind`.</span>
+<span class="sd">        :return: a new `ProblemKind` that is the intersection between this `ProblemKind` and `oth`</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">ProblemKind</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">features</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">oth</span><span class="o">.</span><span class="n">features</span><span class="p">))</span></div></div>
+
+
+<span class="n">basic_classical_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">basic_classical_kind</span><span class="o">.</span><span class="n">set_problem_class</span><span class="p">(</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">)</span>
+<span class="n">basic_classical_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">)</span>
+
+<span class="n">hierarchical_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">hierarchical_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;HIERARCHICAL_TYPING&quot;</span><span class="p">)</span>
+
+<span class="n">classical_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">classical_kind</span><span class="o">.</span><span class="n">set_problem_class</span><span class="p">(</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">)</span>
+<span class="n">classical_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">)</span>
+<span class="n">classical_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;NEGATIVE_CONDITIONS&quot;</span><span class="p">)</span>
+<span class="n">classical_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;DISJUNCTIVE_CONDITIONS&quot;</span><span class="p">)</span>
+<span class="n">classical_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;EQUALITY&quot;</span><span class="p">)</span>
+
+<span class="n">full_classical_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">full_classical_kind</span><span class="o">.</span><span class="n">set_problem_class</span><span class="p">(</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">)</span>
+<span class="n">full_classical_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">)</span>
+<span class="n">full_classical_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;NEGATIVE_CONDITIONS&quot;</span><span class="p">)</span>
+<span class="n">full_classical_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;DISJUNCTIVE_CONDITIONS&quot;</span><span class="p">)</span>
+<span class="n">full_classical_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;EQUALITY&quot;</span><span class="p">)</span>
+<span class="n">full_classical_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;EXISTENTIAL_CONDITIONS&quot;</span><span class="p">)</span>
+<span class="n">full_classical_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;UNIVERSAL_CONDITIONS&quot;</span><span class="p">)</span>
+<span class="n">full_classical_kind</span><span class="o">.</span><span class="n">set_effects_kind</span><span class="p">(</span><span class="s2">&quot;CONDITIONAL_EFFECTS&quot;</span><span class="p">)</span>
+
+<span class="n">object_fluent_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">object_fluent_kind</span><span class="o">.</span><span class="n">set_fluents_type</span><span class="p">(</span><span class="s2">&quot;OBJECT_FLUENTS&quot;</span><span class="p">)</span>
+
+<span class="n">basic_numeric_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">basic_numeric_kind</span><span class="o">.</span><span class="n">set_problem_class</span><span class="p">(</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">)</span>
+<span class="n">basic_numeric_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">)</span>
+<span class="n">basic_numeric_kind</span><span class="o">.</span><span class="n">set_numbers</span><span class="p">(</span><span class="s2">&quot;DISCRETE_NUMBERS&quot;</span><span class="p">)</span>
+<span class="n">basic_numeric_kind</span><span class="o">.</span><span class="n">set_numbers</span><span class="p">(</span><span class="s2">&quot;CONTINUOUS_NUMBERS&quot;</span><span class="p">)</span>
+<span class="n">basic_numeric_kind</span><span class="o">.</span><span class="n">set_fluents_type</span><span class="p">(</span><span class="s2">&quot;NUMERIC_FLUENTS&quot;</span><span class="p">)</span>
+
+<span class="n">full_numeric_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">full_numeric_kind</span><span class="o">.</span><span class="n">set_problem_class</span><span class="p">(</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">)</span>
+<span class="n">full_numeric_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">)</span>
+<span class="n">full_numeric_kind</span><span class="o">.</span><span class="n">set_numbers</span><span class="p">(</span><span class="s2">&quot;DISCRETE_NUMBERS&quot;</span><span class="p">)</span>
+<span class="n">full_numeric_kind</span><span class="o">.</span><span class="n">set_numbers</span><span class="p">(</span><span class="s2">&quot;CONTINUOUS_NUMBERS&quot;</span><span class="p">)</span>
+<span class="n">full_numeric_kind</span><span class="o">.</span><span class="n">set_fluents_type</span><span class="p">(</span><span class="s2">&quot;NUMERIC_FLUENTS&quot;</span><span class="p">)</span>
+<span class="n">full_numeric_kind</span><span class="o">.</span><span class="n">set_effects_kind</span><span class="p">(</span><span class="s2">&quot;INCREASE_EFFECTS&quot;</span><span class="p">)</span>
+<span class="n">full_numeric_kind</span><span class="o">.</span><span class="n">set_effects_kind</span><span class="p">(</span><span class="s2">&quot;DECREASE_EFFECTS&quot;</span><span class="p">)</span>
+
+<span class="n">basic_temporal_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">basic_temporal_kind</span><span class="o">.</span><span class="n">set_problem_class</span><span class="p">(</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">)</span>
+<span class="n">basic_temporal_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">)</span>
+<span class="n">basic_temporal_kind</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="s2">&quot;CONTINUOUS_TIME&quot;</span><span class="p">)</span>
+
+<span class="n">temporal_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">temporal_kind</span><span class="o">.</span><span class="n">set_problem_class</span><span class="p">(</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">)</span>
+<span class="n">temporal_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">)</span>
+<span class="n">temporal_kind</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="s2">&quot;CONTINUOUS_TIME&quot;</span><span class="p">)</span>
+<span class="n">temporal_kind</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="s2">&quot;INTERMEDIATE_CONDITIONS_AND_EFFECTS&quot;</span><span class="p">)</span>
+<span class="n">temporal_kind</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="s2">&quot;TIMED_EFFECT&quot;</span><span class="p">)</span>
+<span class="n">temporal_kind</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="s2">&quot;TIMED_GOALS&quot;</span><span class="p">)</span>
+<span class="n">temporal_kind</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="s2">&quot;DURATION_INEQUALITIES&quot;</span><span class="p">)</span>
+<span class="n">temporal_kind</span><span class="o">.</span><span class="n">set_expression_duration</span><span class="p">(</span><span class="s2">&quot;STATIC_FLUENTS_IN_DURATION&quot;</span><span class="p">)</span>
+
+<span class="n">quality_metrics_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">quality_metrics_kind</span><span class="o">.</span><span class="n">set_quality_metrics</span><span class="p">(</span><span class="s2">&quot;PLAN_LENGTH&quot;</span><span class="p">)</span>
+<span class="n">quality_metrics_kind</span><span class="o">.</span><span class="n">set_quality_metrics</span><span class="p">(</span><span class="s2">&quot;ACTIONS_COST&quot;</span><span class="p">)</span>
+<span class="n">quality_metrics_kind</span><span class="o">.</span><span class="n">set_quality_metrics</span><span class="p">(</span><span class="s2">&quot;FINAL_VALUE&quot;</span><span class="p">)</span>
+
+<span class="n">oversubscription_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+<span class="n">oversubscription_kind</span><span class="o">.</span><span class="n">set_quality_metrics</span><span class="p">(</span><span class="s2">&quot;OVERSUBSCRIPTION&quot;</span><span class="p">)</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">unified_planning.model.problem_kind</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

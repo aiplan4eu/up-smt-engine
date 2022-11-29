@@ -1,0 +1,1605 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>up_SMT_engine.ProblemManager.ProblemManager &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="up_SMT_engine.SMTPlanner" href="up_SMT_engine.SMTPlanner.html" />
+    <link rel="prev" title="up_SMT_engine.ProblemManager" href="up_SMT_engine.ProblemManager.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.SMTPlanner.html" title="up_SMT_engine.SMTPlanner"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.ProblemManager.html" title="up_SMT_engine.ProblemManager"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.ProblemManager.html" accesskey="U">up_SMT_engine.ProblemManager</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.ProblemManager.ProblemManager</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-up_SMT_engine.ProblemManager.ProblemManager">
+<span id="up-smt-engine-problemmanager-problemmanager"></span><h1>up_SMT_engine.ProblemManager.ProblemManager<a class="headerlink" href="#module-up_SMT_engine.ProblemManager.ProblemManager" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager" title="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProblemManager</span></code></a>(grounded_problem[, ...])</p></td>
+<td><p>Class used to handle Action and Fluent classes used to generate the clauses describing the problem for a SMT solver</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">BaseAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Simple action class, used to handle all methods for sequential plans</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return action basename</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>String: action basename</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.check_name_match">
+<span class="sig-name descname"><span class="pre">check_name_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_action_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.check_name_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.check_name_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the action basename matches this action’s basename</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>other_action_name (String): other action’s Basename</p>
+</dd>
+<dt>Returns:</dt><dd><p>Bool: True if matching, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_action_at_t">
+<span class="sig-name descname"><span class="pre">get_action_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_action_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_action_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to create an action at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 Bool: z3 variable representing whether an action is executed at timstep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_causal_axioms_up_to_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_causal_axioms_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_causal_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of causal axioms for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the causal axioms of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_causal_axioms_at_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_causal_axioms_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get causal axioms for the final timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_precondition_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_precondition_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_precondition_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of precondition constraints for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the precondition constraints of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_precondition_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_precondition_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get precondition constraints for the final timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_effected_fluent_basename_condition_tuples">
+<span class="sig-name descname"><span class="pre">get_effected_fluent_basename_condition_tuples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_effected_fluent_basename_condition_tuples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_effected_fluent_basename_condition_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get a list of all effected fluents, and the conditions for the effect
+This is part of the process for sharing the information ‘which actions affect which fluents’ with fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Tuple(String, FNODE): A tuple of a fluent basename, and a FNODE expressing the condition for that fluent being affected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseAction.deliver_effect_tuples_to_Fluents">
+<span class="sig-name descname"><span class="pre">deliver_effect_tuples_to_Fluents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.deliver_effect_tuples_to_Fluents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.deliver_effect_tuples_to_Fluents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to deliver effect-fluent tupes for frame-axioms to the appropriate Fluent object. Should only be called once</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: Raise an exception if an unknown fluent is affected by an action</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">ForAllAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ForAllAction.html#ForAllAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.actions.BaseAction.html#up_SMT_engine.actions.BaseAction.BaseAction" title="up_SMT_engine.actions.BaseAction.BaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAction</span></code></a></p>
+<p>Extension of BaseAction to support ForAll parallelism, allowing all non-interfering actions to be executed within a timestep</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.populate_all_fluents_set">
+<span class="sig-name descname"><span class="pre">populate_all_fluents_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ForAllAction.html#ForAllAction.populate_all_fluents_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.populate_all_fluents_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to populate the all_fluents set for an action</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of all fluents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_ForAll_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_ForAll_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ForAllAction.html#ForAllAction.get_ForAll_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_ForAll_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get all ForAll parallelism constraints over simultaneous actions up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of constraints expressing the ForAll parallelism constraints over simultaneous actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_ForAll_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_ForAll_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ForAllAction.html#ForAllAction.get_ForAll_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_ForAll_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get all ForAll parallelism constraints over simultaneous actions at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of constraints expressing the ForAll parallelism constraints over simultaneous actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.check_name_match">
+<span class="sig-name descname"><span class="pre">check_name_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_action_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.check_name_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the action basename matches this action’s basename</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>other_action_name (String): other action’s Basename</p>
+</dd>
+<dt>Returns:</dt><dd><p>Bool: True if matching, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.deliver_effect_tuples_to_Fluents">
+<span class="sig-name descname"><span class="pre">deliver_effect_tuples_to_Fluents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.deliver_effect_tuples_to_Fluents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to deliver effect-fluent tupes for frame-axioms to the appropriate Fluent object. Should only be called once</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: Raise an exception if an unknown fluent is affected by an action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_action_at_t">
+<span class="sig-name descname"><span class="pre">get_action_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_action_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to create an action at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 Bool: z3 variable representing whether an action is executed at timstep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_causal_axioms_at_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get causal axioms for the final timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_causal_axioms_up_to_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_causal_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of causal axioms for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the causal axioms of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_effected_fluent_basename_condition_tuples">
+<span class="sig-name descname"><span class="pre">get_effected_fluent_basename_condition_tuples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_effected_fluent_basename_condition_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get a list of all effected fluents, and the conditions for the effect
+This is part of the process for sharing the information ‘which actions affect which fluents’ with fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Tuple(String, FNODE): A tuple of a fluent basename, and a FNODE expressing the condition for that fluent being affected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return action basename</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>String: action basename</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_precondition_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get precondition constraints for the final timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_precondition_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_precondition_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of precondition constraints for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the precondition constraints of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">ThereExistsAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.actions.BaseAction.html#up_SMT_engine.actions.BaseAction.BaseAction" title="up_SMT_engine.actions.BaseAction.BaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAction</span></code></a></p>
+<p>Extension of BaseAction to support ThereExists parallelism, allowing more parallelism than ForAll</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.populate_affecting_fluents_set">
+<span class="sig-name descname"><span class="pre">populate_affecting_fluents_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.populate_affecting_fluents_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.populate_affecting_fluents_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to populate the affecting_fluents set for an action</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of all fluents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.populate_all_fluents_set">
+<span class="sig-name descname"><span class="pre">populate_all_fluents_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.populate_all_fluents_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.populate_all_fluents_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to populate the all_fluents set for an action</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of all fluents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_ThereExists_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_ThereExists_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_actions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.get_ThereExists_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_ThereExists_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get all ThereExists parallelism constraints over simultaneous actions up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep
+ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_ThereExists_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_ThereExists_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_actions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.get_ThereExists_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_ThereExists_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get all ThereExists parallelism constraints over simultaneous actions at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep
+ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.check_name_match">
+<span class="sig-name descname"><span class="pre">check_name_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_action_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.check_name_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the action basename matches this action’s basename</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>other_action_name (String): other action’s Basename</p>
+</dd>
+<dt>Returns:</dt><dd><p>Bool: True if matching, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.deliver_effect_tuples_to_Fluents">
+<span class="sig-name descname"><span class="pre">deliver_effect_tuples_to_Fluents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.deliver_effect_tuples_to_Fluents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to deliver effect-fluent tupes for frame-axioms to the appropriate Fluent object. Should only be called once</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: Raise an exception if an unknown fluent is affected by an action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_action_at_t">
+<span class="sig-name descname"><span class="pre">get_action_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_action_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to create an action at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 Bool: z3 variable representing whether an action is executed at timstep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_causal_axioms_at_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get causal axioms for the final timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_causal_axioms_up_to_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_causal_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of causal axioms for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the causal axioms of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_effected_fluent_basename_condition_tuples">
+<span class="sig-name descname"><span class="pre">get_effected_fluent_basename_condition_tuples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_effected_fluent_basename_condition_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get a list of all effected fluents, and the conditions for the effect
+This is part of the process for sharing the information ‘which actions affect which fluents’ with fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Tuple(String, FNODE): A tuple of a fluent basename, and a FNODE expressing the condition for that fluent being affected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return action basename</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>String: action basename</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_precondition_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get precondition constraints for the final timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_precondition_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_precondition_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of precondition constraints for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the precondition constraints of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">R2ExistsAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.actions.BaseAction.html#up_SMT_engine.actions.BaseAction.BaseAction" title="up_SMT_engine.actions.BaseAction.BaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAction</span></code></a></p>
+<p>Extension of BaseAction to support relaxed relaxed ThereExists parallelism, allowing actions to be enabled, and change other action effects within a timestep</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_causal_axioms_up_to_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction.get_causal_axioms_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_causal_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of causal axioms for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass)): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the causal axioms of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_causal_axioms_at_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction.get_causal_axioms_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get causal axioms for a timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): a timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass)): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_precondition_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction.get_precondition_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_precondition_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of precondition constraints for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass)): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the precondition constraints of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_precondition_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction.get_precondition_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get precondition constraints for a timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): a timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass)): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.check_name_match">
+<span class="sig-name descname"><span class="pre">check_name_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_action_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.check_name_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the action basename matches this action’s basename</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>other_action_name (String): other action’s Basename</p>
+</dd>
+<dt>Returns:</dt><dd><p>Bool: True if matching, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.deliver_effect_tuples_to_Fluents">
+<span class="sig-name descname"><span class="pre">deliver_effect_tuples_to_Fluents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.deliver_effect_tuples_to_Fluents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to deliver effect-fluent tupes for frame-axioms to the appropriate Fluent object. Should only be called once</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: Raise an exception if an unknown fluent is affected by an action</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_action_at_t">
+<span class="sig-name descname"><span class="pre">get_action_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_action_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to create an action at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 Bool: z3 variable representing whether an action is executed at timstep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_effected_fluent_basename_condition_tuples">
+<span class="sig-name descname"><span class="pre">get_effected_fluent_basename_condition_tuples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_effected_fluent_basename_condition_tuples" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get a list of all effected fluents, and the conditions for the effect
+This is part of the process for sharing the information ‘which actions affect which fluents’ with fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Tuple(String, FNODE): A tuple of a fluent basename, and a FNODE expressing the condition for that fluent being affected</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_name">
+<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return action basename</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>String: action basename</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.convert_FNODE_to_Z3">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">convert_FNODE_to_Z3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FNODE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#convert_FNODE_to_Z3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.convert_FNODE_to_Z3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert FNODE to z3 expression equivalent</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>FNODE (FNODE): AIPLAN4EU API object used to express logical relations between fluents and other objects
+t (int): current timestep
+r2exists_tuple (Tuple, optional): Tuple used to convey information needed for converting an FNODE to z3 for relaxed relaxed ThereExists encoding. Defaults to None.</p>
+</dd>
+<dt>Raises:</dt><dd><p>Exception: Raise exception when FNODE does not match expected logical relation structure</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: Equivalent expression expressued using z3</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.handle_API_fluent">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">handle_API_fluent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">API_fluent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallelism</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grounded_objects</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FluentHelperFunctions.html#handle_API_fluent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.handle_API_fluent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles a single ungrounded api fluent, including grounding into each possible combination without parameters
+and creating a fluent object for each</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>API_fluent (unified-planning.model.Fluent): unified-planning API based Fluent to be grounded
+parallelism (String): Type of parallelism to use
+grounded_objects (List[unified-planning.model.Object]): List of user objects including all possible parameters for the ungrounded fluent</p>
+</dd>
+<dt>Returns:</dt><dd><p>BaseFluent or BaseFluent subclass object: Custom fluent object used to generate Frame Axiom constraints, value bound constraints and to handle variables and chained variables for Fluents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">BaseProblemBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_incremental</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used to handle constructing the SMT problem for Z3 to solve
+Suitable for sequential planning</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.get_mutex_count">
+<span class="sig-name descname"><span class="pre">get_mutex_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.get_mutex_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.get_mutex_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_mutexes">
+<span class="sig-name descname"><span class="pre">add_mutexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutex_array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.add_mutexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_mutexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add mutex clauses to the solver while counting each mutex</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>instance (z3.Solver): Current Solver to which clauses can be added
+mutex_array (Array of constraint clauses): Array of mutex clauses to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_action_constraints">
+<span class="sig-name descname"><span class="pre">add_action_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.add_action_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_action_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each action object generate all relevant constraints</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
+plan_len (int): Plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_fluent_constraints">
+<span class="sig-name descname"><span class="pre">add_fluent_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.add_fluent_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_fluent_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each fluent object generate all relevant constraints</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
+plan_len (int): Plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using clauses generated by actions and fluents build the problem in the z3 Solver</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The current solver to which clauses are added
+plan_len (int): The plan length
+goal_clause (Clause): The clause representing all goal conditions</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">ForAllProblemBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_incremental</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/ForAllProblemBuilder.html#ForAllProblemBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder" title="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseProblemBuilder</span></code></a></p>
+<p>Subclass of BaseProblemBuilder, overriding build and __generate_parallelism_mutexes to implement ForAll parallelism</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/ForAllProblemBuilder.html#ForAllProblemBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using clauses generated by actions and fluents build the problem in the z3 Solver</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The current solver to which clauses are added
+plan_len (int): The plan length
+goal_clause (Clause): The clause representing all goal conditions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_action_constraints">
+<span class="sig-name descname"><span class="pre">add_action_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_action_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each action object generate all relevant constraints</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
+plan_len (int): Plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_fluent_constraints">
+<span class="sig-name descname"><span class="pre">add_fluent_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_fluent_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each fluent object generate all relevant constraints</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
+plan_len (int): Plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_mutexes">
+<span class="sig-name descname"><span class="pre">add_mutexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutex_array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_mutexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add mutex clauses to the solver while counting each mutex</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>instance (z3.Solver): Current Solver to which clauses can be added
+mutex_array (Array of constraint clauses): Array of mutex clauses to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.get_mutex_count">
+<span class="sig-name descname"><span class="pre">get_mutex_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.get_mutex_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">ThereExistsProblemBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_incremental</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/ThereExistsProblemBuilder.html#ThereExistsProblemBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder" title="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseProblemBuilder</span></code></a></p>
+<p>Subclass of BaseProblemBuilder, overriding build and __generate_parallelism_mutexes to implement ThereExists parallelism</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/ThereExistsProblemBuilder.html#ThereExistsProblemBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using clauses generated by actions and fluents build the problem in the z3 Solver</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The current solver to which clauses are added
+plan_len (int): The plan length
+goal_clause (Clause): The clause representing all goal conditions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_action_constraints">
+<span class="sig-name descname"><span class="pre">add_action_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_action_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each action object generate all relevant constraints</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
+plan_len (int): Plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_fluent_constraints">
+<span class="sig-name descname"><span class="pre">add_fluent_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_fluent_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each fluent object generate all relevant constraints</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
+plan_len (int): Plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_mutexes">
+<span class="sig-name descname"><span class="pre">add_mutexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutex_array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_mutexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add mutex clauses to the solver while counting each mutex</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>instance (z3.Solver): Current Solver to which clauses can be added
+mutex_array (Array of constraint clauses): Array of mutex clauses to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.get_mutex_count">
+<span class="sig-name descname"><span class="pre">get_mutex_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.get_mutex_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">R2EProblemBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_incremental</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/R2EProblemBuilder.html#R2EProblemBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder" title="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseProblemBuilder</span></code></a></p>
+<p>Subclass of BaseProblemBuilder, overriding build and adding new methods to implement relaxed relaxed ThereExists parallelism</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_fluent_constraints">
+<span class="sig-name descname"><span class="pre">add_fluent_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/R2EProblemBuilder.html#R2EProblemBuilder.add_fluent_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_fluent_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each fluent object generate all relevant constraints</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The solver to which clauses are added
+plan_len (int): The plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_action_constraints">
+<span class="sig-name descname"><span class="pre">add_action_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/R2EProblemBuilder.html#R2EProblemBuilder.add_action_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_action_constraints" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each action object generate all relevant constraints</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The solver to which clauses are added
+plan_len (int): The plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.build">
+<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/R2EProblemBuilder.html#R2EProblemBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.build" title="Permalink to this definition">¶</a></dt>
+<dd><p>Using clauses generated by actions and fluents build the problem in the z3 Solver</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The current solver to which clauses are added
+plan_len (int): The plan length
+goal_clause (Clause): The clause representing all goal conditions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_mutexes">
+<span class="sig-name descname"><span class="pre">add_mutexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutex_array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_mutexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add mutex clauses to the solver while counting each mutex</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>instance (z3.Solver): Current Solver to which clauses can be added
+mutex_array (Array of constraint clauses): Array of mutex clauses to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.get_mutex_count">
+<span class="sig-name descname"><span class="pre">get_mutex_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.get_mutex_count" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.And">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">And</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#And"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.And" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a Z3 and-expression or and-probe.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+<span class="go">And(p, q, r)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="go">And(p__0, p__1, p__2, p__3, p__4)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">Solver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solver</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logFile</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Z3PPObject</span></code></p>
+<p>Solver API provides methods for implementing the main SMT 2.0 commands:
+push, pop, check, get-model, etc.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">keys</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set a configuration option.
+The method <cite>help()</cite> return a string containing all available options.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># The option MBQI can be set using three different approaches.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">mbqi</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;MBQI&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s1">&#39;:mbqi&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.push">
+<span class="sig-name descname"><span class="pre">push</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.push"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.push" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a backtracking point.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0, x &lt; 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">unsat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">sat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.pop">
+<span class="sig-name descname"><span class="pre">pop</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.pop"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.pop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Backtrack c num backtracking points.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0, x &lt; 1]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">unsat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">sat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.num_scopes">
+<span class="sig-name descname"><span class="pre">num_scopes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.num_scopes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.num_scopes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the current number of backtracking points.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">num_scopes</span><span class="p">()</span>
+<span class="go">0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">num_scopes</span><span class="p">()</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">num_scopes</span><span class="p">()</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">num_scopes</span><span class="p">()</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.reset" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove all asserted constraints and backtracking points created using <cite>push()</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.assert_exprs">
+<span class="sig-name descname"><span class="pre">assert_exprs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.assert_exprs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.assert_exprs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert constraints into the solver.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">assert_exprs</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0, x &lt; 2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert constraints into the solver.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0, x &lt; 2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.append" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert constraints into the solver.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0, x &lt; 2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.insert"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.insert" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert constraints into the solver.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>
+<span class="go">[x &gt; 0, x &lt; 2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.assert_and_track">
+<span class="sig-name descname"><span class="pre">assert_and_track</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">p</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.assert_and_track"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.assert_and_track" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert constraint <cite>a</cite> and track it in the unsat core using the Boolean constant <cite>p</cite>.</p>
+<p>If <cite>p</cite> is a string, it will be automatically converted into a Boolean constant.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p3</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">unsat_core</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">assert_and_track</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span>  <span class="s1">&#39;p1&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">assert_and_track</span><span class="p">(</span><span class="n">x</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;p2&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">assert_and_track</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">,</span>  <span class="n">p3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">())</span>
+<span class="go">unsat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">unsat_core</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p1&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">c</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p2&#39;</span><span class="p">)</span> <span class="ow">in</span> <span class="n">c</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p3</span> <span class="ow">in</span> <span class="n">c</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.check">
+<span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">assumptions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check whether the assertions in the given solver plus the optional assumptions are consistent or not.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">sat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">sat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">()</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">unsat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">x</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">unknown</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.model">
+<span class="sig-name descname"><span class="pre">model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a model for the last <cite>check()</cite>.</p>
+<p>This function raises an exception if
+a model is not available (e.g., last <cite>check()</cite> returned unsat).</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">sat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+<span class="go">[a = -2]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.import_model_converter">
+<span class="sig-name descname"><span class="pre">import_model_converter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.import_model_converter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.import_model_converter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Import model converter from other into the current solver</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.unsat_core">
+<span class="sig-name descname"><span class="pre">unsat_core</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.unsat_core"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.unsat_core" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a subset (as an AST vector) of the assumptions provided to the last check().</p>
+<p>These are the assumptions Z3 used in the unsatisfiability proof.
+Assumptions are available in Z3. They are used to extract unsatisfiable cores.
+They may be also used to “retract” assumptions. Note that, assumptions are not really
+“soft constraints”, but they can be used to implement them.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p1 p2 p3&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="p">,</span> <span class="n">y</span>       <span class="o">=</span> <span class="n">Ints</span><span class="p">(</span><span class="s1">&#39;x y&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span>          <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Implies</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Implies</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="n">x</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Implies</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Implies</span><span class="p">(</span><span class="n">p3</span><span class="p">,</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">3</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span>
+<span class="go">unsat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">core</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">unsat_core</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">core</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="ow">in</span> <span class="n">core</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="ow">in</span> <span class="n">core</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p3</span> <span class="ow">in</span> <span class="n">core</span>
+<span class="go">False</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># &quot;Retracting&quot; p2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p3</span><span class="p">)</span>
+<span class="go">sat</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.consequences">
+<span class="sig-name descname"><span class="pre">consequences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">assumptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">variables</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.consequences"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.consequences" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine fixed values for the variables based on the solver state and assumptions.
+&gt;&gt;&gt; s = Solver()
+&gt;&gt;&gt; a, b, c, d = Bools(‘a b c d’)
+&gt;&gt;&gt; s.add(Implies(a,b), Implies(b, c))
+&gt;&gt;&gt; s.consequences([a],[b,c,d])
+(sat, [Implies(a, b), Implies(a, c)])
+&gt;&gt;&gt; s.consequences([Not(c),d],[a,b,c,d])
+(sat, [Implies(d, d), Implies(Not(c), Not(c)), Implies(Not(c), Not(b)), Implies(Not(c), Not(a))])</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.from_file">
+<span class="sig-name descname"><span class="pre">from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse assertions from a file</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.from_string">
+<span class="sig-name descname"><span class="pre">from_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.from_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.from_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse assertions from a string</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.cube">
+<span class="sig-name descname"><span class="pre">cube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vars</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.cube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.cube" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get set of cubes
+The method takes an optional set of variables that restrict which
+variables may be used as a starting point for cubing.
+If vars is not None, then the first case split is based on a variable in
+this set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.cube_vars">
+<span class="sig-name descname"><span class="pre">cube_vars</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.cube_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.cube_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Access the set of variables that were touched by the most recently generated cube.
+This set of variables can be used as a starting point for additional cubes.
+The idea is that variables that appear in clauses that are reduced by the most recent
+cube are likely more useful to cube on.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.proof">
+<span class="sig-name descname"><span class="pre">proof</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.proof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.proof" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a proof for the last <cite>check()</cite>. Proof construction must be enabled.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.assertions">
+<span class="sig-name descname"><span class="pre">assertions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.assertions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.assertions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an AST vector containing all added constraints.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">assertions</span><span class="p">()</span>
+<span class="go">[]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">a</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;a&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">assertions</span><span class="p">()</span>
+<span class="go">[a &gt; 0, a &lt; 10]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.units">
+<span class="sig-name descname"><span class="pre">units</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.units"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an AST vector containing all currently inferred units.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.non_units">
+<span class="sig-name descname"><span class="pre">non_units</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.non_units"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.non_units" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an AST vector containing all atomic formulas in solver state that are not units.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.trail_levels">
+<span class="sig-name descname"><span class="pre">trail_levels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.trail_levels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.trail_levels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return trail and decision levels of the solver state after a check() call.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.trail">
+<span class="sig-name descname"><span class="pre">trail</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.trail"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.trail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return trail of the solver state after a check() call.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.statistics">
+<span class="sig-name descname"><span class="pre">statistics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.statistics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.statistics" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return statistics for the last <cite>check()</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">SimpleSolver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">sat</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">statistics</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="o">.</span><span class="n">get_key_value</span><span class="p">(</span><span class="s1">&#39;final checks&#39;</span><span class="p">)</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">st</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">st</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.reason_unknown">
+<span class="sig-name descname"><span class="pre">reason_unknown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.reason_unknown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.reason_unknown" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string describing why the last <cite>check()</cite> returned <cite>unknown</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">SimpleSolver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="mi">2</span><span class="o">**</span><span class="n">x</span> <span class="o">==</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+<span class="go">unknown</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">reason_unknown</span><span class="p">()</span>
+<span class="go">&#39;(incomplete (theory arithmetic))&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.help">
+<span class="sig-name descname"><span class="pre">help</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.help"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.help" title="Permalink to this definition">¶</a></dt>
+<dd><p>Display a string describing all available options.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.param_descrs">
+<span class="sig-name descname"><span class="pre">param_descrs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.param_descrs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.param_descrs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the parameter description set.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.translate">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.translate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.translate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Translate <cite>self</cite> to the context <cite>target</cite>. That is, return a copy of <cite>self</cite> in the context <cite>target</cite>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">c1</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">c2</span> <span class="o">=</span> <span class="n">Context</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s1</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">(</span><span class="n">ctx</span><span class="o">=</span><span class="n">c1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s2</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span><span class="n">c2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.sexpr">
+<span class="sig-name descname"><span class="pre">sexpr</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.sexpr"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.sexpr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a formatted string (in Lisp-like format) with all added constraints.
+We say the string is in s-expression format.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">sexpr</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.dimacs">
+<span class="sig-name descname"><span class="pre">dimacs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">include_names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.dimacs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.dimacs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a textual representation of the solver in DIMACS format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.to_smt2">
+<span class="sig-name descname"><span class="pre">to_smt2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Solver.to_smt2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.to_smt2" title="Permalink to this definition">¶</a></dt>
+<dd><p>return SMTLIB2 formatted benchmark for solver’s assertions</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.Solver.use_pp">
+<span class="sig-name descname"><span class="pre">use_pp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.use_pp" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">ProblemManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sequential'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_incremental</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used to handle Action and Fluent classes used to generate the clauses describing the problem for a SMT solver</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_ordered_actions">
+<span class="sig-name descname"><span class="pre">get_ordered_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.get_ordered_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_ordered_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ThereExists implementation uses an arbitrary total ordering over all actions. The ordering used is the
+index of each action in smt_action</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Returns:</dt><dd><p>List: Ordered list of actions</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.is_solved">
+<span class="sig-name descname"><span class="pre">is_solved</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.is_solved"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.is_solved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a satisfying model has been found</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Boolean: True if found, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.print_results">
+<span class="sig-name descname"><span class="pre">print_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.print_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.print_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the satisfying model if one exists</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_results">
+<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.get_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the satisfying model if one exists</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>z3.Model: The satisfying model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_formula_data">
+<span class="sig-name descname"><span class="pre">get_formula_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">formula_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.get_formula_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_formula_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the formula data (part of the performance statistics) for the most recent step to a dictionary</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>formula_data (Dictionary): The dictionary of lists for formula data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_eval_data">
+<span class="sig-name descname"><span class="pre">get_eval_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eval_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.get_eval_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_eval_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the evaluation data (part of the performance statistics) for the most recent step to a dictionary</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>eval_data (List): The evaluation data list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.check_sat">
+<span class="sig-name descname"><span class="pre">check_sat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.check_sat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.check_sat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populates SMT problem instance and checks if the instance is satisfiable</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>time (int): Plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">up_SMT_engine.ProblemManager.ProblemManager</a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction"><code class="docutils literal notranslate"><span class="pre">BaseAction</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_name"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.check_name_match"><code class="docutils literal notranslate"><span class="pre">BaseAction.check_name_match()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_action_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_action_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_causal_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_causal_axioms_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_causal_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_precondition_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_precondition_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_precondition_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_effected_fluent_basename_condition_tuples"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_effected_fluent_basename_condition_tuples()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.deliver_effect_tuples_to_Fluents"><code class="docutils literal notranslate"><span class="pre">BaseAction.deliver_effect_tuples_to_Fluents()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction"><code class="docutils literal notranslate"><span class="pre">ForAllAction</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.populate_all_fluents_set"><code class="docutils literal notranslate"><span class="pre">ForAllAction.populate_all_fluents_set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_ForAll_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_ForAll_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_ForAll_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_ForAll_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.check_name_match"><code class="docutils literal notranslate"><span class="pre">ForAllAction.check_name_match()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.deliver_effect_tuples_to_Fluents"><code class="docutils literal notranslate"><span class="pre">ForAllAction.deliver_effect_tuples_to_Fluents()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_action_at_t"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_action_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_causal_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_causal_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_causal_axioms_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_effected_fluent_basename_condition_tuples"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_effected_fluent_basename_condition_tuples()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_name"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_precondition_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllAction.get_precondition_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">ForAllAction.get_precondition_constraints_up_to_t()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.populate_affecting_fluents_set"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.populate_affecting_fluents_set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.populate_all_fluents_set"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.populate_all_fluents_set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_ThereExists_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_ThereExists_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_ThereExists_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_ThereExists_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.check_name_match"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.check_name_match()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.deliver_effect_tuples_to_Fluents"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.deliver_effect_tuples_to_Fluents()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_action_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_action_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_causal_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_causal_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_causal_axioms_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_effected_fluent_basename_condition_tuples"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_effected_fluent_basename_condition_tuples()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_name"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_name()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_precondition_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsAction.get_precondition_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_precondition_constraints_up_to_t()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_causal_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_causal_axioms_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_causal_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_precondition_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_precondition_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_precondition_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.check_name_match"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.check_name_match()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.deliver_effect_tuples_to_Fluents"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.deliver_effect_tuples_to_Fluents()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_action_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_action_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_effected_fluent_basename_condition_tuples"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_effected_fluent_basename_condition_tuples()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2ExistsAction.get_name"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_name()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.convert_FNODE_to_Z3"><code class="docutils literal notranslate"><span class="pre">convert_FNODE_to_Z3()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.handle_API_fluent"><code class="docutils literal notranslate"><span class="pre">handle_API_fluent()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.get_mutex_count"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.get_mutex_count()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_mutexes"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_mutexes()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_action_constraints"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_action_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.add_fluent_constraints"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_fluent_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.BaseProblemBuilder.build"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.build()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.build"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.build()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_action_constraints"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.add_action_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_fluent_constraints"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.add_fluent_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.add_mutexes"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.add_mutexes()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ForAllProblemBuilder.get_mutex_count"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.get_mutex_count()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder"><code class="docutils literal notranslate"><span class="pre">ThereExistsProblemBuilder</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.build"><code class="docutils literal notranslate"><span class="pre">ThereExistsProblemBuilder.build()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_action_constraints"><code class="docutils literal notranslate"><span class="pre">ThereExistsProblemBuilder.add_action_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_fluent_constraints"><code class="docutils literal notranslate"><span class="pre">ThereExistsProblemBuilder.add_fluent_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.add_mutexes"><code class="docutils literal notranslate"><span class="pre">ThereExistsProblemBuilder.add_mutexes()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ThereExistsProblemBuilder.get_mutex_count"><code class="docutils literal notranslate"><span class="pre">ThereExistsProblemBuilder.get_mutex_count()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder"><code class="docutils literal notranslate"><span class="pre">R2EProblemBuilder</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_fluent_constraints"><code class="docutils literal notranslate"><span class="pre">R2EProblemBuilder.add_fluent_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_action_constraints"><code class="docutils literal notranslate"><span class="pre">R2EProblemBuilder.add_action_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.build"><code class="docutils literal notranslate"><span class="pre">R2EProblemBuilder.build()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.add_mutexes"><code class="docutils literal notranslate"><span class="pre">R2EProblemBuilder.add_mutexes()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.R2EProblemBuilder.get_mutex_count"><code class="docutils literal notranslate"><span class="pre">R2EProblemBuilder.get_mutex_count()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.And"><code class="docutils literal notranslate"><span class="pre">And()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver"><code class="docutils literal notranslate"><span class="pre">Solver</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.set"><code class="docutils literal notranslate"><span class="pre">Solver.set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.push"><code class="docutils literal notranslate"><span class="pre">Solver.push()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.pop"><code class="docutils literal notranslate"><span class="pre">Solver.pop()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.num_scopes"><code class="docutils literal notranslate"><span class="pre">Solver.num_scopes()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.reset"><code class="docutils literal notranslate"><span class="pre">Solver.reset()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.assert_exprs"><code class="docutils literal notranslate"><span class="pre">Solver.assert_exprs()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.add"><code class="docutils literal notranslate"><span class="pre">Solver.add()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.append"><code class="docutils literal notranslate"><span class="pre">Solver.append()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.insert"><code class="docutils literal notranslate"><span class="pre">Solver.insert()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.assert_and_track"><code class="docutils literal notranslate"><span class="pre">Solver.assert_and_track()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.check"><code class="docutils literal notranslate"><span class="pre">Solver.check()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.model"><code class="docutils literal notranslate"><span class="pre">Solver.model()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.import_model_converter"><code class="docutils literal notranslate"><span class="pre">Solver.import_model_converter()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.unsat_core"><code class="docutils literal notranslate"><span class="pre">Solver.unsat_core()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.consequences"><code class="docutils literal notranslate"><span class="pre">Solver.consequences()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.from_file"><code class="docutils literal notranslate"><span class="pre">Solver.from_file()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.from_string"><code class="docutils literal notranslate"><span class="pre">Solver.from_string()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.cube"><code class="docutils literal notranslate"><span class="pre">Solver.cube()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.cube_vars"><code class="docutils literal notranslate"><span class="pre">Solver.cube_vars()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.proof"><code class="docutils literal notranslate"><span class="pre">Solver.proof()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.assertions"><code class="docutils literal notranslate"><span class="pre">Solver.assertions()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.units"><code class="docutils literal notranslate"><span class="pre">Solver.units()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.non_units"><code class="docutils literal notranslate"><span class="pre">Solver.non_units()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.trail_levels"><code class="docutils literal notranslate"><span class="pre">Solver.trail_levels()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.trail"><code class="docutils literal notranslate"><span class="pre">Solver.trail()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.statistics"><code class="docutils literal notranslate"><span class="pre">Solver.statistics()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.reason_unknown"><code class="docutils literal notranslate"><span class="pre">Solver.reason_unknown()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.help"><code class="docutils literal notranslate"><span class="pre">Solver.help()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.param_descrs"><code class="docutils literal notranslate"><span class="pre">Solver.param_descrs()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.translate"><code class="docutils literal notranslate"><span class="pre">Solver.translate()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.sexpr"><code class="docutils literal notranslate"><span class="pre">Solver.sexpr()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.dimacs"><code class="docutils literal notranslate"><span class="pre">Solver.dimacs()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.to_smt2"><code class="docutils literal notranslate"><span class="pre">Solver.to_smt2()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.Solver.use_pp"><code class="docutils literal notranslate"><span class="pre">Solver.use_pp()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager"><code class="docutils literal notranslate"><span class="pre">ProblemManager</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_ordered_actions"><code class="docutils literal notranslate"><span class="pre">ProblemManager.get_ordered_actions()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.is_solved"><code class="docutils literal notranslate"><span class="pre">ProblemManager.is_solved()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.print_results"><code class="docutils literal notranslate"><span class="pre">ProblemManager.print_results()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_results"><code class="docutils literal notranslate"><span class="pre">ProblemManager.get_results()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_formula_data"><code class="docutils literal notranslate"><span class="pre">ProblemManager.get_formula_data()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_eval_data"><code class="docutils literal notranslate"><span class="pre">ProblemManager.get_eval_data()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.check_sat"><code class="docutils literal notranslate"><span class="pre">ProblemManager.check_sat()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="up_SMT_engine.ProblemManager.html"
+                          title="previous chapter">up_SMT_engine.ProblemManager</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="up_SMT_engine.SMTPlanner.html"
+                          title="next chapter">up_SMT_engine.SMTPlanner</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/up_SMT_engine.ProblemManager.ProblemManager.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.SMTPlanner.html" title="up_SMT_engine.SMTPlanner"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.ProblemManager.html" title="up_SMT_engine.ProblemManager"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.ProblemManager.html" >up_SMT_engine.ProblemManager</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.ProblemManager.ProblemManager</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
