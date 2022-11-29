@@ -11,9 +11,9 @@ sys.path.insert(0, os.path.abspath("../"))
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'up_SMT_engine'
-copyright = '2022, Ben Pathak'
-author = 'Ben Pathak'
+project = "up_SMT_engine"
+copyright = "2022, Ben Pathak"
+author = "Ben Pathak"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
@@ -38,7 +38,7 @@ autodoc_default_options = {
 }
 autodoc_member_order = "bysource"
 
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 source_suffix = ".rst"
 
@@ -46,12 +46,11 @@ master_doc = "index"
 
 pygments_style = "sphinx"
 
-exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
-
+exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
 
-html_theme = 'default'
-html_static_path = ['_static']
+html_theme = "default"
+html_static_path = ["_static"]
