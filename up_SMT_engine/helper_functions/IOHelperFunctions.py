@@ -70,33 +70,25 @@ def save_stats_to_file(
         current_row.append(formula_data["variables_per_step"][step])
         current_row.append(formula_data["clauses_per_step"][step])
         current_row.append(formula_data["mutexes_per_step"][step])
+        current_row.append("instance")
+        current_row.append("domain")
         csv_rows.append(current_row)
-    with open(stats_output, "a", encoding="UTF8", newline="") as csvfile:
+    with open(stats_output, "w", encoding="UTF8", newline="") as csvfile:
         w = csv.writer(csvfile)
-        if file_was_created:
-            w.writerow(
-                [
-                    "Encoding",
-                    "is_incremental",
-                    "Steps",
-                    "Solving Time per Step",
-                    "Variables per Step",
-                    "Clauses per Step",
-                    "Mutexes per Step",
-                ]
-            )
+        # This makes collating data more difficult so skip for now
+        # if file_was_created:
+        #     w.writerow(
+        #         [
+        #             "Encoding",
+        #             "is_incremental",
+        #             "Steps",
+        #             "Solving Time per Step",
+        #             "Variables per Step",
+        #             "Clauses per Step",
+        #             "Mutexes per Step",
+        #         ]
+        #     )
         w.writerows(csv_rows)
-
-
-def deleteFile(file_path):
-    """Function used to delete a file, used by test_runner
-
-    Args:
-        file_path (String): File path
-    """
-    if file_path is not None:
-        if os.path.exists(file_path):
-            os.remove(file_path)
 
 
 def print_eval_data(eval_data):
