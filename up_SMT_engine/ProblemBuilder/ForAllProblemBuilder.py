@@ -30,15 +30,7 @@ class ForAllProblemBuilder(BaseProblemBuilder):
             plan_len (int): The plan length
             goal_clause (Clause): The clause representing all goal conditions
         """
-        if plan_len == 0 or not self.incremental:
-            # Reset mutex count
-            self.num_mutexes = 0
-            # Add initial state constraints
-            for init_value in self.initial_values:
-                problem_instance.add(init_value)
-        elif problem_instance is not None and self.incremental:
-            # Pop previous goal clause
-            problem_instance.pop()
+        self.add_init(problem_instance, plan_len)
 
         super().add_fluent_constraints(problem_instance, plan_len)
 
@@ -49,9 +41,5 @@ class ForAllProblemBuilder(BaseProblemBuilder):
             mutexes = self.__generate_parallelism_mutexes(plan_len)
             super().add_mutexes(problem_instance, mutexes)
 
-        if self.incremental:
-            # Create a breakpoint, allowing the current goals to be removed if they are unsatisfiable
-            problem_instance.push()
-
-        problem_instance.add(goal_clause)
+        self.add_goal(problem_instance, goal_clause)
         return

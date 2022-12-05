@@ -272,7 +272,6 @@ class ProblemManager:
         self.problem_builder.build(
             self.solver_instance, final_timestep, self.__create_goals(final_timestep)
         )
-
         # Solve
         self.results = self.solver_instance.check()
 
