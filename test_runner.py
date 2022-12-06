@@ -233,9 +233,15 @@ def main(
                 env, options, problem, False, write_solution, solution_path, timeout
             )
         else:
+            incremental = (
+                True if (incremental == "true" or incremental == "True") else False
+            )
             options = {
                 "parallelism": test_choice,
                 "use_incremental_solving": incremental,
+                "stats_output": generate_stats_path(
+                    statistics_path, test_choice, incremental
+                ),
             }
             run_one(env, options, problem, True, write_solution, solution_path, timeout)
 
@@ -267,7 +273,7 @@ if __name__ == "__main__":
         test_choice = str(args[i + 1])
     if "-incremental" in args:
         i = args.index("-incremental")
-        incremental = bool(args[i + 1])
+        incremental = args[i + 1]
     domain_path = ""
     problem_path = ""
     if use_PDDL:
