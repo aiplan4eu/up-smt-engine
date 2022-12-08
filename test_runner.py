@@ -48,6 +48,7 @@ def run_one(
             print("Solution found")
             if verbose:
                 print("\n".join(str(x) for x in result.plan.actions))
+                print("\nPlan length: " + str(len(result.plan.actions)) + "\n")
             if write_solution and len(solution_path) > 0:
                 solution_path = generate_plan_path(
                     solution_path,
