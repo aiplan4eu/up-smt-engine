@@ -59,47 +59,6 @@
 </tr>
 </tbody>
 </table>
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.And">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemBuilder.BaseProblemBuilder.</span></span><span class="sig-name descname"><span class="pre">And</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#And"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.And" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 and-expression or and-probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">And(p, q, r)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">And(p__0, p__1, p__2, p__3, p__4)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.Not">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemBuilder.BaseProblemBuilder.</span></span><span class="sig-name descname"><span class="pre">Not</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Not"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.Not" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 not expression or probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Not</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-<span class="go">Not(Not(p))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">simplify</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span>
-<span class="go">p</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.Or">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemBuilder.BaseProblemBuilder.</span></span><span class="sig-name descname"><span class="pre">Or</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Or"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.Or" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 or-expression or or-probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Or</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">Or(p, q, r)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Or</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">Or(p__0, p__1, p__2, p__3, p__4)</span>
-</pre></div>
-</div>
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemBuilder.BaseProblemBuilder.</span></span><span class="sig-name descname"><span class="pre">BaseProblemBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_incremental</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder" title="Permalink to this definition">¶</a></dt>
@@ -110,6 +69,21 @@ Suitable for sequential planning</p>
 <dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.get_mutex_count">
 <span class="sig-name descname"><span class="pre">get_mutex_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.get_mutex_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.get_mutex_count" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.__generate_parallelism_mutexes">
+<span class="sig-name descname"><span class="pre">__generate_parallelism_mutexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.__generate_parallelism_mutexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate mutexes for sequential parallelism
+Use basic encoding requiring O(n^2) constraints per timestep
+Assert that, for every pair of actions at time t, only one can be true
+Assert that, for every action at time t at least one can be true (using OR)</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>plan_len (int): Plan length</p>
+</dd>
+<dt>Returns:</dt><dd><p>Array of constraint clauses: Array of constraint clauses. If using incremental solving this only covers the penultimate timestep. Otherwise the array covers the first to penultimate timesteps</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_mutexes">
@@ -145,6 +119,28 @@ plan_len (int): Plan length</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_init">
+<span class="sig-name descname"><span class="pre">add_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.add_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add initial values if not already present. If using incremental pop the previous goal clause</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The current solver to which clauses are added
+plan_len (int): The plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_goal">
+<span class="sig-name descname"><span class="pre">add_goal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.add_goal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_goal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add the goal value to the solver, and create a checkpoint if using incremental solving</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The current solver to which clauses are added
+goal_clause (Clause): The clause representing all goal conditions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.build" title="Permalink to this definition">¶</a></dt>
 <dd><p>Using clauses generated by actions and fluents build the problem in the z3 Solver</p>
@@ -171,14 +167,14 @@ goal_clause (Clause): The clause representing all goal conditions</p>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">up_SMT_engine.ProblemBuilder.BaseProblemBuilder</a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.And"><code class="docutils literal notranslate"><span class="pre">And()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.Not"><code class="docutils literal notranslate"><span class="pre">Not()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.Or"><code class="docutils literal notranslate"><span class="pre">Or()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder</span></code></a><ul>
 <li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.get_mutex_count"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.get_mutex_count()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.__generate_parallelism_mutexes"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.__generate_parallelism_mutexes()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_mutexes"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_mutexes()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_action_constraints"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_action_constraints()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_fluent_constraints"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_fluent_constraints()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_init"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_init()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_goal"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_goal()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.build"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.build()</span></code></a></li>
 </ul>
 </li>

@@ -31,10 +31,8 @@ autosummary_generate = True
 autodoc_default_options = {
     "members": True,
     "undoc-members": True,
-    "inherited-members": True,
     "show-inheritance": True,
-    "ignore-module-all": True,
-    "imported-members": True,
+    "private-members": True,
 }
 autodoc_member_order = "bysource"
 

@@ -59,208 +59,61 @@
 </tr>
 </tbody>
 </table>
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.search_FNODE_for_Fluents">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">search_FNODE_for_Fluents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FNODE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename_set</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/ParallelPlanningHelperFunctions.html#search_FNODE_for_Fluents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.search_FNODE_for_Fluents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Used to search for fluents, returns a set of basenames, which can then be used to match with the corresponding fluent objects
-Should only be called after convert_FNODE_to_Z3 has been called on all FNODEs</p>
-<blockquote>
-<div><dl class="simple">
-<dt>Args:</dt><dd><p>FNODE (unified-planning FNODE): The current FNODE being searched
-basename_set (set(String)): The set of basenames for each fluent found</p>
-</dd>
-<dt>Returns:</dt><dd><p>None: Skip if a dead end has been found</p>
-</dd>
-</dl>
-</div></blockquote>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.And">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">And</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#And"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.And" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 and-expression or and-probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">And(p, q, r)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">And(p__0, p__1, p__2, p__3, p__4)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.Not">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">Not</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Not"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.Not" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 not expression or probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Not</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-<span class="go">Not(Not(p))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">simplify</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span>
-<span class="go">p</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.convert_FNODE_to_Z3">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">convert_FNODE_to_Z3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FNODE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#convert_FNODE_to_Z3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.convert_FNODE_to_Z3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert FNODE to z3 expression equivalent</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>FNODE (FNODE): AIPLAN4EU API object used to express logical relations between fluents and other objects
-t (int): current timestep
-r2exists_tuple (Tuple, optional): Tuple used to convey information needed for converting an FNODE to z3 for relaxed relaxed ThereExists encoding. Defaults to None.</p>
-</dd>
-<dt>Raises:</dt><dd><p>Exception: Raise exception when FNODE does not match expected logical relation structure</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 expression: Equivalent expression expressued using z3</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.search_fluents_list">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">search_fluents_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluent_basename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#search_fluents_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.search_fluents_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return fluent object corresponding to basename, returns fluent if matched, None if no match</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
-fluent_basename (String): Name of fluent</p>
-</dd>
-<dt>Returns:</dt><dd><p>BaseFluent or BaseFluent subclass: Fluent corresponding to the fluent basename</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.create_stated_action_instance">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">create_stated_action_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#create_stated_action_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.create_stated_action_instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Bool for the fluent or action at time ‘t’, if a bool with that name exists then returns a reference to that bool</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>action (String): Action name
-t (int): timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3.Bool: a Bool for the fluent or action at time ‘t’, if a bool with that name exists then returns a reference to that bool</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">BaseAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Simple action class, used to handle all methods for sequential plans</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.get_name">
-<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return action basename</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>String: action basename</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.check_name_match">
-<span class="sig-name descname"><span class="pre">check_name_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_action_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.check_name_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.check_name_match" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the action basename matches this action’s basename</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>other_action_name (String): other action’s Basename</p>
-</dd>
-<dt>Returns:</dt><dd><p>Bool: True if matching, False otherwise</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.get_action_at_t">
-<span class="sig-name descname"><span class="pre">get_action_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_action_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_action_at_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method used to create an action at timestep t</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 Bool: z3 variable representing whether an action is executed at timstep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.get_causal_axioms_up_to_t">
-<span class="sig-name descname"><span class="pre">get_causal_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_causal_axioms_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_causal_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the list of causal axioms for a problem of length up to timestep t</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the causal axioms of this action up to timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.get_causal_axioms_at_t">
-<span class="sig-name descname"><span class="pre">get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_causal_axioms_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get causal axioms for the final timestep</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.get_precondition_constraints_up_to_t">
-<span class="sig-name descname"><span class="pre">get_precondition_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_precondition_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_precondition_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the list of precondition constraints for a problem of length up to timestep t</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the precondition constraints of this action up to timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.get_precondition_constraints_at_t">
-<span class="sig-name descname"><span class="pre">get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_precondition_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get precondition constraints for the final timestep</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints of this action at timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.get_effected_fluent_basename_condition_tuples">
-<span class="sig-name descname"><span class="pre">get_effected_fluent_basename_condition_tuples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_effected_fluent_basename_condition_tuples"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_effected_fluent_basename_condition_tuples" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method used to get a list of all effected fluents, and the conditions for the effect
-This is part of the process for sharing the information ‘which actions affect which fluents’ with fluent objects</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>Tuple(String, FNODE): A tuple of a fluent basename, and a FNODE expressing the condition for that fluent being affected</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.BaseAction.deliver_effect_tuples_to_Fluents">
-<span class="sig-name descname"><span class="pre">deliver_effect_tuples_to_Fluents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.deliver_effect_tuples_to_Fluents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.deliver_effect_tuples_to_Fluents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method used to deliver effect-fluent tupes for frame-axioms to the appropriate Fluent object. Should only be called once</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</p>
-</dd>
-<dt>Raises:</dt><dd><p>Exception: Raise an exception if an unknown fluent is affected by an action</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">ThereExistsAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="up_SMT_engine.actions.BaseAction.html#up_SMT_engine.actions.BaseAction.BaseAction" title="up_SMT_engine.actions.BaseAction.BaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAction</span></code></a></p>
 <p>Extension of BaseAction to support ThereExists parallelism, allowing more parallelism than ForAll</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_matching_fluent_set">
+<span class="sig-name descname"><span class="pre">__get_matching_fluent_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_matching_fluent_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to find the set of fluents matching a set of basenames</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+name_set (Set(String)): Set of basenames</p>
+</dd>
+<dt>Returns:</dt><dd><p>Set(BaseFluent or BaseFluent subclass): Set of fluents matching the basenames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_precondition_fluent_names">
+<span class="sig-name descname"><span class="pre">__get_precondition_fluent_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_precondition_fluent_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to find all fluents mentioned in preconditions. This is a coarse grained approach because
+each fluent’s semantics are discarded
+Used with __get_matching_fluent_set to get matching fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Set(String): Set of fluent basenames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_precondition_fluent_names">
+<span class="sig-name descname"><span class="pre">__get_effect_precondition_fluent_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_precondition_fluent_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to find all fluents mentioned in effect preconditions. This is a coarse grained approach because
+each fluent’s semantics are discarded.
+Effects without preconditions are skipped.
+Used with __get_matching_fluent_set to get matching fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Set(String): Set of fluent basenames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_fluent_names">
+<span class="sig-name descname"><span class="pre">__get_effect_fluent_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_fluent_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to find all fluents affected by an effect, including conditional effects
+This is also a coarse grained approach.
+Used with __get_matching_fluent_set to get matching fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Set(String): Set of fluent basenames</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_affecting_fluents_set">
 <span class="sig-name descname"><span class="pre">populate_affecting_fluents_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.populate_affecting_fluents_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_affecting_fluents_set" title="Permalink to this definition">¶</a></dt>
@@ -277,6 +130,20 @@ This is part of the process for sharing the information ‘which actions affect 
 <dd><p>Method used to populate the all_fluents set for an action</p>
 <dl class="simple">
 <dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of all fluents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_ThereExists_constraints_at_time_t">
+<span class="sig-name descname"><span class="pre">__get_ThereExists_constraints_at_time_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_actions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_ThereExists_constraints_at_time_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to generate all parallelism constraints for this action for a ThereExists encoding
+Affecting actions are found by finding affecting actions of fluents in all_fluents set</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep
+ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</p>
 </dd>
 </dl>
 </dd></dl>
@@ -307,111 +174,6 @@ ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all a
 </dl>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.check_name_match">
-<span class="sig-name descname"><span class="pre">check_name_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other_action_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.check_name_match" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the action basename matches this action’s basename</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>other_action_name (String): other action’s Basename</p>
-</dd>
-<dt>Returns:</dt><dd><p>Bool: True if matching, False otherwise</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.deliver_effect_tuples_to_Fluents">
-<span class="sig-name descname"><span class="pre">deliver_effect_tuples_to_Fluents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.deliver_effect_tuples_to_Fluents" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method used to deliver effect-fluent tupes for frame-axioms to the appropriate Fluent object. Should only be called once</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</p>
-</dd>
-<dt>Raises:</dt><dd><p>Exception: Raise an exception if an unknown fluent is affected by an action</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_action_at_t">
-<span class="sig-name descname"><span class="pre">get_action_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_action_at_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method used to create an action at timestep t</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 Bool: z3 variable representing whether an action is executed at timstep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_causal_axioms_at_t">
-<span class="sig-name descname"><span class="pre">get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get causal axioms for the final timestep</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_causal_axioms_up_to_t">
-<span class="sig-name descname"><span class="pre">get_causal_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_causal_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the list of causal axioms for a problem of length up to timestep t</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the causal axioms of this action up to timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_effected_fluent_basename_condition_tuples">
-<span class="sig-name descname"><span class="pre">get_effected_fluent_basename_condition_tuples</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_effected_fluent_basename_condition_tuples" title="Permalink to this definition">¶</a></dt>
-<dd><p>Method used to get a list of all effected fluents, and the conditions for the effect
-This is part of the process for sharing the information ‘which actions affect which fluents’ with fluent objects</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>Tuple(String, FNODE): A tuple of a fluent basename, and a FNODE expressing the condition for that fluent being affected</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_name">
-<span class="sig-name descname"><span class="pre">get_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return action basename</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>String: action basename</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_precondition_constraints_at_t">
-<span class="sig-name descname"><span class="pre">get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Get precondition constraints for the final timestep</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints of this action at timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_precondition_constraints_up_to_t">
-<span class="sig-name descname"><span class="pre">get_precondition_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_precondition_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
-<dd><p>Generate the list of precondition constraints for a problem of length up to timestep t</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the precondition constraints of this action up to timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
 </dd></dl>
 
 </section>
@@ -427,38 +189,16 @@ This is part of the process for sharing the information ‘which actions affect 
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">up_SMT_engine.actions.ThereExistsAction</a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.search_FNODE_for_Fluents"><code class="docutils literal notranslate"><span class="pre">search_FNODE_for_Fluents()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.And"><code class="docutils literal notranslate"><span class="pre">And()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.Not"><code class="docutils literal notranslate"><span class="pre">Not()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.convert_FNODE_to_Z3"><code class="docutils literal notranslate"><span class="pre">convert_FNODE_to_Z3()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.search_fluents_list"><code class="docutils literal notranslate"><span class="pre">search_fluents_list()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.create_stated_action_instance"><code class="docutils literal notranslate"><span class="pre">create_stated_action_instance()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction"><code class="docutils literal notranslate"><span class="pre">BaseAction</span></code></a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_name"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_name()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.check_name_match"><code class="docutils literal notranslate"><span class="pre">BaseAction.check_name_match()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_action_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_action_at_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_causal_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_causal_axioms_up_to_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_causal_axioms_at_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_precondition_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_precondition_constraints_up_to_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_precondition_constraints_at_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.get_effected_fluent_basename_condition_tuples"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_effected_fluent_basename_condition_tuples()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.BaseAction.deliver_effect_tuples_to_Fluents"><code class="docutils literal notranslate"><span class="pre">BaseAction.deliver_effect_tuples_to_Fluents()</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_matching_fluent_set"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_matching_fluent_set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_precondition_fluent_names"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_precondition_fluent_names()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_precondition_fluent_names"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_effect_precondition_fluent_names()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_fluent_names"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_effect_fluent_names()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_affecting_fluents_set"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.populate_affecting_fluents_set()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_all_fluents_set"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.populate_all_fluents_set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_ThereExists_constraints_at_time_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_ThereExists_constraints_at_time_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_ThereExists_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_ThereExists_constraints_up_to_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_ThereExists_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_ThereExists_constraints_at_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.check_name_match"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.check_name_match()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.deliver_effect_tuples_to_Fluents"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.deliver_effect_tuples_to_Fluents()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_action_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_action_at_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_causal_axioms_at_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_causal_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_causal_axioms_up_to_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_effected_fluent_basename_condition_tuples"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_effected_fluent_basename_condition_tuples()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_name"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_name()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_precondition_constraints_at_t()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_precondition_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_precondition_constraints_up_to_t()</span></code></a></li>
 </ul>
 </li>
 </ul>

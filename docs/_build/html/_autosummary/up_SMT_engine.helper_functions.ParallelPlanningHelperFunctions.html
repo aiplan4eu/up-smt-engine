@@ -60,14 +60,14 @@
 </tbody>
 </table>
 <dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.get_effected_fluent_name">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">get_effected_fluent_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluent_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#get_effected_fluent_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.get_effected_fluent_name" title="Permalink to this definition">¶</a></dt>
-<dd><p>If a fluent has arguments then ground it by including arguments in name</p>
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.__convert_FNODE_args_for_Fluents">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">__convert_FNODE_args_for_Fluents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">basename_set</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/ParallelPlanningHelperFunctions.html#__convert_FNODE_args_for_Fluents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.__convert_FNODE_args_for_Fluents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles recursively calling search_FNODE_for_Fluents for each FNODE argument</p>
 <dl class="simple">
-<dt>Args:</dt><dd><p>fluent_name (String): Ungrounded fluent name
-args (FNODE.args): Parameter values for ungrounded fluent</p>
+<dt>Args:</dt><dd><p>args (list): List of the current FNODE’s arguments
+basename_set (set(String)): The set of basenames for each fluent found</p>
 </dd>
-<dt>Returns:</dt><dd><p>String: Grounded fluent name</p>
+<dt>Returns:</dt><dd><p>set(String): The set of basenames for each fluent found</p>
 </dd>
 </dl>
 </dd></dl>
@@ -101,7 +101,7 @@ basename_set (set(String)): The set of basenames for each fluent found</p>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions</a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.get_effected_fluent_name"><code class="docutils literal notranslate"><span class="pre">get_effected_fluent_name()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.__convert_FNODE_args_for_Fluents"><code class="docutils literal notranslate"><span class="pre">__convert_FNODE_args_for_Fluents()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.ParallelPlanningHelperFunctions.search_FNODE_for_Fluents"><code class="docutils literal notranslate"><span class="pre">search_FNODE_for_Fluents()</span></code></a></li>
 </ul>
 </li>

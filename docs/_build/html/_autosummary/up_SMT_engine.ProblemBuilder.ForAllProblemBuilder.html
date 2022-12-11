@@ -60,68 +60,23 @@
 </tbody>
 </table>
 <dl class="py class">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.</span></span><span class="sig-name descname"><span class="pre">BaseProblemBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_incremental</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Class used to handle constructing the SMT problem for Z3 to solve
-Suitable for sequential planning</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.get_mutex_count">
-<span class="sig-name descname"><span class="pre">get_mutex_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.get_mutex_count"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.get_mutex_count" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_mutexes">
-<span class="sig-name descname"><span class="pre">add_mutexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutex_array</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.add_mutexes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_mutexes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add mutex clauses to the solver while counting each mutex</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>instance (z3.Solver): Current Solver to which clauses can be added
-mutex_array (Array of constraint clauses): Array of mutex clauses to add</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_action_constraints">
-<span class="sig-name descname"><span class="pre">add_action_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.add_action_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_action_constraints" title="Permalink to this definition">¶</a></dt>
-<dd><p>For each action object generate all relevant constraints</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
-plan_len (int): Plan length</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_fluent_constraints">
-<span class="sig-name descname"><span class="pre">add_fluent_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.add_fluent_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_fluent_constraints" title="Permalink to this definition">¶</a></dt>
-<dd><p>For each fluent object generate all relevant constraints</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
-plan_len (int): Plan length</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.build">
-<span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/BaseProblemBuilder.html#BaseProblemBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.build" title="Permalink to this definition">¶</a></dt>
-<dd><p>Using clauses generated by actions and fluents build the problem in the z3 Solver</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>problem_instance (z3.Solver): The current solver to which clauses are added
-plan_len (int): The plan length
-goal_clause (Clause): The clause representing all goal conditions</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.</span></span><span class="sig-name descname"><span class="pre">ForAllProblemBuilder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">actions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_incremental</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/ForAllProblemBuilder.html#ForAllProblemBuilder"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder" title="up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseProblemBuilder</span></code></a></p>
 <p>Subclass of BaseProblemBuilder, overriding build and __generate_parallelism_mutexes to implement ForAll parallelism</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.__generate_parallelism_mutexes">
+<span class="sig-name descname"><span class="pre">__generate_parallelism_mutexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.__generate_parallelism_mutexes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate mutexes for ForAll parallelism
+For every pair of actions if interference is found then add a mutex over those two actions</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>plan_len (int): Plan length</p>
+</dd>
+<dt>Returns:</dt><dd><p>Array of constraint clauses: Array of constraint clauses. If using incremental solving this only covers the penultimate timestep. Otherwise the array covers the first to penultimate timesteps</p>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.build">
 <span class="sig-name descname"><span class="pre">build</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">goal_clause</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemBuilder/ForAllProblemBuilder.html#ForAllProblemBuilder.build"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.build" title="Permalink to this definition">¶</a></dt>
@@ -133,44 +88,6 @@ goal_clause (Clause): The clause representing all goal conditions</p>
 </dd>
 </dl>
 </dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_action_constraints">
-<span class="sig-name descname"><span class="pre">add_action_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_action_constraints" title="Permalink to this definition">¶</a></dt>
-<dd><p>For each action object generate all relevant constraints</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
-plan_len (int): Plan length</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_fluent_constraints">
-<span class="sig-name descname"><span class="pre">add_fluent_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plan_len</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_fluent_constraints" title="Permalink to this definition">¶</a></dt>
-<dd><p>For each fluent object generate all relevant constraints</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>problem_instance (z3.Solver): Current Solver to which clauses can be added
-plan_len (int): Plan length</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_mutexes">
-<span class="sig-name descname"><span class="pre">add_mutexes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mutex_array</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_mutexes" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add mutex clauses to the solver while counting each mutex</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>instance (z3.Solver): Current Solver to which clauses can be added
-mutex_array (Array of constraint clauses): Array of mutex clauses to add</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.get_mutex_count">
-<span class="sig-name descname"><span class="pre">get_mutex_count</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.get_mutex_count" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 </dd></dl>
 
@@ -187,20 +104,9 @@ mutex_array (Array of constraint clauses): Array of mutex clauses to add</p>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">up_SMT_engine.ProblemBuilder.ForAllProblemBuilder</a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder</span></code></a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.get_mutex_count"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.get_mutex_count()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_mutexes"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_mutexes()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_action_constraints"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_action_constraints()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.add_fluent_constraints"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.add_fluent_constraints()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.BaseProblemBuilder.build"><code class="docutils literal notranslate"><span class="pre">BaseProblemBuilder.build()</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.__generate_parallelism_mutexes"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.__generate_parallelism_mutexes()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.build"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.build()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_action_constraints"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.add_action_constraints()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_fluent_constraints"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.add_fluent_constraints()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.add_mutexes"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.add_mutexes()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.ProblemBuilder.ForAllProblemBuilder.ForAllProblemBuilder.get_mutex_count"><code class="docutils literal notranslate"><span class="pre">ForAllProblemBuilder.get_mutex_count()</span></code></a></li>
 </ul>
 </li>
 </ul>

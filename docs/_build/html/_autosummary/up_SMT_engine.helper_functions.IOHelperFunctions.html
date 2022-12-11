@@ -57,68 +57,20 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLToProblem" title="up_SMT_engine.helper_functions.IOHelperFunctions.PDDLToProblem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">PDDLToProblem</span></code></a>(domain_path, problem_path)</p></td>
 <td><p>Using the path of a domain and instance file parse them into a unified planning problem object.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.deleteFile" title="up_SMT_engine.helper_functions.IOHelperFunctions.deleteFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">deleteFile</span></code></a>(file_path)</p></td>
-<td><p>Function used to delete a file, used by test_runner</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.print_eval_data" title="up_SMT_engine.helper_functions.IOHelperFunctions.print_eval_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_eval_data</span></code></a>(eval_data)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.print_eval_data" title="up_SMT_engine.helper_functions.IOHelperFunctions.print_eval_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_eval_data</span></code></a>(eval_data)</p></td>
 <td><p>Function used to print the time per each step</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.print_formula_data" title="up_SMT_engine.helper_functions.IOHelperFunctions.print_formula_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_formula_data</span></code></a>(formula_data)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.print_formula_data" title="up_SMT_engine.helper_functions.IOHelperFunctions.print_formula_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_formula_data</span></code></a>(formula_data)</p></td>
 <td><p>Function used to print the formula data per each step</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.save_stats_to_file" title="up_SMT_engine.helper_functions.IOHelperFunctions.save_stats_to_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_stats_to_file</span></code></a>(formula_data, eval_data, ...)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.save_stats_to_file" title="up_SMT_engine.helper_functions.IOHelperFunctions.save_stats_to_file"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_stats_to_file</span></code></a>(formula_data, eval_data, ...)</p></td>
 <td><p>Save performance statistics to a designated file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.writeSolutionToFile" title="up_SMT_engine.helper_functions.IOHelperFunctions.writeSolutionToFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeSolutionToFile</span></code></a>(solution, solution_path)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.writeSolutionToFile" title="up_SMT_engine.helper_functions.IOHelperFunctions.writeSolutionToFile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">writeSolutionToFile</span></code></a>(solution, solution_path)</p></td>
 <td><p>Save plan to a txt file, in a format which may be verified by VAL.</p></td>
 </tr>
 </tbody>
 </table>
-<dl class="py class">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.IOHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">PDDLReader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">env</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Environment</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/io/pddl_reader.html#PDDLReader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Parse a <cite>PDDL</cite> domain file and, optionally, a <cite>PDDL</cite> problem file and generate the equivalent <code class="xref py py-class docutils literal notranslate"><span class="pre">Problem</span></code>.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader.parse_problem">
-<span class="sig-name descname"><span class="pre">parse_problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Problem</span></span></span><a class="reference internal" href="../_modules/unified_planning/io/pddl_reader.html#PDDLReader.parse_problem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader.parse_problem" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes in input a filename containing the <cite>PDDL</cite> domain and optionally a filename
-containing the <cite>PDDL</cite> problem and returns the parsed <cite>Problem</cite>.</p>
-<p>Note that if the <cite>problem_filename</cite> is <cite>None</cite>, an incomplete <cite>Problem</cite> will be returned.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>domain_filename</strong> – The path to the file containing the <cite>PDDL</cite> domain.</p></li>
-<li><p><strong>problem_filename</strong> – Optionally the path to the file containing the <cite>PDDL</cite> problem.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The <cite>Problem</cite> parsed from the given pddl domain + problem.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader.parse_problem_string">
-<span class="sig-name descname"><span class="pre">parse_problem_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_str</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Problem</span></span></span><a class="reference internal" href="../_modules/unified_planning/io/pddl_reader.html#PDDLReader.parse_problem_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader.parse_problem_string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Takes in input a str representing the <cite>PDDL</cite> domain and optionally a str
-representing the <cite>PDDL</cite> problem and returns the parsed <cite>Problem</cite>.</p>
-<p>Note that if the <cite>problem_str</cite> is <cite>None</cite>, an incomplete <cite>Problem</cite> will be returned.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>domain_filename</strong> – The string representing the <cite>PDDL</cite> domain.</p></li>
-<li><p><strong>problem_filename</strong> – Optionally the string representing the <cite>PDDL</cite> problem.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The <cite>Problem</cite> parsed from the given pddl domain + problem.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 <dl class="py function">
 <dt class="sig sig-object py" id="up_SMT_engine.helper_functions.IOHelperFunctions.PDDLToProblem">
 <span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.IOHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">PDDLToProblem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">domain_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/IOHelperFunctions.html#PDDLToProblem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLToProblem" title="Permalink to this definition">¶</a></dt>
@@ -158,16 +110,6 @@ is_incremental (bool): True if using incremental solving, False otherwise</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.IOHelperFunctions.deleteFile">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.IOHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">deleteFile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">file_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/IOHelperFunctions.html#deleteFile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.IOHelperFunctions.deleteFile" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function used to delete a file, used by test_runner</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>file_path (String): File path</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="up_SMT_engine.helper_functions.IOHelperFunctions.print_eval_data">
 <span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.IOHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">print_eval_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eval_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/IOHelperFunctions.html#print_eval_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.IOHelperFunctions.print_eval_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Function used to print the time per each step</p>
@@ -200,15 +142,9 @@ is_incremental (bool): True if using incremental solving, False otherwise</p>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">up_SMT_engine.helper_functions.IOHelperFunctions</a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader"><code class="docutils literal notranslate"><span class="pre">PDDLReader</span></code></a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader.parse_problem"><code class="docutils literal notranslate"><span class="pre">PDDLReader.parse_problem()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLReader.parse_problem_string"><code class="docutils literal notranslate"><span class="pre">PDDLReader.parse_problem_string()</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLToProblem"><code class="docutils literal notranslate"><span class="pre">PDDLToProblem()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.writeSolutionToFile"><code class="docutils literal notranslate"><span class="pre">writeSolutionToFile()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.save_stats_to_file"><code class="docutils literal notranslate"><span class="pre">save_stats_to_file()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.deleteFile"><code class="docutils literal notranslate"><span class="pre">deleteFile()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.print_eval_data"><code class="docutils literal notranslate"><span class="pre">print_eval_data()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.IOHelperFunctions.print_formula_data"><code class="docutils literal notranslate"><span class="pre">print_formula_data()</span></code></a></li>
 </ul>

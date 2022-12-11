@@ -87,458 +87,6 @@
 </tbody>
 </table>
 <dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.Bool">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">Bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Bool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Boolean constant named <cite>name</cite>. If <cite>ctx=None</cite>, then the global context is used.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-<span class="go">And(p, q)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.Real">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">Real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Real"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Real" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a real constant named <cite>name</cite>. If <cite>ctx=None</cite>, then the global context is used.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_real</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_real</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.Int">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">Int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Int" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an integer constant named <cite>name</cite>. If <cite>ctx=None</cite>, then the global context is used.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.Implies">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">Implies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Implies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Implies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 implies expression.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Implies</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-<span class="go">Implies(p, q)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.And">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">And</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#And"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.And" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 and-expression or and-probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">And(p, q, r)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">And(p__0, p__1, p__2, p__3, p__4)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.Or">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">Or</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Or"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Or" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 or-expression or or-probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Or</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">Or(p, q, r)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Or</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">Or(p__0, p__1, p__2, p__3, p__4)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.Not">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">Not</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Not"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Not" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 not expression or probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Not</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
-<span class="go">Not(Not(p))</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">simplify</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">p</span><span class="p">)))</span>
-<span class="go">p</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.Exists">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">Exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patterns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_patterns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Exists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 exists formula.</p>
-<p>The parameters <cite>weight</cite>, <cite>qif</cite>, <cite>skid</cite>, <cite>patterns</cite> and <cite>no_patterns</cite> are optional annotations.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">Exists</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">,</span> <span class="n">skid</span><span class="o">=</span><span class="s2">&quot;foo&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span>
-<span class="go">Exists([x, y], f(x, y) &gt;= x)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_quantifier</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">r</span> <span class="o">=</span> <span class="n">Tactic</span><span class="p">(</span><span class="s1">&#39;nnf&#39;</span><span class="p">)(</span><span class="n">q</span><span class="p">)</span><span class="o">.</span><span class="n">as_expr</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_quantifier</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-<span class="go">False</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.ForAll">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">ForAll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skid</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patterns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">no_patterns</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#ForAll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.ForAll" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 forall formula.</p>
-<p>The parameters <cite>weight</cite>, <cite>qid</cite>, <cite>skid</cite>, <cite>patterns</cite> and <cite>no_patterns</cite> are optional annotations.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">f</span> <span class="o">=</span> <span class="n">Function</span><span class="p">(</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">(),</span> <span class="n">IntSort</span><span class="p">())</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">y</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ForAll</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">)</span>
-<span class="go">ForAll([x, y], f(x, y) &gt;= x)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ForAll</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">,</span> <span class="n">patterns</span><span class="o">=</span><span class="p">[</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="p">])</span>
-<span class="go">ForAll([x, y], f(x, y) &gt;= x)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">ForAll</span><span class="p">([</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">],</span> <span class="n">f</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
-<span class="go">ForAll([x, y], f(x, y) &gt;= x)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">FNode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">content</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FNodeContent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">environment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Environment</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.object" title="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.object"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>The <cite>FNode</cite> class represents an <cite>expression tree</cite> in the <cite>unified_planning</cite> library.</p>
-<p>Since the <cite>FNode</cite> is immutable and the same <cite>expression</cite> can be used in more than one <cite>expression tree</cite>, it
-is actually a <cite>DAG</cite>, but the <cite>single expression</cite> can be seen as a <cite>tree</cite> for simplicity.</p>
-<p>All the expressions are managed by the <code class="xref py py-func docutils literal notranslate"><span class="pre">ExpressionManager</span></code> in the <cite>Environment</cite>, so this class should never
-be instantiated or modified by the user.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.get_nary_expression_string">
-<span class="sig-name descname"><span class="pre">get_nary_expression_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">op</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode" title="unified_planning.model.fnode.FNode"><span class="pre">FNode</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.get_nary_expression_string"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.get_nary_expression_string" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.node_id">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.node_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the <cite>id</cite> of this expression.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.node_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">node_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">OperatorKind</span></em><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.node_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the <cite>OperatorKind</cite> that defines the semantic of this expression.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.environment">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">environment</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Environment</span></em><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.environment" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the <cite>Environment</cite> in which this expression exists.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.args">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode" title="unified_planning.model.fnode.FNode"><span class="pre">FNode</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.args" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the subexpressions of this expression.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Type</span></em><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.type" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the <cite>Type</cite> of this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.arg">
-<span class="sig-name descname"><span class="pre">arg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode" title="unified_planning.model.fnode.FNode"><span class="pre">FNode</span></a></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.arg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.arg" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the given subexpression at the given position.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>idx</strong> – The <cite>index</cite> of the wanted subexpression.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>The expression at the position <cite>idx</cite>.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_constant">
-<span class="sig-name descname"><span class="pre">is_constant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_constant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns <cite>True</cite> if the expression is a constant, <cite>False</cite> otherwise.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.constant_value">
-<span class="sig-name descname"><span class="pre">constant_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">bool</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Fraction</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.constant_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.constant_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the constant value stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.bool_constant_value">
-<span class="sig-name descname"><span class="pre">bool_constant_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.bool_constant_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.bool_constant_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return constant <cite>boolean</cite> value stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.int_constant_value">
-<span class="sig-name descname"><span class="pre">int_constant_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.int_constant_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.int_constant_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return constant <cite>integer</cite> value stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.real_constant_value">
-<span class="sig-name descname"><span class="pre">real_constant_value</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Fraction</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.real_constant_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.real_constant_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return constant <cite>real</cite> value stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.fluent">
-<span class="sig-name descname"><span class="pre">fluent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Fluent</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.fluent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.fluent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <cite>Fluent</cite> stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.parameter">
-<span class="sig-name descname"><span class="pre">parameter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Parameter</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.parameter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.parameter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <cite>Parameter</cite> stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.variable">
-<span class="sig-name descname"><span class="pre">variable</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Variable</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.variable"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.variable" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <cite>Variable</cite> stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.variables">
-<span class="sig-name descname"><span class="pre">variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Variable</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.variables"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.variables" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <cite>Variables</cite> of the <cite>Exists</cite> or <cite>Forall</cite>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.object">
-<span class="sig-name descname"><span class="pre">object</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Object</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.object"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.object" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <cite>Object</cite> stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.timing">
-<span class="sig-name descname"><span class="pre">timing</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Timing</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.timing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.timing" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <cite>Timing</cite> stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.agent">
-<span class="sig-name descname"><span class="pre">agent</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Agent</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.agent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.agent" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return the <cite>Agent</cite> stored in this expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.simplify">
-<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode" title="unified_planning.model.fnode.FNode"><span class="pre">FNode</span></a></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.simplify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.simplify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the simplified version of this expression.</p>
-<p>The simplification is done just by constant propagation by the <code class="xref py py-class docutils literal notranslate"><span class="pre">Simplifier</span></code></p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_bool_constant">
-<span class="sig-name descname"><span class="pre">is_bool_constant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_bool_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_bool_constant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the expression is a <cite>boolean</cite> constant.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_int_constant">
-<span class="sig-name descname"><span class="pre">is_int_constant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_int_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_int_constant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the expression is an <cite>integer</cite> constant.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_real_constant">
-<span class="sig-name descname"><span class="pre">is_real_constant</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_real_constant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_real_constant" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the expression is a <cite>real</cite> constant.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_true">
-<span class="sig-name descname"><span class="pre">is_true</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_true"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_true" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the expression is the <cite>True</cite> Boolean constant.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_false">
-<span class="sig-name descname"><span class="pre">is_false</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_false"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_false" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the expression is the <cite>False</cite> Boolean constant.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_and">
-<span class="sig-name descname"><span class="pre">is_and</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_and"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_and" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>And</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_or">
-<span class="sig-name descname"><span class="pre">is_or</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_or"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_or" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Or</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_not">
-<span class="sig-name descname"><span class="pre">is_not</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_not"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_not" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Not</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_implies">
-<span class="sig-name descname"><span class="pre">is_implies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_implies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_implies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Implies</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_iff">
-<span class="sig-name descname"><span class="pre">is_iff</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_iff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_iff" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Iff</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_exists">
-<span class="sig-name descname"><span class="pre">is_exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_exists" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Exists</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_forall">
-<span class="sig-name descname"><span class="pre">is_forall</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_forall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_forall" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Forall</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_fluent_exp">
-<span class="sig-name descname"><span class="pre">is_fluent_exp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_fluent_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_fluent_exp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is a <code class="xref py py-class docutils literal notranslate"><span class="pre">Fluent</span></code> Expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_parameter_exp">
-<span class="sig-name descname"><span class="pre">is_parameter_exp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_parameter_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_parameter_exp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is an <code class="xref py py-func docutils literal notranslate"><span class="pre">action</span> <span class="pre">parameter</span></code>.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_variable_exp">
-<span class="sig-name descname"><span class="pre">is_variable_exp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_variable_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_variable_exp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is a <code class="xref py py-class docutils literal notranslate"><span class="pre">Variable</span></code> Expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_object_exp">
-<span class="sig-name descname"><span class="pre">is_object_exp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_object_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_object_exp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is an <code class="xref py py-class docutils literal notranslate"><span class="pre">Object</span></code> Expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_timing_exp">
-<span class="sig-name descname"><span class="pre">is_timing_exp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_timing_exp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_timing_exp" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is a <code class="xref py py-class docutils literal notranslate"><span class="pre">Timing</span></code> Expression.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_plus">
-<span class="sig-name descname"><span class="pre">is_plus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_plus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_plus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Plus</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_minus">
-<span class="sig-name descname"><span class="pre">is_minus</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_minus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_minus" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Minus</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_times">
-<span class="sig-name descname"><span class="pre">is_times</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_times" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Times</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_div">
-<span class="sig-name descname"><span class="pre">is_div</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_div"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_div" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Div</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_equals">
-<span class="sig-name descname"><span class="pre">is_equals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_equals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_equals" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>Equals</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_le">
-<span class="sig-name descname"><span class="pre">is_le</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_le"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_le" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>LE</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_lt">
-<span class="sig-name descname"><span class="pre">is_lt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_lt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_lt" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>LT</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_dot">
-<span class="sig-name descname"><span class="pre">is_dot</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.is_dot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_dot" title="Permalink to this definition">¶</a></dt>
-<dd><p>Test whether the node is the <cite>DOT</cite> operator.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Equals">
-<span class="sig-name descname"><span class="pre">Equals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.Equals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Equals" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.And">
-<span class="sig-name descname"><span class="pre">And</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.And"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.And" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Or">
-<span class="sig-name descname"><span class="pre">Or</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.Or"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Or" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Not">
-<span class="sig-name descname"><span class="pre">Not</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.Not"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Not" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Xor">
-<span class="sig-name descname"><span class="pre">Xor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">other</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.Xor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Xor" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Implies">
-<span class="sig-name descname"><span class="pre">Implies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.Implies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Implies" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Iff">
-<span class="sig-name descname"><span class="pre">Iff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">right</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/unified_planning/model/fnode.html#FNode.Iff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Iff" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.get_fluent_name_at_state">
 <span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">get_fluent_name_at_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluent_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#get_fluent_name_at_state"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.get_fluent_name_at_state" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the variable name for a Fluent, at timestep t</p>
@@ -560,6 +108,20 @@ t (int): timestep</p>
 t (int): timestep</p>
 </dd>
 <dt>Returns:</dt><dd><p>z3.Bool: a Bool for the fluent or action at time ‘t’, if a bool with that name exists then returns a reference to that bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.__convert_FNODE_args">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">__convert_FNODE_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#__convert_FNODE_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.__convert_FNODE_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles recursively calling convert_FNODE_to_Z3 for each FNODE argument</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>args (FNODE.args): An FNODE’s arguments
+t (int): current timestep
+r2exists_tuple (Tuple, optional): Tuple of values required for handling chained variables for relaxed relaxed ThereExists parallelism. Defaults to None.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Array: Array of z3 expressions</p>
 </dd>
 </dl>
 </dd></dl>
@@ -603,6 +165,24 @@ Extra information is needed due to chained variables</p>
 val_name (String): Information required from tuple</p>
 </dd>
 <dt>Returns:</dt><dd><p>int or Bool or List: action index, or is_effect, or fluents list, or actions list</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="up_SMT_engine.helper_functions.FNODEHelperFunctions.__create_stated_fluent_instance">
+<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.helper_functions.FNODEHelperFunctions.</span></span><span class="sig-name descname"><span class="pre">__create_stated_fluent_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluent</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#__create_stated_fluent_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.__create_stated_fluent_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a Bool, Real or Int for the fluent at time ‘t’, if a value with that name exists then returns a reference
+This effectively both grounds a fluent, and transforms it into a variable representing that fluent at time t.</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Args:</dt><dd><p>fluent (FNODE.fluent): Fluent contained by FNODE
+args (FNODE.args): Fluent arguments
+t (int): current timestep
+r2exists_tuple (Tuple, optional): Tuple used to convey information needed for converting an FNODE to z3 for relaxed relaxed ThereExists encoding. Defaults to None.</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3.Bool or z3.Real or z3.Int: Grounded variable corresponding to fluent at timestep t</p>
 </dd>
 </dl>
 </div></blockquote>
@@ -691,75 +271,13 @@ fluent_basename (String): Name of fluent</p>
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">up_SMT_engine.helper_functions.FNODEHelperFunctions</a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Bool"><code class="docutils literal notranslate"><span class="pre">Bool()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Real"><code class="docutils literal notranslate"><span class="pre">Real()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Int"><code class="docutils literal notranslate"><span class="pre">Int()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Implies"><code class="docutils literal notranslate"><span class="pre">Implies()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.And"><code class="docutils literal notranslate"><span class="pre">And()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Or"><code class="docutils literal notranslate"><span class="pre">Or()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Not"><code class="docutils literal notranslate"><span class="pre">Not()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.Exists"><code class="docutils literal notranslate"><span class="pre">Exists()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.ForAll"><code class="docutils literal notranslate"><span class="pre">ForAll()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode"><code class="docutils literal notranslate"><span class="pre">FNode</span></code></a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.get_nary_expression_string"><code class="docutils literal notranslate"><span class="pre">FNode.get_nary_expression_string()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.node_id"><code class="docutils literal notranslate"><span class="pre">FNode.node_id</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.node_type"><code class="docutils literal notranslate"><span class="pre">FNode.node_type</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.environment"><code class="docutils literal notranslate"><span class="pre">FNode.environment</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.args"><code class="docutils literal notranslate"><span class="pre">FNode.args</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.type"><code class="docutils literal notranslate"><span class="pre">FNode.type</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.arg"><code class="docutils literal notranslate"><span class="pre">FNode.arg()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_constant"><code class="docutils literal notranslate"><span class="pre">FNode.is_constant()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.constant_value"><code class="docutils literal notranslate"><span class="pre">FNode.constant_value()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.bool_constant_value"><code class="docutils literal notranslate"><span class="pre">FNode.bool_constant_value()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.int_constant_value"><code class="docutils literal notranslate"><span class="pre">FNode.int_constant_value()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.real_constant_value"><code class="docutils literal notranslate"><span class="pre">FNode.real_constant_value()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.fluent"><code class="docutils literal notranslate"><span class="pre">FNode.fluent()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.parameter"><code class="docutils literal notranslate"><span class="pre">FNode.parameter()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.variable"><code class="docutils literal notranslate"><span class="pre">FNode.variable()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.variables"><code class="docutils literal notranslate"><span class="pre">FNode.variables()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.object"><code class="docutils literal notranslate"><span class="pre">FNode.object()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.timing"><code class="docutils literal notranslate"><span class="pre">FNode.timing()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.agent"><code class="docutils literal notranslate"><span class="pre">FNode.agent()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.simplify"><code class="docutils literal notranslate"><span class="pre">FNode.simplify()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_bool_constant"><code class="docutils literal notranslate"><span class="pre">FNode.is_bool_constant()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_int_constant"><code class="docutils literal notranslate"><span class="pre">FNode.is_int_constant()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_real_constant"><code class="docutils literal notranslate"><span class="pre">FNode.is_real_constant()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_true"><code class="docutils literal notranslate"><span class="pre">FNode.is_true()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_false"><code class="docutils literal notranslate"><span class="pre">FNode.is_false()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_and"><code class="docutils literal notranslate"><span class="pre">FNode.is_and()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_or"><code class="docutils literal notranslate"><span class="pre">FNode.is_or()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_not"><code class="docutils literal notranslate"><span class="pre">FNode.is_not()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_implies"><code class="docutils literal notranslate"><span class="pre">FNode.is_implies()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_iff"><code class="docutils literal notranslate"><span class="pre">FNode.is_iff()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_exists"><code class="docutils literal notranslate"><span class="pre">FNode.is_exists()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_forall"><code class="docutils literal notranslate"><span class="pre">FNode.is_forall()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_fluent_exp"><code class="docutils literal notranslate"><span class="pre">FNode.is_fluent_exp()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_parameter_exp"><code class="docutils literal notranslate"><span class="pre">FNode.is_parameter_exp()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_variable_exp"><code class="docutils literal notranslate"><span class="pre">FNode.is_variable_exp()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_object_exp"><code class="docutils literal notranslate"><span class="pre">FNode.is_object_exp()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_timing_exp"><code class="docutils literal notranslate"><span class="pre">FNode.is_timing_exp()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_plus"><code class="docutils literal notranslate"><span class="pre">FNode.is_plus()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_minus"><code class="docutils literal notranslate"><span class="pre">FNode.is_minus()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_times"><code class="docutils literal notranslate"><span class="pre">FNode.is_times()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_div"><code class="docutils literal notranslate"><span class="pre">FNode.is_div()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_equals"><code class="docutils literal notranslate"><span class="pre">FNode.is_equals()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_le"><code class="docutils literal notranslate"><span class="pre">FNode.is_le()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_lt"><code class="docutils literal notranslate"><span class="pre">FNode.is_lt()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.is_dot"><code class="docutils literal notranslate"><span class="pre">FNode.is_dot()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Equals"><code class="docutils literal notranslate"><span class="pre">FNode.Equals()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.And"><code class="docutils literal notranslate"><span class="pre">FNode.And()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Or"><code class="docutils literal notranslate"><span class="pre">FNode.Or()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Not"><code class="docutils literal notranslate"><span class="pre">FNode.Not()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Xor"><code class="docutils literal notranslate"><span class="pre">FNode.Xor()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Implies"><code class="docutils literal notranslate"><span class="pre">FNode.Implies()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.FNode.Iff"><code class="docutils literal notranslate"><span class="pre">FNode.Iff()</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.get_fluent_name_at_state"><code class="docutils literal notranslate"><span class="pre">get_fluent_name_at_state()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.create_stated_action_instance"><code class="docutils literal notranslate"><span class="pre">create_stated_action_instance()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.__convert_FNODE_args"><code class="docutils literal notranslate"><span class="pre">__convert_FNODE_args()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.get_effected_fluent_name"><code class="docutils literal notranslate"><span class="pre">get_effected_fluent_name()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.createR2ExistsTuple"><code class="docutils literal notranslate"><span class="pre">createR2ExistsTuple()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.getR2ExistsTupleValue"><code class="docutils literal notranslate"><span class="pre">getR2ExistsTupleValue()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.__create_stated_fluent_instance"><code class="docutils literal notranslate"><span class="pre">__create_stated_fluent_instance()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.convert_FNODE_to_Z3"><code class="docutils literal notranslate"><span class="pre">convert_FNODE_to_Z3()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.convert_effect_to_Z3"><code class="docutils literal notranslate"><span class="pre">convert_effect_to_Z3()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.helper_functions.FNODEHelperFunctions.get_base_fluent_name"><code class="docutils literal notranslate"><span class="pre">get_base_fluent_name()</span></code></a></li>

@@ -59,99 +59,6 @@
 </tr>
 </tbody>
 </table>
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.And">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.BaseAction.</span></span><span class="sig-name descname"><span class="pre">And</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#And"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.And" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 and-expression or and-probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">And(p, q, r)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">And(p__0, p__1, p__2, p__3, p__4)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.Implies">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.BaseAction.</span></span><span class="sig-name descname"><span class="pre">Implies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Implies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.Implies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 implies expression.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Implies</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-<span class="go">Implies(p, q)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.Bool">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.BaseAction.</span></span><span class="sig-name descname"><span class="pre">Bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.Bool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Boolean constant named <cite>name</cite>. If <cite>ctx=None</cite>, then the global context is used.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-<span class="go">And(p, q)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.convert_FNODE_to_Z3">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.BaseAction.</span></span><span class="sig-name descname"><span class="pre">convert_FNODE_to_Z3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FNODE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#convert_FNODE_to_Z3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.convert_FNODE_to_Z3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert FNODE to z3 expression equivalent</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>FNODE (FNODE): AIPLAN4EU API object used to express logical relations between fluents and other objects
-t (int): current timestep
-r2exists_tuple (Tuple, optional): Tuple used to convey information needed for converting an FNODE to z3 for relaxed relaxed ThereExists encoding. Defaults to None.</p>
-</dd>
-<dt>Raises:</dt><dd><p>Exception: Raise exception when FNODE does not match expected logical relation structure</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 expression: Equivalent expression expressued using z3</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.search_fluents_list">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.BaseAction.</span></span><span class="sig-name descname"><span class="pre">search_fluents_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluent_basename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#search_fluents_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.search_fluents_list" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return fluent object corresponding to basename, returns fluent if matched, None if no match</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
-fluent_basename (String): Name of fluent</p>
-</dd>
-<dt>Returns:</dt><dd><p>BaseFluent or BaseFluent subclass: Fluent corresponding to the fluent basename</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.create_fluent_condition_tuple">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.BaseAction.</span></span><span class="sig-name descname"><span class="pre">create_fluent_condition_tuple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">effect</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#create_fluent_condition_tuple"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.create_fluent_condition_tuple" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function used to extract and package useful effect information before passing to a Fluent class for
-generating frame axiom constraints</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>effect (unified-planning.Model.effect): Effect, changing a fluent value, with optional condition</p>
-</dd>
-<dt>Returns:</dt><dd><p>Tuple: (grounded fluent basename, effect condition as FNODE expression)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.convert_effect_to_Z3">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.BaseAction.</span></span><span class="sig-name descname"><span class="pre">convert_effect_to_Z3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">effect</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#convert_effect_to_Z3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.convert_effect_to_Z3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Function used to convert an Effect object into Z3 equivalent expression for a given time t</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>effect (unified-planning.Model.effect): The effect to be converted
-t (int): current timestep
-r2exists_tuple (Tuple, optional): Tuple used to convey information needed for converting an FNODE to z3 for relaxed relaxed ThereExists encoding. Defaults to None.</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 expression: An action’s effect on a fluent expressed as a z3 expression at timestep t</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.BaseAction">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.BaseAction.</span></span><span class="sig-name descname"><span class="pre">BaseAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.BaseAction" title="Permalink to this definition">¶</a></dt>
@@ -192,6 +99,34 @@ r2exists_tuple (Tuple, optional): Tuple used to convey information needed for co
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.BaseAction.__get_effects_at_t">
+<span class="sig-name descname"><span class="pre">__get_effects_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.BaseAction.__get_effects_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Each effect has three FNODE structures, the condition (optional, makes effect conditional), fluent (the stated variable to be changed)
+and the value (the new fluent value). These are separately converted into Z3, and returned as Implies(condition, (fluent == value))
+These statements are And’d together, as the set of effects of the action.
+n.b. The fluents in the ‘fluent’ part of the effect are in the next state (time + 1), because they are the result of
+the current action, while all other fluents are in the current state</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the effects of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.BaseAction.__get_causal_axioms_at_t">
+<span class="sig-name descname"><span class="pre">__get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.BaseAction.__get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>The causal axioms assert the effects, given the action occurs</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.BaseAction.get_causal_axioms_up_to_t">
 <span class="sig-name descname"><span class="pre">get_causal_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/BaseAction.html#BaseAction.get_causal_axioms_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.BaseAction.get_causal_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate the list of causal axioms for a problem of length up to timestep t</p>
@@ -211,6 +146,19 @@ r2exists_tuple (Tuple, optional): Tuple used to convey information needed for co
 <dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
 </dd>
 <dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.BaseAction.BaseAction.__get_precondition_constraints_at_t">
+<span class="sig-name descname"><span class="pre">__get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.BaseAction.BaseAction.__get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the precondition constraints for this action at timestep t
+Precondition constraint is: action occuring at timestep t implies preconditions are true at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints for this action at timestep t</p>
 </dd>
 </dl>
 </dd></dl>
@@ -277,19 +225,15 @@ This is part of the process for sharing the information ‘which actions affect 
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">up_SMT_engine.actions.BaseAction</a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.And"><code class="docutils literal notranslate"><span class="pre">And()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.Implies"><code class="docutils literal notranslate"><span class="pre">Implies()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.Bool"><code class="docutils literal notranslate"><span class="pre">Bool()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.convert_FNODE_to_Z3"><code class="docutils literal notranslate"><span class="pre">convert_FNODE_to_Z3()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.search_fluents_list"><code class="docutils literal notranslate"><span class="pre">search_fluents_list()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.create_fluent_condition_tuple"><code class="docutils literal notranslate"><span class="pre">create_fluent_condition_tuple()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.convert_effect_to_Z3"><code class="docutils literal notranslate"><span class="pre">convert_effect_to_Z3()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction"><code class="docutils literal notranslate"><span class="pre">BaseAction</span></code></a><ul>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.get_name"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_name()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.check_name_match"><code class="docutils literal notranslate"><span class="pre">BaseAction.check_name_match()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.get_action_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_action_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.__get_effects_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.__get_effects_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.__get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.__get_causal_axioms_at_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.get_causal_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_causal_axioms_up_to_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_causal_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.__get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.__get_precondition_constraints_at_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.get_precondition_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_precondition_constraints_up_to_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_precondition_constraints_at_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.actions.BaseAction.BaseAction.get_effected_fluent_basename_condition_tuples"><code class="docutils literal notranslate"><span class="pre">BaseAction.get_effected_fluent_basename_condition_tuples()</span></code></a></li>

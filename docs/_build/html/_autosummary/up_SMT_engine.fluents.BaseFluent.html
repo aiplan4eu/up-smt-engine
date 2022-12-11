@@ -59,112 +59,6 @@
 </tr>
 </tbody>
 </table>
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.And">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">And</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#And"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.And" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 and-expression or and-probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">And(p, q, r)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">And(p__0, p__1, p__2, p__3, p__4)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.Or">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">Or</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Or"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.Or" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 or-expression or or-probe.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q r&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Or</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-<span class="go">Or(p, q, r)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">P</span> <span class="o">=</span> <span class="n">BoolVector</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Or</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
-<span class="go">Or(p__0, p__1, p__2, p__3, p__4)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.Implies">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">Implies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Implies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.Implies" title="Permalink to this definition">¶</a></dt>
-<dd><p>Create a Z3 implies expression.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="o">=</span> <span class="n">Bools</span><span class="p">(</span><span class="s1">&#39;p q&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">Implies</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-<span class="go">Implies(p, q)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.Real">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">Real</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Real"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.Real" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a real constant named <cite>name</cite>. If <cite>ctx=None</cite>, then the global context is used.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Real</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_real</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_real</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.Int">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">Int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Int"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.Int" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return an integer constant named <cite>name</cite>. If <cite>ctx=None</cite>, then the global context is used.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">Int</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_int</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-<span class="go">True</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">is_int</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-<span class="go">True</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.Bool">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">Bool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/z3/z3.html#Bool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.Bool" title="Permalink to this definition">¶</a></dt>
-<dd><p>Return a Boolean constant named <cite>name</cite>. If <cite>ctx=None</cite>, then the global context is used.</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;p&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">q</span> <span class="o">=</span> <span class="n">Bool</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">And</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
-<span class="go">And(p, q)</span>
-</pre></div>
-</div>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.convert_FNODE_to_Z3">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">convert_FNODE_to_Z3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">FNODE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#convert_FNODE_to_Z3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.convert_FNODE_to_Z3" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert FNODE to z3 expression equivalent</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>FNODE (FNODE): AIPLAN4EU API object used to express logical relations between fluents and other objects
-t (int): current timestep
-r2exists_tuple (Tuple, optional): Tuple used to convey information needed for converting an FNODE to z3 for relaxed relaxed ThereExists encoding. Defaults to None.</p>
-</dd>
-<dt>Raises:</dt><dd><p>Exception: Raise exception when FNODE does not match expected logical relation structure</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3 expression: Equivalent expression expressued using z3</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.create_stated_action_instance">
-<span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">create_stated_action_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/helper_functions/FNODEHelperFunctions.html#create_stated_action_instance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.create_stated_action_instance" title="Permalink to this definition">¶</a></dt>
-<dd><p>Creates a Bool for the fluent or action at time ‘t’, if a bool with that name exists then returns a reference to that bool</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>action (String): Action name
-t (int): timestep</p>
-</dd>
-<dt>Returns:</dt><dd><p>z3.Bool: a Bool for the fluent or action at time ‘t’, if a bool with that name exists then returns a reference to that bool</p>
-</dd>
-</dl>
-</dd></dl>
-
 <dl class="py class">
 <dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">BaseFluent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">API_fluent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent" title="Permalink to this definition">¶</a></dt>
@@ -179,6 +73,18 @@ Able to handle all methods for sequential, and therefore most parallel plans</p>
 <dt>Args:</dt><dd><p>name (String): name to match</p>
 </dd>
 <dt>Returns:</dt><dd><p>Bool: True if match, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_predicate_at_t">
+<span class="sig-name descname"><span class="pre">__get_predicate_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_predicate_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to generate this fluent’s Bool representing its state at t = ‘timestep’</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Timestep value for the variable</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3.Real or z3.Int or z3.Bool: Variable expression of value of Fluent at timestep t</p>
 </dd>
 </dl>
 </dd></dl>
@@ -217,6 +123,20 @@ condition (FNODE): FNODE expression for action’s effect condition affecting th
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_bound_constraints_at_t">
+<span class="sig-name descname"><span class="pre">__get_bound_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_lower</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_bound_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to generate bound constraints for either upper, or lower bound at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Timestep value
+bound (Numeric type): upper or lower bound value
+is_lower (bool): True if is lower, False if is upper bound</p>
+</dd>
+<dt>Returns:</dt><dd><p>_type_: _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_up_to_t">
 <span class="sig-name descname"><span class="pre">get_bound_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.get_bound_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
 <dd><p>Method used to generate all bound constraints up to timestep t, can be called if no constraints are needed</p>
@@ -236,6 +156,18 @@ condition (FNODE): FNODE expression for action’s effect condition affecting th
 <dt>Args:</dt><dd><p>timestep (int): current timestep</p>
 </dd>
 <dt>Returns:</dt><dd><p>z3 expression: z3 expression for bound constraints at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.__generate_frame_axiom_constraints_at_t">
+<span class="sig-name descname"><span class="pre">__generate_frame_axiom_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__generate_frame_axiom_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used internally to generate the frame axiom constraints for this fluent at time timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expression for Frame axiom constraints at timestep t</p>
 </dd>
 </dl>
 </dd></dl>
@@ -279,21 +211,16 @@ condition (FNODE): FNODE expression for action’s effect condition affecting th
     <h3><a href="../index.html">Table of Contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#">up_SMT_engine.fluents.BaseFluent</a><ul>
-<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.And"><code class="docutils literal notranslate"><span class="pre">And()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.Or"><code class="docutils literal notranslate"><span class="pre">Or()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.Implies"><code class="docutils literal notranslate"><span class="pre">Implies()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.Real"><code class="docutils literal notranslate"><span class="pre">Real()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.Int"><code class="docutils literal notranslate"><span class="pre">Int()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.Bool"><code class="docutils literal notranslate"><span class="pre">Bool()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.convert_FNODE_to_Z3"><code class="docutils literal notranslate"><span class="pre">convert_FNODE_to_Z3()</span></code></a></li>
-<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.create_stated_action_instance"><code class="docutils literal notranslate"><span class="pre">create_stated_action_instance()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent"><code class="docutils literal notranslate"><span class="pre">BaseFluent</span></code></a><ul>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.check_name_match"><code class="docutils literal notranslate"><span class="pre">BaseFluent.check_name_match()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_predicate_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.__get_predicate_at_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_fluents_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.get_fluents_up_to_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.add_action_condition"><code class="docutils literal notranslate"><span class="pre">BaseFluent.add_action_condition()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_action_conditions"><code class="docutils literal notranslate"><span class="pre">BaseFluent.get_action_conditions()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_bound_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.__get_bound_constraints_at_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.get_bound_constraints_up_to_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.get_bound_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__generate_frame_axiom_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.__generate_frame_axiom_constraints_at_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.generate_frame_axiom_constraints_up_to_t()</span></code></a></li>
 <li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.generate_frame_axiom_constraints_at_t()</span></code></a></li>
 </ul>

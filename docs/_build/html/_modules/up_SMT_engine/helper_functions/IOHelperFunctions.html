@@ -45,7 +45,7 @@
 <span class="kn">import</span> <span class="nn">csv</span>
 
 
-<div class="viewcode-block" id="PDDLToProblem"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.SMTPlanner.PDDLToProblem">[docs]</a><span class="k">def</span> <span class="nf">PDDLToProblem</span><span class="p">(</span><span class="n">domain_path</span><span class="p">,</span> <span class="n">problem_path</span><span class="p">):</span>
+<div class="viewcode-block" id="PDDLToProblem"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.helper_functions.IOHelperFunctions.PDDLToProblem">[docs]</a><span class="k">def</span> <span class="nf">PDDLToProblem</span><span class="p">(</span><span class="n">domain_path</span><span class="p">,</span> <span class="n">problem_path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Using the path of a domain and instance file parse them into a unified planning problem object. Used by the test_runner.</span>
 
 <span class="sd">    Args:</span>
@@ -66,7 +66,7 @@
     <span class="k">return</span> <span class="n">problem</span></div>
 
 
-<div class="viewcode-block" id="writeSolutionToFile"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.SMTPlanner.writeSolutionToFile">[docs]</a><span class="k">def</span> <span class="nf">writeSolutionToFile</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">solution_path</span><span class="p">):</span>
+<div class="viewcode-block" id="writeSolutionToFile"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.helper_functions.IOHelperFunctions.writeSolutionToFile">[docs]</a><span class="k">def</span> <span class="nf">writeSolutionToFile</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">solution_path</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Save plan to a txt file, in a format which may be verified by VAL. Only used by the test_runner</span>
 
 <span class="sd">    Args:</span>
@@ -89,7 +89,7 @@
 
 
 <span class="c1"># Save stats to CSV file</span>
-<div class="viewcode-block" id="save_stats_to_file"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.SMTPlanner.save_stats_to_file">[docs]</a><span class="k">def</span> <span class="nf">save_stats_to_file</span><span class="p">(</span>
+<div class="viewcode-block" id="save_stats_to_file"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.helper_functions.IOHelperFunctions.save_stats_to_file">[docs]</a><span class="k">def</span> <span class="nf">save_stats_to_file</span><span class="p">(</span>
     <span class="n">formula_data</span><span class="p">,</span> <span class="n">eval_data</span><span class="p">,</span> <span class="n">stats_output</span><span class="p">,</span> <span class="n">parallelism</span><span class="p">,</span> <span class="n">is_incremental</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Save performance statistics to a designated file. Appends onto existing files.</span>
@@ -112,36 +112,28 @@
         <span class="n">current_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;variables_per_step&quot;</span><span class="p">][</span><span class="n">step</span><span class="p">])</span>
         <span class="n">current_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;clauses_per_step&quot;</span><span class="p">][</span><span class="n">step</span><span class="p">])</span>
         <span class="n">current_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;mutexes_per_step&quot;</span><span class="p">][</span><span class="n">step</span><span class="p">])</span>
+        <span class="n">current_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;instance&quot;</span><span class="p">)</span>
+        <span class="n">current_row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;domain&quot;</span><span class="p">)</span>
         <span class="n">csv_rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_row</span><span class="p">)</span>
-    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">stats_output</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;UTF8&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">stats_output</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;UTF8&quot;</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
         <span class="n">w</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvfile</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">file_was_created</span><span class="p">:</span>
-            <span class="n">w</span><span class="o">.</span><span class="n">writerow</span><span class="p">(</span>
-                <span class="p">[</span>
-                    <span class="s2">&quot;Encoding&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;is_incremental&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Steps&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Solving Time per Step&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Variables per Step&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Clauses per Step&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;Mutexes per Step&quot;</span><span class="p">,</span>
-                <span class="p">]</span>
-            <span class="p">)</span>
+        <span class="c1"># This makes collating data more difficult so skip for now</span>
+        <span class="c1"># if file_was_created:</span>
+        <span class="c1">#     w.writerow(</span>
+        <span class="c1">#         [</span>
+        <span class="c1">#             &quot;Encoding&quot;,</span>
+        <span class="c1">#             &quot;is_incremental&quot;,</span>
+        <span class="c1">#             &quot;Steps&quot;,</span>
+        <span class="c1">#             &quot;Solving Time per Step&quot;,</span>
+        <span class="c1">#             &quot;Variables per Step&quot;,</span>
+        <span class="c1">#             &quot;Clauses per Step&quot;,</span>
+        <span class="c1">#             &quot;Mutexes per Step&quot;,</span>
+        <span class="c1">#         ]</span>
+        <span class="c1">#     )</span>
         <span class="n">w</span><span class="o">.</span><span class="n">writerows</span><span class="p">(</span><span class="n">csv_rows</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="deleteFile"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.SMTPlanner.deleteFile">[docs]</a><span class="k">def</span> <span class="nf">deleteFile</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Function used to delete a file, used by test_runner</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        file_path (String): File path</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">file_path</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">file_path</span><span class="p">):</span>
-            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="print_eval_data"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.SMTPlanner.print_eval_data">[docs]</a><span class="k">def</span> <span class="nf">print_eval_data</span><span class="p">(</span><span class="n">eval_data</span><span class="p">):</span>
+<div class="viewcode-block" id="print_eval_data"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.helper_functions.IOHelperFunctions.print_eval_data">[docs]</a><span class="k">def</span> <span class="nf">print_eval_data</span><span class="p">(</span><span class="n">eval_data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Function used to print the time per each step</span>
 
 <span class="sd">    Args:</span>
@@ -154,7 +146,7 @@
         <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">{:&lt;8}</span><span class="s2"> </span><span class="si">{:&lt;20}</span><span class="s2"> </span><span class="si">{:&lt;15}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">eval_data</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">total_time</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="print_formula_data"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.SMTPlanner.print_formula_data">[docs]</a><span class="k">def</span> <span class="nf">print_formula_data</span><span class="p">(</span><span class="n">formula_data</span><span class="p">):</span>
+<div class="viewcode-block" id="print_formula_data"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.IOHelperFunctions.html#up_SMT_engine.helper_functions.IOHelperFunctions.print_formula_data">[docs]</a><span class="k">def</span> <span class="nf">print_formula_data</span><span class="p">(</span><span class="n">formula_data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Function used to print the formula data per each step</span>
 
 <span class="sd">    Args:</span>
