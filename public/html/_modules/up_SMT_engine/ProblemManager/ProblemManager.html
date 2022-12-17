@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>up_SMT_engine.ProblemManager.ProblemManager &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.ProblemManager.ProblemManager</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for up_SMT_engine.ProblemManager.ProblemManager</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Used for measuring performance per step</span>
+<span class="kn">import</span> <span class="nn">time</span> <span class="k">as</span> <span class="nn">system_time</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.actions.BaseAction</span> <span class="kn">import</span> <span class="n">BaseAction</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.actions.ForAllAction</span> <span class="kn">import</span> <span class="n">ForAllAction</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.actions.ThereExistsAction</span> <span class="kn">import</span> <span class="n">ThereExistsAction</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.actions.R2ExistsAction</span> <span class="kn">import</span> <span class="n">R2ExistsAction</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.FNODEHelperFunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_FNODE_to_Z3</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.FluentHelperFunctions</span> <span class="kn">import</span> <span class="n">handle_API_fluent</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.ProblemBuilder.BaseProblemBuilder</span> <span class="kn">import</span> <span class="n">BaseProblemBuilder</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.ProblemBuilder.ForAllProblemBuilder</span> <span class="kn">import</span> <span class="n">ForAllProblemBuilder</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.ProblemBuilder.ThereExistsProblemBuilder</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ThereExistsProblemBuilder</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.ProblemBuilder.R2EProblemBuilder</span> <span class="kn">import</span> <span class="n">R2EProblemBuilder</span>
+<span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">sat</span><span class="p">,</span> <span class="n">Solver</span>
+
+
+<div class="viewcode-block" id="ProblemManager"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager">[docs]</a><span class="k">class</span> <span class="nc">ProblemManager</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class used to handle Action and Fluent classes used to generate the clauses describing the problem for a SMT solver&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">grounded_problem</span><span class="p">,</span> <span class="n">parallel_choice</span><span class="o">=</span><span class="s2">&quot;sequential&quot;</span><span class="p">,</span> <span class="n">run_incremental</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialisation function used to generate the necessary classes. Actions, Fluents, and the ProblemBuilder have specialised subclasses for specific types of parallelism.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            grounded_problem (unified_planning.model.Problem): A planning problem with grounded actions</span>
+<span class="sd">            parallel_choice (str, optional): The choice of parallelism to implement for SMT solving. See SMTPlanner for more. Defaults to &quot;sequential&quot;.</span>
+<span class="sd">            run_incremental (bool, optional): Whether to run the solver incrementally. See SMTPlanner for more. Defaults to True.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># API representation of the PDDL problem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grounded_problem</span> <span class="o">=</span> <span class="n">grounded_problem</span>
+        <span class="c1"># String denoting choice of parallel execution</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">=</span> <span class="n">parallel_choice</span>
+        <span class="c1"># Array of fluent objects representing a smt fluent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Array of fluent objects representing a smt action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Current solver instance</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Satisfying model from the Solver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Boolean value, denotes whether the solver should preserve learned clauses between runs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span> <span class="o">=</span> <span class="n">run_incremental</span>
+        <span class="c1"># Time taken to add values to the solver and then solve</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_time</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="c1"># Number of steps in the current plan (including 0th step)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Tailored function to each version of parallelism designed to allow modular use of parallel executions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem_builder</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># Create a grounded fluent object for each grounding of an API fluent variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initialise_fluents</span><span class="p">()</span>
+        <span class="c1"># Create a grounded action object for each grounding of an API action variable</span>
+        <span class="c1"># Actions are pre-grounded so no further grounding is required</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__initialise_actions</span><span class="p">()</span>
+
+        <span class="c1"># For each action find all fluents affected. Send a tuple (action, condition) to be stored by the affected fluent. When the condition is satisfied</span>
+        <span class="c1"># that fluent may be affected by the action</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__share_effect_info</span><span class="p">()</span>
+        <span class="c1"># if ForAll parallelism is chosen we need to populate the all_fluents set for each action</span>
+        <span class="k">if</span> <span class="n">parallel_choice</span> <span class="o">==</span> <span class="s2">&quot;ForAll&quot;</span><span class="p">:</span>
+            <span class="c1"># For each action populate &#39;all_fluents&#39; sets. These sets contain all fluents in an action&#39;s preconditions, effect conditions and effects</span>
+            <span class="c1"># Using each fluent&#39;s action_condition pairs we can find which actions interfere</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__populate_all_fluents_sets</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_builder</span> <span class="o">=</span> <span class="n">ForAllProblemBuilder</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__create_initial_values</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">parallel_choice</span> <span class="o">==</span> <span class="s2">&quot;ThereExists&quot;</span><span class="p">:</span>
+            <span class="c1"># Populate this set first to avoid duplication of work when populating all fluents sets</span>
+            <span class="c1"># ThereExist actions require an &#39;affecting_fluents&#39; set, in addition to &#39;all_fluents&#39;. This is used to determine which actions affect</span>
+            <span class="c1"># eachother</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__populate_affecting_fluents_sets</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__populate_all_fluents_sets</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_builder</span> <span class="o">=</span> <span class="n">ThereExistsProblemBuilder</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__create_initial_values</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="n">parallel_choice</span> <span class="o">==</span> <span class="s2">&quot;relaxed_relaxed_ThereExists&quot;</span><span class="p">:</span>
+            <span class="c1"># Initialise the chained variables necessary for tracking value changes within a timestep in relaxed relaxed ThereExists parallelism</span>
+            <span class="c1"># For each fluent find set of affecting actions. For each affecting action create a unique chained variable. Order the chained variables</span>
+            <span class="c1"># according to the order of actions.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">__initialise_chained_variables</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_builder</span> <span class="o">=</span> <span class="n">R2EProblemBuilder</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__create_initial_values</span><span class="p">(),</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">problem_builder</span> <span class="o">=</span> <span class="n">BaseProblemBuilder</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__create_initial_values</span><span class="p">(),</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="ProblemManager.get_ordered_actions"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_ordered_actions">[docs]</a>    <span class="k">def</span> <span class="nf">get_ordered_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The ThereExists implementation uses an arbitrary total ordering over all actions. The ordering used is the</span>
+<span class="sd">        index of each action in smt_action</span>
+
+<span class="sd">            Returns:</span>
+<span class="sd">                List: Ordered list of actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span></div>
+
+<div class="viewcode-block" id="ProblemManager.is_solved"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.is_solved">[docs]</a>    <span class="k">def</span> <span class="nf">is_solved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if a satisfying model has been found</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Boolean: True if found, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">==</span> <span class="n">sat</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+<div class="viewcode-block" id="ProblemManager.print_results"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.print_results">[docs]</a>    <span class="k">def</span> <span class="nf">print_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Print the satisfying model if one exists&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span><span class="o">.</span><span class="n">model</span><span class="p">())</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No results exist&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProblemManager.get_results"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_results">[docs]</a>    <span class="k">def</span> <span class="nf">get_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return the satisfying model if one exists</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3.Model: The satisfying model</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span><span class="o">.</span><span class="n">model</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="ProblemManager.get_formula_data"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_formula_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_formula_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formula_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the formula data (part of the performance statistics) for the most recent step to a dictionary</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            formula_data (Dictionary): The dictionary of lists for formula data</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Total number of variables added to the solver equals the number of action instances + fluent instances + (if using relaxed relaxed exists) chained variable instances</span>
+            <span class="c1"># We have 1 grounded fluent instance per step, starting at step 0, 1 grounded action instance from step 1 (effectively), {size of set affecting a fluent} chained variables per step from step 1 (effectively)</span>
+            <span class="n">vars_per_step</span> <span class="o">=</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;relaxed_relaxed_ThereExists&quot;</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">fluent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">:</span>
+                    <span class="n">vars_per_step</span> <span class="o">+=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">fluent</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">)</span>
+            <span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;variables_per_step&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vars_per_step</span><span class="p">)</span>
+            <span class="c1"># Count the number of assertions added to the problem to approximate the space complexity</span>
+            <span class="c1"># n.b. for incremental solving we pop the goal clause if the problem is not SAT. There is always exactly one goal</span>
+            <span class="c1"># clause, so we add 1 if using incremental, and not SAT</span>
+            <span class="n">clauses_per_step</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span><span class="o">.</span><span class="n">assertions</span><span class="p">())</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_solved</span><span class="p">():</span>
+                <span class="n">clauses_per_step</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;clauses_per_step&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">clauses_per_step</span><span class="p">)</span>
+            <span class="c1"># Count the number of constraints between parallel actions per step to approximcate complexity</span>
+            <span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;mutexes_per_step&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">problem_builder</span><span class="o">.</span><span class="n">get_mutex_count</span><span class="p">()</span>
+            <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProblemManager.get_eval_data"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_eval_data">[docs]</a>    <span class="k">def</span> <span class="nf">get_eval_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">eval_data</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the evaluation data (part of the performance statistics) for the most recent step to a dictionary</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            eval_data (List): The evaluation data list</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">eval_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">run_time</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__initialise_fluents</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;For each ungrounded fluent create a grounded fluent, using either the BaseFluent or R2ExistsFluent class&quot;&quot;&quot;</span>
+        <span class="n">API_fluents</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grounded_problem</span><span class="o">.</span><span class="n">fluents</span>
+        <span class="k">for</span> <span class="n">ungrounded_fluent</span> <span class="ow">in</span> <span class="n">API_fluents</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+                <span class="n">handle_API_fluent</span><span class="p">(</span>
+                    <span class="n">ungrounded_fluent</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">grounded_problem</span><span class="o">.</span><span class="n">objects</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__initialise_actions</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Converts grounded unified-planning actions into BaseAction, ForAllAction, ThereExistsAction or R2ExistsAction objects, depending on the parallel choice&quot;&quot;&quot;</span>
+        <span class="n">API_actions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grounded_problem</span><span class="o">.</span><span class="n">actions</span>
+        <span class="k">for</span> <span class="n">API_action</span> <span class="ow">in</span> <span class="n">API_actions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;ForAll&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ForAllAction</span><span class="p">(</span><span class="n">API_action</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;ThereExists&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ThereExistsAction</span><span class="p">(</span><span class="n">API_action</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;relaxed_relaxed_ThereExists&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">R2ExistsAction</span><span class="p">(</span><span class="n">API_action</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BaseAction</span><span class="p">(</span><span class="n">API_action</span><span class="p">))</span>
+
+    <span class="k">def</span> <span class="nf">__share_effect_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handles sharing effect info from actions to fluents to enable fluents generating frame axiom constraitns&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">:</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">deliver_effect_tuples_to_Fluents</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__populate_all_fluents_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handles creating the set of fluents relevant to each action. This is only used for parallel encodings&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">:</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">populate_all_fluents_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__populate_affecting_fluents_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handles creating the set of fluents affected by each action. This is only used for ThereExists encodings&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">:</span>
+            <span class="n">action</span><span class="o">.</span><span class="n">populate_affecting_fluents_set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__initialise_chained_variables</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Initialise chained variables for all fluents. This is only used for relaxed relaxed ThereExists encodings&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">fluent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">:</span>
+            <span class="n">fluent</span><span class="o">.</span><span class="n">init_chained_vars</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__create_initial_values</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handles initial values, initial_values does computation so only call once&quot;&quot;&quot;</span>
+        <span class="n">z3_init_values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">API_init_values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grounded_problem</span><span class="o">.</span><span class="n">initial_values</span>
+        <span class="k">for</span> <span class="n">fluent_fnode</span> <span class="ow">in</span> <span class="n">API_init_values</span><span class="p">:</span>
+            <span class="n">z3_fluent</span> <span class="o">=</span> <span class="n">convert_FNODE_to_Z3</span><span class="p">(</span><span class="n">fluent_fnode</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">z3_val</span> <span class="o">=</span> <span class="n">convert_FNODE_to_Z3</span><span class="p">(</span><span class="n">API_init_values</span><span class="p">[</span><span class="n">fluent_fnode</span><span class="p">],</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">z3_init_values</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">z3_fluent</span> <span class="o">==</span> <span class="n">z3_val</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">z3_init_values</span>
+
+    <span class="k">def</span> <span class="nf">__create_goals</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">final_timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Handles goals, time must be equal to the final state considered for the current problem</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            final_timestep (int): Final timestep of the problem</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Clause: Clause repreesnting all goals</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fnode_goals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">grounded_problem</span><span class="o">.</span><span class="n">goals</span>
+        <span class="n">current_goals</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">fnode_goal</span> <span class="ow">in</span> <span class="n">fnode_goals</span><span class="p">:</span>
+            <span class="n">current_goals</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">convert_FNODE_to_Z3</span><span class="p">(</span><span class="n">fnode_goal</span><span class="p">,</span> <span class="n">final_timestep</span><span class="p">,</span> <span class="kc">None</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">And</span><span class="p">(</span><span class="n">current_goals</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ProblemManager.check_sat"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.check_sat">[docs]</a>    <span class="k">def</span> <span class="nf">check_sat</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">final_timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Populates SMT problem instance and checks if the instance is satisfiable</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            time (int): Plan length</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">system_time</span><span class="o">.</span><span class="n">process_time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">=</span> <span class="n">final_timestep</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="c1"># Debug info</span>
+        <span class="k">if</span> <span class="n">final_timestep</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Run &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">time</span><span class="p">))</span>
+            <span class="nb">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_mutexes</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span>
+                <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smt_fluent</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span><span class="p">)</span>
+                <span class="o">+</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smt_action</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_steps</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span><span class="o">.</span><span class="n">assertions</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">final_timestep</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1"># Reset the solver</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Create a problem instance for time t</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span> <span class="o">=</span> <span class="n">Solver</span><span class="p">()</span>
+
+        <span class="c1"># Use ProblemBuilder class tailored to parallelism choice to add the appropriate clauses to the problem</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">problem_builder</span><span class="o">.</span><span class="n">build</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span><span class="p">,</span> <span class="n">final_timestep</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__create_goals</span><span class="p">(</span><span class="n">final_timestep</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="c1"># Solve</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver_instance</span><span class="o">.</span><span class="n">check</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_time</span> <span class="o">=</span> <span class="n">system_time</span><span class="o">.</span><span class="n">process_time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.ProblemManager.ProblemManager</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

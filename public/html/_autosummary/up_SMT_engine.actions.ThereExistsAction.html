@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>up_SMT_engine.actions.ThereExistsAction &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="up_SMT_engine.fluents" href="up_SMT_engine.fluents.html" />
+    <link rel="prev" title="up_SMT_engine.actions.R2ExistsAction" href="up_SMT_engine.actions.R2ExistsAction.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.fluents.html" title="up_SMT_engine.fluents"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.actions.R2ExistsAction.html" title="up_SMT_engine.actions.R2ExistsAction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.actions.html" accesskey="U">up_SMT_engine.actions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.actions.ThereExistsAction</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-up_SMT_engine.actions.ThereExistsAction">
+<span id="up-smt-engine-actions-thereexistsaction"></span><h1>up_SMT_engine.actions.ThereExistsAction<a class="headerlink" href="#module-up_SMT_engine.actions.ThereExistsAction" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction" title="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ThereExistsAction</span></code></a>(grounded_action)</p></td>
+<td><p>Extension of BaseAction to support ThereExists parallelism, allowing more parallelism than ForAll</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.ThereExistsAction.</span></span><span class="sig-name descname"><span class="pre">ThereExistsAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.actions.BaseAction.html#up_SMT_engine.actions.BaseAction.BaseAction" title="up_SMT_engine.actions.BaseAction.BaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAction</span></code></a></p>
+<p>Extension of BaseAction to support ThereExists parallelism, allowing more parallelism than ForAll</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_matching_fluent_set">
+<span class="sig-name descname"><span class="pre">__get_matching_fluent_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name_set</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_matching_fluent_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to find the set of fluents matching a set of basenames</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+name_set (Set(String)): Set of basenames</p>
+</dd>
+<dt>Returns:</dt><dd><p>Set(BaseFluent or BaseFluent subclass): Set of fluents matching the basenames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_precondition_fluent_names">
+<span class="sig-name descname"><span class="pre">__get_precondition_fluent_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_precondition_fluent_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to find all fluents mentioned in preconditions. This is a coarse grained approach because
+each fluent’s semantics are discarded
+Used with __get_matching_fluent_set to get matching fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Set(String): Set of fluent basenames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_precondition_fluent_names">
+<span class="sig-name descname"><span class="pre">__get_effect_precondition_fluent_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_precondition_fluent_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to find all fluents mentioned in effect preconditions. This is a coarse grained approach because
+each fluent’s semantics are discarded.
+Effects without preconditions are skipped.
+Used with __get_matching_fluent_set to get matching fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Set(String): Set of fluent basenames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_fluent_names">
+<span class="sig-name descname"><span class="pre">__get_effect_fluent_names</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_fluent_names" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to find all fluents affected by an effect, including conditional effects
+This is also a coarse grained approach.
+Used with __get_matching_fluent_set to get matching fluent objects</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Set(String): Set of fluent basenames</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_affecting_fluents_set">
+<span class="sig-name descname"><span class="pre">populate_affecting_fluents_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.populate_affecting_fluents_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_affecting_fluents_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to populate the affecting_fluents set for an action</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of all fluents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_all_fluents_set">
+<span class="sig-name descname"><span class="pre">populate_all_fluents_set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.populate_all_fluents_set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_all_fluents_set" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to populate the all_fluents set for an action</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>fluents_list (List(BaseFluent or BaseFluent subclass)): List of all fluents</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_ThereExists_constraints_at_time_t">
+<span class="sig-name descname"><span class="pre">__get_ThereExists_constraints_at_time_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_actions</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_ThereExists_constraints_at_time_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to generate all parallelism constraints for this action for a ThereExists encoding
+Affecting actions are found by finding affecting actions of fluents in all_fluents set</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep
+ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_ThereExists_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_ThereExists_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_actions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.get_ThereExists_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_ThereExists_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get all ThereExists parallelism constraints over simultaneous actions up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep
+ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_ThereExists_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_ThereExists_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered_actions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/ThereExistsAction.html#ThereExistsAction.get_ThereExists_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_ThereExists_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to get all ThereExists parallelism constraints over simultaneous actions at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep
+ordered_actions (List(BaseAction or BaseAction subclass)): Ordered list of all actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of constraints expressing the ThereExists parallelism constraints over simultaneous actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">up_SMT_engine.actions.ThereExistsAction</a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_matching_fluent_set"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_matching_fluent_set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_precondition_fluent_names"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_precondition_fluent_names()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_precondition_fluent_names"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_effect_precondition_fluent_names()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_effect_fluent_names"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_effect_fluent_names()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_affecting_fluents_set"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.populate_affecting_fluents_set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.populate_all_fluents_set"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.populate_all_fluents_set()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.__get_ThereExists_constraints_at_time_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.__get_ThereExists_constraints_at_time_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_ThereExists_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_ThereExists_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.ThereExistsAction.ThereExistsAction.get_ThereExists_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">ThereExistsAction.get_ThereExists_constraints_at_t()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="up_SMT_engine.actions.R2ExistsAction.html"
+                          title="previous chapter">up_SMT_engine.actions.R2ExistsAction</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="up_SMT_engine.fluents.html"
+                          title="next chapter">up_SMT_engine.fluents</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/up_SMT_engine.actions.ThereExistsAction.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.fluents.html" title="up_SMT_engine.fluents"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.actions.R2ExistsAction.html" title="up_SMT_engine.actions.R2ExistsAction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.actions.html" >up_SMT_engine.actions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.actions.ThereExistsAction</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

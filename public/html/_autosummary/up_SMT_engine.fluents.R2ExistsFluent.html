@@ -1,0 +1,336 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>up_SMT_engine.fluents.R2ExistsFluent &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="up_SMT_engine.helper_functions" href="up_SMT_engine.helper_functions.html" />
+    <link rel="prev" title="up_SMT_engine.fluents.BaseFluent" href="up_SMT_engine.fluents.BaseFluent.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.helper_functions.html" title="up_SMT_engine.helper_functions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.fluents.BaseFluent.html" title="up_SMT_engine.fluents.BaseFluent"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.fluents.html" accesskey="U">up_SMT_engine.fluents</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.fluents.R2ExistsFluent</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-up_SMT_engine.fluents.R2ExistsFluent">
+<span id="up-smt-engine-fluents-r2existsfluent"></span><h1>up_SMT_engine.fluents.R2ExistsFluent<a class="headerlink" href="#module-up_SMT_engine.fluents.R2ExistsFluent" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent" title="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">R2ExistsFluent</span></code></a>(name, API_fluent)</p></td>
+<td><p>R2ExistsFluent inherits methods from BaseFluent, it handles fluents for relaxed relaxed ThereExists parallelism.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.R2ExistsFluent.</span></span><span class="sig-name descname"><span class="pre">R2ExistsFluent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">API_fluent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.fluents.BaseFluent.html#up_SMT_engine.fluents.BaseFluent.BaseFluent" title="up_SMT_engine.fluents.BaseFluent.BaseFluent"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseFluent</span></code></a></p>
+<p>R2ExistsFluent inherits methods from BaseFluent, it handles fluents for relaxed relaxed ThereExists parallelism. This subclass extends BaseFluent by adding chained variables.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__check_action_is_affecting">
+<span class="sig-name descname"><span class="pre">__check_action_is_affecting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__check_action_is_affecting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if an action affects this fluent according to the action_condition tuples list</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>action (BaseAction or BaseAction subclass): Action to check for</p>
+</dd>
+<dt>Returns:</dt><dd><p>Bool: True if affecting, false otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.init_chained_vars">
+<span class="sig-name descname"><span class="pre">init_chained_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ordered_actions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent.init_chained_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.init_chained_vars" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create a chained variable for each affecting action, plus one initial chained var.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>ordered_actions (List): Ordered list of actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_chained_var_instance">
+<span class="sig-name descname"><span class="pre">__get_chained_var_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_chained_var_instance" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used internally to create/reference a chained variable</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>name (String): chained variable name
+timestep (int): current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 variable for chained variable at timestep ‘time’</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_var">
+<span class="sig-name descname"><span class="pre">get_chained_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent.get_chained_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return chained variable corresponding to calling action. Returns previous chained variable if not for an effect</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>r2exists_tuple (Tuple): Tuple of values required for handling chained variables for relaxed relaxed ThereExists parallelism.</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 variable: Chained variable</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_chained_vars_bound_constraints_at_t">
+<span class="sig-name descname"><span class="pre">__get_chained_vars_bound_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_chained_vars_bound_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns chained variable bound constraints at t.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expressions for bound constraints at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_vars_bound_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_chained_vars_bound_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">last_timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent.get_chained_vars_bound_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_vars_bound_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to generate all bound constraints for chained variables up to time t, can be called if no constraints are needed</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>last_timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of z3 expressions for bound constraints up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_vars_bound_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_chained_vars_bound_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent.get_chained_vars_bound_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_vars_bound_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns chained variable bound constraints at t. Used for incremental solving.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expressions for bound constraints at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_action_specific_action_condition_pairs">
+<span class="sig-name descname"><span class="pre">__get_action_specific_action_condition_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_action_specific_action_condition_pairs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get action condition pairs corresponding to a specific action</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>action (BaseAction or BaseAction subclass): Action to search for in pairs</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(Tuple(BaseAction or BaseAction subclass, condition)): List of pairs with matching actions</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__assert_explanatory_axioms_at_t">
+<span class="sig-name descname"><span class="pre">__assert_explanatory_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__assert_explanatory_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert explanatory axioms at t (these replace frame axioms for r2ThereExists parallelism) over chained variables</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expression for explanatory axioms at t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.generate_explanatory_axioms_up_to_t">
+<span class="sig-name descname"><span class="pre">generate_explanatory_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent.generate_explanatory_axioms_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.generate_explanatory_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert explanatory axioms up to the final timestep (these replace frame axioms) over chained variables</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of z3 expressions for explanatory axioms up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.generate_explanatory_axioms_at_t">
+<span class="sig-name descname"><span class="pre">generate_explanatory_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent.generate_explanatory_axioms_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.generate_explanatory_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns explanatory axioms at t. Used for incremental solving.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expression for explanatory axioms at timestep t - 1</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__link_chained_vars_to_majors_at_t">
+<span class="sig-name descname"><span class="pre">__link_chained_vars_to_majors_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__link_chained_vars_to_majors_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert initial and final chained variables are linked with major timestep variables
+Even if no actions affect this, because of the 0th chained variable independent of an affecting
+action this method is valid, and equivalent to current_state_var == next_state_var</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expression for linking chained variables to major variables</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.link_chained_vars_to_majors_up_to_t">
+<span class="sig-name descname"><span class="pre">link_chained_vars_to_majors_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent.link_chained_vars_to_majors_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.link_chained_vars_to_majors_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert all initial and final chained variables are linked with major timestep variables.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of z3 expressions for linking chained variables to major variables</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.link_chained_vars_to_majors_at_t">
+<span class="sig-name descname"><span class="pre">link_chained_vars_to_majors_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/R2ExistsFluent.html#R2ExistsFluent.link_chained_vars_to_majors_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.link_chained_vars_to_majors_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns constraints linking chained variables at t. Used for incremental solving.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expression for linking chained variables to major variables at time ‘timestep - 1’</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">up_SMT_engine.fluents.R2ExistsFluent</a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__check_action_is_affecting"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.__check_action_is_affecting()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.init_chained_vars"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.init_chained_vars()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_chained_var_instance"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.__get_chained_var_instance()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_var"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.get_chained_var()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_chained_vars_bound_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.__get_chained_vars_bound_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_vars_bound_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.get_chained_vars_bound_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_vars_bound_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.get_chained_vars_bound_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__get_action_specific_action_condition_pairs"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.__get_action_specific_action_condition_pairs()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__assert_explanatory_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.__assert_explanatory_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.generate_explanatory_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.generate_explanatory_axioms_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.generate_explanatory_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.generate_explanatory_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.__link_chained_vars_to_majors_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.__link_chained_vars_to_majors_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.link_chained_vars_to_majors_up_to_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.link_chained_vars_to_majors_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.link_chained_vars_to_majors_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsFluent.link_chained_vars_to_majors_at_t()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="up_SMT_engine.fluents.BaseFluent.html"
+                          title="previous chapter">up_SMT_engine.fluents.BaseFluent</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="up_SMT_engine.helper_functions.html"
+                          title="next chapter">up_SMT_engine.helper_functions</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/up_SMT_engine.fluents.R2ExistsFluent.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.helper_functions.html" title="up_SMT_engine.helper_functions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.fluents.BaseFluent.html" title="up_SMT_engine.fluents.BaseFluent"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.fluents.html" >up_SMT_engine.fluents</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.fluents.R2ExistsFluent</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

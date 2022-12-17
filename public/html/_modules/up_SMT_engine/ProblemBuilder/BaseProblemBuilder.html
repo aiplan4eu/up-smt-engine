@@ -1,0 +1,261 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>up_SMT_engine.ProblemBuilder.BaseProblemBuilder &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.ProblemBuilder.BaseProblemBuilder</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for up_SMT_engine.ProblemBuilder.BaseProblemBuilder</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">Not</span><span class="p">,</span> <span class="n">Or</span>
+
+
+<div class="viewcode-block" id="BaseProblemBuilder"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder">[docs]</a><span class="k">class</span> <span class="nc">BaseProblemBuilder</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Class used to handle constructing the SMT problem for Z3 to solve</span>
+<span class="sd">    Suitable for sequential planning</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">actions</span><span class="p">,</span> <span class="n">fluents</span><span class="p">,</span> <span class="n">is_incremental</span><span class="p">,</span> <span class="n">initial_values</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">actions</span> <span class="o">=</span> <span class="n">actions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fluents</span> <span class="o">=</span> <span class="n">fluents</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span> <span class="o">=</span> <span class="n">is_incremental</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_values</span> <span class="o">=</span> <span class="n">initial_values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_mutexes</span> <span class="o">=</span> <span class="mi">0</span>
+
+<div class="viewcode-block" id="BaseProblemBuilder.get_mutex_count"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.get_mutex_count">[docs]</a>    <span class="k">def</span> <span class="nf">get_mutex_count</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_mutexes</span></div>
+
+    <span class="k">def</span> <span class="nf">__generate_parallelism_mutexes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate mutexes for sequential parallelism</span>
+<span class="sd">        Use basic encoding requiring O(n^2) constraints per timestep</span>
+<span class="sd">        Assert that, for every pair of actions at time t, only one can be true</span>
+<span class="sd">        Assert that, for every action at time t at least one can be true (using OR)</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            plan_len (int): Plan length</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Array of constraint clauses: Array of constraint clauses. If using incremental solving this only covers the penultimate timestep. Otherwise the array covers the first to penultimate timesteps</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="n">plan_len</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="n">actions_at_t</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">)):</span>
+                <span class="n">action_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_action_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                <span class="n">actions_at_t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action_a</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+                    <span class="n">action_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_action_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                    <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">)))</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Or</span><span class="p">(</span><span class="n">actions_at_t</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">):</span>
+                <span class="n">timestep_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">actions_at_t</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">)):</span>
+                    <span class="n">action_a</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">get_action_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                    <span class="n">actions_at_t</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action_a</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">):</span>
+                        <span class="n">action_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">get_action_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                        <span class="n">timestep_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Not</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">action_a</span><span class="p">,</span> <span class="n">action_b</span><span class="p">)))</span>
+                <span class="n">timestep_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Or</span><span class="p">(</span><span class="n">actions_at_t</span><span class="p">))</span>
+                <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">timestep_constraints</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">constraints</span>
+
+<div class="viewcode-block" id="BaseProblemBuilder.add_mutexes"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_mutexes">[docs]</a>    <span class="k">def</span> <span class="nf">add_mutexes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">mutex_array</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add mutex clauses to the solver while counting each mutex</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            instance (z3.Solver): Current Solver to which clauses can be added</span>
+<span class="sd">            mutex_array (Array of constraint clauses): Array of mutex clauses to add</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+            <span class="c1"># Expect a 1d array of constraints</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_mutexes</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mutex_array</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">mutex_array</span><span class="p">:</span>
+                <span class="n">instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Expect a 2d array of constraints</span>
+            <span class="k">for</span> <span class="n">constraint_set</span> <span class="ow">in</span> <span class="n">mutex_array</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">num_mutexes</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">constraint_set</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraint_set</span><span class="p">:</span>
+                    <span class="n">instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProblemBuilder.add_action_constraints"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_action_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">add_action_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_instance</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;For each action object generate all relevant constraints</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            problem_instance (z3.Solver): Current Solver to which clauses can be added</span>
+<span class="sd">            plan_len (int): Plan length</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Generate all causal constraints over all actions</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+                <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">get_causal_axioms_at_t</span><span class="p">(</span><span class="n">plan_len</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">axioms</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">get_causal_axioms_up_to_t</span><span class="p">(</span><span class="n">plan_len</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">axiom</span> <span class="ow">in</span> <span class="n">axioms</span><span class="p">:</span>
+                    <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">axiom</span><span class="p">)</span>
+
+        <span class="c1"># Generate all precondition constraints over all actions</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">actions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+                <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">action</span><span class="o">.</span><span class="n">get_precondition_constraints_at_t</span><span class="p">(</span><span class="n">plan_len</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">constraints</span> <span class="o">=</span> <span class="n">action</span><span class="o">.</span><span class="n">get_precondition_constraints_up_to_t</span><span class="p">(</span><span class="n">plan_len</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">constraints</span><span class="p">:</span>
+                    <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProblemBuilder.add_fluent_constraints"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_fluent_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">add_fluent_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_instance</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;For each fluent object generate all relevant constraints</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            problem_instance (z3.Solver): Current Solver to which clauses can be added</span>
+<span class="sd">            plan_len (int): Plan length</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Generate bound constraints over all fluents</span>
+        <span class="k">for</span> <span class="n">fluent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+                <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">fluent</span><span class="o">.</span><span class="n">get_bound_constraints_at_t</span><span class="p">(</span><span class="n">plan_len</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bound_constraints</span> <span class="o">=</span> <span class="n">fluent</span><span class="o">.</span><span class="n">get_bound_constraints_up_to_t</span><span class="p">(</span><span class="n">plan_len</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">bound_constraints</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="n">bound_constraints</span><span class="p">:</span>
+                        <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">plan_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Generate frame axiom constraints over all fluents</span>
+            <span class="k">for</span> <span class="n">fluent</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluents</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+                    <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="n">fluent</span><span class="o">.</span><span class="n">generate_frame_axiom_constraints_at_t</span><span class="p">(</span><span class="n">plan_len</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="n">fluent</span><span class="o">.</span><span class="n">generate_frame_axiom_constraints_up_to_t</span><span class="p">(</span><span class="n">plan_len</span><span class="p">)</span>
+                    <span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProblemBuilder.add_init"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_init">[docs]</a>    <span class="k">def</span> <span class="nf">add_init</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_instance</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add initial values if not already present. If using incremental pop the previous goal clause</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            problem_instance (z3.Solver): The current solver to which clauses are added</span>
+<span class="sd">            plan_len (int): The plan length</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">plan_len</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+            <span class="c1"># Reset mutex count</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">num_mutexes</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># Add initial state constraints</span>
+            <span class="k">for</span> <span class="n">init_value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">initial_values</span><span class="p">:</span>
+                <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">init_value</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">problem_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+            <span class="c1"># Pop previous goal clause</span>
+            <span class="n">problem_instance</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="BaseProblemBuilder.add_goal"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.add_goal">[docs]</a>    <span class="k">def</span> <span class="nf">add_goal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_instance</span><span class="p">,</span> <span class="n">goal_clause</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add the goal value to the solver, and create a checkpoint if using incremental solving</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            problem_instance (z3.Solver): The current solver to which clauses are added</span>
+<span class="sd">            goal_clause (Clause): The clause representing all goal conditions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">incremental</span><span class="p">:</span>
+            <span class="c1"># Create a breakpoint, allowing the current goals to be removed if they are unsatisfiable</span>
+            <span class="c1"># Using push automatically turns on incremental mode for the solver</span>
+            <span class="n">problem_instance</span><span class="o">.</span><span class="n">push</span><span class="p">()</span>
+        <span class="n">problem_instance</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">goal_clause</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseProblemBuilder.build"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.ProblemBuilder.BaseProblemBuilder.BaseProblemBuilder.build">[docs]</a>    <span class="k">def</span> <span class="nf">build</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">problem_instance</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">,</span> <span class="n">goal_clause</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Using clauses generated by actions and fluents build the problem in the z3 Solver</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            problem_instance (z3.Solver): The current solver to which clauses are added</span>
+<span class="sd">            plan_len (int): The plan length</span>
+<span class="sd">            goal_clause (Clause): The clause representing all goal conditions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_init</span><span class="p">(</span><span class="n">problem_instance</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_fluent_constraints</span><span class="p">(</span><span class="n">problem_instance</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">)</span>
+
+        <span class="c1"># Don&#39;t consider actions, frame axiom constraints and chained variables until after timestep 0</span>
+        <span class="k">if</span> <span class="n">plan_len</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_action_constraints</span><span class="p">(</span><span class="n">problem_instance</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">)</span>
+            <span class="c1"># Generate action parallelism constraints over all actions</span>
+            <span class="n">mutexes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__generate_parallelism_mutexes</span><span class="p">(</span><span class="n">plan_len</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_mutexes</span><span class="p">(</span><span class="n">problem_instance</span><span class="p">,</span> <span class="n">mutexes</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_goal</span><span class="p">(</span><span class="n">problem_instance</span><span class="p">,</span> <span class="n">goal_clause</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.ProblemBuilder.BaseProblemBuilder</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,254 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>up_SMT_engine.actions.R2ExistsAction &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="up_SMT_engine.actions.ThereExistsAction" href="up_SMT_engine.actions.ThereExistsAction.html" />
+    <link rel="prev" title="up_SMT_engine.actions.ForAllAction" href="up_SMT_engine.actions.ForAllAction.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.actions.ThereExistsAction.html" title="up_SMT_engine.actions.ThereExistsAction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.actions.ForAllAction.html" title="up_SMT_engine.actions.ForAllAction"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.actions.html" accesskey="U">up_SMT_engine.actions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.actions.R2ExistsAction</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-up_SMT_engine.actions.R2ExistsAction">
+<span id="up-smt-engine-actions-r2existsaction"></span><h1>up_SMT_engine.actions.R2ExistsAction<a class="headerlink" href="#module-up_SMT_engine.actions.R2ExistsAction" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction" title="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">R2ExistsAction</span></code></a>(grounded_action)</p></td>
+<td><p>Extension of BaseAction to support relaxed relaxed ThereExists parallelism, allowing actions to be enabled, and change other action effects within a timestep</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.actions.R2ExistsAction.</span></span><span class="sig-name descname"><span class="pre">R2ExistsAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_action</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="up_SMT_engine.actions.BaseAction.html#up_SMT_engine.actions.BaseAction.BaseAction" title="up_SMT_engine.actions.BaseAction.BaseAction"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseAction</span></code></a></p>
+<p>Extension of BaseAction to support relaxed relaxed ThereExists parallelism, allowing actions to be enabled, and change other action effects within a timestep</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_effects_at_t">
+<span class="sig-name descname"><span class="pre">__get_effects_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_effects_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Each effect has three FNODE structures, the condition (optional, makes effect conditional), fluent (the stated variable to be changed)
+and the value (the new fluent value). These are separately converted into Z3, and returned as Implies(condition, (fluent == value))
+These statements are And’d together, as the set of effects of the action.
+n.b. The fluents in the ‘fluent’ part of the effect are in the next state (timestep + 1), because they are the result of
+the current action, while all other fluents are in the current state</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): current timestep
+r2exists_tuple (Tuple, optional): Tuple used to convey information needed for handling chained variables. Defaults to None.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of expressions for action effects</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_causal_axioms_at_t">
+<span class="sig-name descname"><span class="pre">__get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>The causal axioms assert the effects, given the action occurs</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep
+r2exists_tuple (Tuple, optional): Tuple used to convey information needed for handling chained variables. Defaults to None.</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_causal_axioms_up_to_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction.get_causal_axioms_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_causal_axioms_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of causal axioms for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass)): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the causal axioms of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_causal_axioms_at_t">
+<span class="sig-name descname"><span class="pre">get_causal_axioms_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction.get_causal_axioms_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_causal_axioms_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get causal axioms for a timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): a timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass)): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the causal axioms of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_precondition_constraints_at_t">
+<span class="sig-name descname"><span class="pre">__get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r2exists_tuple</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the precondition constraints for this action at timestep t
+Precondition constraint is: action occuring at timestep t implies preconditions are true at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Current timestep
+r2exists_tuple (Tuple, optional): Tuple used to convey information needed for handling chained variables. Defaults to None.</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints for this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_precondition_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction.get_precondition_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_precondition_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate the list of precondition constraints for a problem of length up to timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Final timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass)): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): A list of z3 expressions representing the precondition constraints of this action up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_precondition_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_precondition_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fluents_list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">actions_list</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/actions/R2ExistsAction.html#R2ExistsAction.get_precondition_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_precondition_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get precondition constraints for a timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): a timestep
+fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents
+actions_list (List(BaseAction or BaseAction subclass)): List of actions</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: A z3 expression representing the precondition constraints of this action at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">up_SMT_engine.actions.R2ExistsAction</a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_effects_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.__get_effects_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.__get_causal_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_causal_axioms_up_to_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_causal_axioms_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_causal_axioms_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_causal_axioms_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.__get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.__get_precondition_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_precondition_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_precondition_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.actions.R2ExistsAction.R2ExistsAction.get_precondition_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">R2ExistsAction.get_precondition_constraints_at_t()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="up_SMT_engine.actions.ForAllAction.html"
+                          title="previous chapter">up_SMT_engine.actions.ForAllAction</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="up_SMT_engine.actions.ThereExistsAction.html"
+                          title="next chapter">up_SMT_engine.actions.ThereExistsAction</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/up_SMT_engine.actions.R2ExistsAction.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.actions.ThereExistsAction.html" title="up_SMT_engine.actions.ThereExistsAction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.actions.ForAllAction.html" title="up_SMT_engine.actions.ForAllAction"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.actions.html" >up_SMT_engine.actions</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.actions.R2ExistsAction</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>up_SMT_engine.helper_functions.SmtModelHelperFunctions &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.helper_functions.SmtModelHelperFunctions</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for up_SMT_engine.helper_functions.SmtModelHelperFunctions</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Regex used for finding action base names</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="c1"># unified_planning Used for converting the SAT model into a plan</span>
+<span class="kn">import</span> <span class="nn">unified_planning</span> <span class="k">as</span> <span class="nn">up</span>
+<span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="n">BoolRef</span><span class="p">,</span> <span class="n">FuncDeclRef</span>
+
+
+<div class="viewcode-block" id="get_z3_FuncDecl_name"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.SmtModelHelperFunctions.html#up_SMT_engine.SMTPlanner.get_z3_FuncDecl_name">[docs]</a><span class="k">def</span> <span class="nf">get_z3_FuncDecl_name</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function used to get the string name of a variable in the Model result</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        obj: object to check</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        String: The object&#39;s name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span> <span class="o">==</span> <span class="n">FuncDeclRef</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">()</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="split_stated_action_name"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.SmtModelHelperFunctions.html#up_SMT_engine.SMTPlanner.split_stated_action_name">[docs]</a><span class="k">def</span> <span class="nf">split_stated_action_name</span><span class="p">(</span><span class="n">action_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Splits action name from &#39;action_@tx&#39; to [&#39;action&#39;, &#39;x&#39;], giving the action basename, and time of execution</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        action_name (String): An action basename with time of execution</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        String: The action basename</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_@t&quot;</span><span class="p">,</span> <span class="n">action_name</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="get_action_by_name"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.SmtModelHelperFunctions.html#up_SMT_engine.SMTPlanner.get_action_by_name">[docs]</a><span class="k">def</span> <span class="nf">get_action_by_name</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">grounded_actions</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function used to find corresponding action to string action name in grounded_actions, if one exists</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        name (String): Action name</span>
+<span class="sd">        grounded_actions (List of InstantaneousAction objects): List of grounded actions</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        InstantaneousAction: The grounded InstantaneousAction corresponding to the name</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">grounded_actions</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="n">action</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">action</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="get_goal_actions_list"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.SmtModelHelperFunctions.html#up_SMT_engine.SMTPlanner.get_goal_actions_list">[docs]</a><span class="k">def</span> <span class="nf">get_goal_actions_list</span><span class="p">(</span><span class="n">solution</span><span class="p">,</span> <span class="n">grounded_actions</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">,</span> <span class="n">parallelism</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Using the full z3 solution model compare each True boolean variable against the name of a grounded_action</span>
+<span class="sd">    If the names match then the variable shows that action is executed at time x, given the variable name is &#39;action_@tx&#39;</span>
+<span class="sd">    Iterate over each variable in the model, setting the corresponding ground action to index x in the plan array</span>
+<span class="sd">    Return the plan array</span>
+<span class="sd">    &#39;solution&#39; parameter should be a Solver.model() object</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            solution (z3.Model): The model satisfying the problem as SMT</span>
+<span class="sd">            grounded_actions (List of InstantaneousAction objects): List of grounded actions</span>
+<span class="sd">            plan_len (int): Plan length</span>
+<span class="sd">            parallelism (String): The type of parallelism chosen</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List or List of sets: If sequential this returns a list of actions in the order the appear in the plan. Otherwise this returns a list of sets, each set corresponding to the parallel actions taken at that timestep</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Get TRUE booleans from solution, these will include the actions we want</span>
+    <span class="n">true_values</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">solution</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">solution</span><span class="p">[</span><span class="n">val</span><span class="p">])</span> <span class="o">==</span> <span class="n">BoolRef</span> <span class="ow">and</span> <span class="n">solution</span><span class="p">[</span><span class="n">val</span><span class="p">]:</span>
+            <span class="n">true_values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="c1"># if the plan is parallel we need a list of sets of actions, otherwise just a list</span>
+    <span class="k">if</span> <span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;sequential&quot;</span><span class="p">:</span>
+        <span class="c1"># Plan list, consisting of actions from grounded_actions where index corresponds to execution order</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">plan_len</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">plan_len</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">true_values</span><span class="p">:</span>
+        <span class="n">val_name</span> <span class="o">=</span> <span class="n">get_z3_FuncDecl_name</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+        <span class="n">split_name</span> <span class="o">=</span> <span class="n">split_stated_action_name</span><span class="p">(</span><span class="n">val_name</span><span class="p">)</span>
+        <span class="n">ground_name</span> <span class="o">=</span> <span class="n">split_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">split_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">matched_action</span> <span class="o">=</span> <span class="n">get_action_by_name</span><span class="p">(</span><span class="n">ground_name</span><span class="p">,</span> <span class="n">grounded_actions</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">matched_action</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;sequential&quot;</span><span class="p">:</span>
+                <span class="n">plan</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">state</span><span class="p">)]</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">plans</span><span class="o">.</span><span class="n">ActionInstance</span><span class="p">(</span><span class="n">matched_action</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">plan</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">state</span><span class="p">)]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">up</span><span class="o">.</span><span class="n">plans</span><span class="o">.</span><span class="n">ActionInstance</span><span class="p">(</span><span class="n">matched_action</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">plan</span></div>
+
+
+<div class="viewcode-block" id="find_action_in_ordered_list"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.SmtModelHelperFunctions.html#up_SMT_engine.SMTPlanner.find_action_in_ordered_list">[docs]</a><span class="k">def</span> <span class="nf">find_action_in_ordered_list</span><span class="p">(</span><span class="n">action_instance</span><span class="p">,</span> <span class="n">ordered_list</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Custom index finding function, for finding the action of an action_instance in an ordered list</span>
+<span class="sd">    Uses the action&#39;s name to find the action</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action_instance (ActionInstance): a unified-planning Action instance</span>
+<span class="sd">            ordered_list (List): ordered list of actions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: action index</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">action_instance</span><span class="o">.</span><span class="n">action</span><span class="o">.</span><span class="n">name</span>
+    <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">ordered_list</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">action</span><span class="o">.</span><span class="n">check_name_match</span><span class="p">(</span><span class="n">name</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ordered_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error. Action not found.&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="mi">1</span></div>
+
+
+<div class="viewcode-block" id="convert_action_sequence_to_plan"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.SmtModelHelperFunctions.html#up_SMT_engine.SMTPlanner.convert_action_sequence_to_plan">[docs]</a><span class="k">def</span> <span class="nf">convert_action_sequence_to_plan</span><span class="p">(</span>
+    <span class="n">actions</span><span class="p">,</span> <span class="n">parallelism</span><span class="p">,</span> <span class="n">ForAll_get_sets</span><span class="p">,</span> <span class="n">ordered_list</span>
+<span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function used to convert a list or list of sets to a corresponding unified-planning Plan object.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        actions (list or list of sets): list or list of sets of InstantaneousActions</span>
+<span class="sd">        parallelism (String): Choice of parallelism</span>
+<span class="sd">        ForAll_get_sets (Boolean): True if the user wants to maintain the sets of parallel actions</span>
+<span class="sd">        ordered_list (list): Ordered list of actions</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        PartialOrderPlan or SequentialPlan: If ForAll_get_sets is true we return a PartialOrderPlan. Otherwise we return a SequentialPlan</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;sequential&quot;</span><span class="p">:</span>
+        <span class="c1"># The candidate plan, initially empty</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">plans</span><span class="o">.</span><span class="n">SequentialPlan</span><span class="p">([])</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+            <span class="n">plan</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">plan</span>
+    <span class="k">elif</span> <span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;ForAll&quot;</span> <span class="ow">and</span> <span class="n">ForAll_get_sets</span><span class="p">:</span>
+        <span class="c1"># Represent parallel plans as a partial order plan, this plan is initialised after full construction</span>
+        <span class="c1"># of the plan as a dictionary</span>
+        <span class="n">plan_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">plan_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">actions</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">plan_len</span><span class="p">):</span>
+            <span class="n">action_set</span> <span class="o">=</span> <span class="n">actions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">action_set</span><span class="p">:</span>
+                <span class="n">affected_list</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="n">plan_len</span><span class="p">:</span>
+                    <span class="n">other_action_sets</span> <span class="o">=</span> <span class="n">actions</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="k">for</span> <span class="n">other_actions</span> <span class="ow">in</span> <span class="n">other_action_sets</span><span class="p">:</span>
+                        <span class="n">affected_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">other_actions</span><span class="p">)</span>
+                <span class="n">plan_dict</span><span class="p">[</span><span class="n">action</span><span class="p">]</span> <span class="o">=</span> <span class="n">affected_list</span>
+        <span class="k">return</span> <span class="n">up</span><span class="o">.</span><span class="n">plans</span><span class="o">.</span><span class="n">PartialOrderPlan</span><span class="p">(</span><span class="n">plan_dict</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="p">(</span>
+        <span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;ForAll&quot;</span>
+        <span class="ow">or</span> <span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;ThereExists&quot;</span>
+        <span class="ow">or</span> <span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;relaxed_relaxed_ThereExists&quot;</span>
+    <span class="p">):</span>
+        <span class="c1"># Convert parallel action sets into sequential plan, using total ordering assigned</span>
+        <span class="c1"># We need to iterate over each set, turning them into ordered sub-plans</span>
+        <span class="c1"># For each set. Iterate while action has members. Iterate over each member, remembering</span>
+        <span class="n">plan</span> <span class="o">=</span> <span class="n">up</span><span class="o">.</span><span class="n">plans</span><span class="o">.</span><span class="n">SequentialPlan</span><span class="p">([])</span>
+        <span class="k">for</span> <span class="n">action_set</span> <span class="ow">in</span> <span class="n">actions</span><span class="p">:</span>
+            <span class="c1"># Iterate over every item in action set</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">action_set</span><span class="p">)):</span>
+                <span class="n">earliest_action</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="n">earliest_action_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+                <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">action_set</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">earliest_action</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">earliest_action</span> <span class="o">=</span> <span class="n">action</span>
+                        <span class="n">earliest_action_index</span> <span class="o">=</span> <span class="n">find_action_in_ordered_list</span><span class="p">(</span>
+                            <span class="n">earliest_action</span><span class="p">,</span> <span class="n">ordered_list</span>
+                        <span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">current_action_index</span> <span class="o">=</span> <span class="n">find_action_in_ordered_list</span><span class="p">(</span>
+                            <span class="n">action</span><span class="p">,</span> <span class="n">ordered_list</span>
+                        <span class="p">)</span>
+                        <span class="k">if</span> <span class="n">earliest_action_index</span> <span class="o">&gt;</span> <span class="n">current_action_index</span><span class="p">:</span>
+                            <span class="n">earliest_action</span> <span class="o">=</span> <span class="n">action</span>
+                            <span class="n">earliest_action_index</span> <span class="o">=</span> <span class="n">find_action_in_ordered_list</span><span class="p">(</span>
+                                <span class="n">earliest_action</span><span class="p">,</span> <span class="n">ordered_list</span>
+                            <span class="p">)</span>
+                <span class="n">plan</span><span class="o">.</span><span class="n">actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">earliest_action</span><span class="p">)</span>
+                <span class="n">action_set</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">earliest_action</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">plan</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Error. Parallelism type not currently handled: &quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">parallelism</span><span class="p">)</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.helper_functions.SmtModelHelperFunctions</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

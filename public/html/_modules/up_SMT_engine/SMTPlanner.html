@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>up_SMT_engine.SMTPlanner &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/classic.css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.SMTPlanner</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for up_SMT_engine.SMTPlanner</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Manager</span>
+<span class="kn">from</span> <span class="nn">io</span> <span class="kn">import</span> <span class="n">StringIO</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">IO</span>
+<span class="kn">from</span> <span class="nn">unified_planning.engines.results</span> <span class="kn">import</span> <span class="n">PlanGenerationResultStatus</span>
+<span class="kn">import</span> <span class="nn">unified_planning</span> <span class="k">as</span> <span class="nn">up</span>
+<span class="kn">import</span> <span class="nn">unified_planning.engines</span> <span class="k">as</span> <span class="nn">engines</span>
+<span class="kn">from</span> <span class="nn">unified_planning.model</span> <span class="kn">import</span> <span class="n">ProblemKind</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.ProblemManager.ProblemManager</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.PartialOrderPlanFix</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">custom_replace_action_instances</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.IOHelperFunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">save_stats_to_file</span><span class="p">,</span>
+    <span class="n">print_eval_data</span><span class="p">,</span>
+    <span class="n">print_formula_data</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.SmtModelHelperFunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_action_sequence_to_plan</span><span class="p">,</span>
+    <span class="n">get_goal_actions_list</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Core function for building SMT based problem and solving the same problem via z3</span>
+<span class="c1"># In order to allow clean timeouts this can be run as a Process which can be killed without running into any z3 related problems</span>
+<span class="c1"># It was found using a signal to throw an exception on timeout was inconsistent.</span>
+<div class="viewcode-block" id="run_smt_planner"><a class="viewcode-back" href="../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.run_smt_planner">[docs]</a><span class="k">def</span> <span class="nf">run_smt_planner</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">smt_planner</span><span class="p">,</span> <span class="n">return_queue</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Function used to ground a Unified Planning API based problem, reformat into SMT friendly classes, use class methods to</span>
+<span class="sd">    generate clauses necessary for SMT and then check for satisfiability</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        problem (up.model.Problem): The API based model of the current planning problem</span>
+<span class="sd">        smt_planner (SMTPlanner): The SMTPlanner object holding user options, and shared-memory objects for returning values</span>
+<span class="sd">        return_queue (multiprocessing.Queue): Shared memory queue, used to return a satisfying plan, or if one cannot be found: None</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        unified_planning.plans.sequential_plan.SequentialPlan or unified_planning.plans.PartialorderPlan or None: Satisfying plan. When executed without a timeout this</span>
+<span class="sd">        normally returns a SequentialPlan object containing the satisfying series of actions, but if one cannot be found then return None. If the ForAll_get_sets option</span>
+<span class="sd">        is chosen then returns a PartialOrderPlan containing the sets of actions which may be executed in parallel to satisfy the problem.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Use try and finally to ensure something is added to the Queue to avoid deadlock</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">env</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">env</span>
+        <span class="c1"># First we ground the problem. This doesn&#39;t ground the fluents, but does ground the actions.</span>
+        <span class="k">with</span> <span class="n">env</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">Compiler</span><span class="p">(</span>
+            <span class="n">problem_kind</span><span class="o">=</span><span class="n">problem</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span>
+            <span class="n">compilation_kind</span><span class="o">=</span><span class="n">engines</span><span class="o">.</span><span class="n">CompilationKind</span><span class="o">.</span><span class="n">GROUNDING</span><span class="p">,</span>
+        <span class="p">)</span> <span class="k">as</span> <span class="n">grounder</span><span class="p">:</span>
+            <span class="n">grounding_result</span> <span class="o">=</span> <span class="n">grounder</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span>
+                <span class="n">problem</span><span class="p">,</span> <span class="n">engines</span><span class="o">.</span><span class="n">CompilationKind</span><span class="o">.</span><span class="n">GROUNDING</span>
+            <span class="p">)</span>
+        <span class="n">grounded_problem</span> <span class="o">=</span> <span class="n">grounding_result</span><span class="o">.</span><span class="n">problem</span>
+        <span class="c1"># We store the grounded actions in a list which is later used to build a unified-planning API based plan from the grounded SMT model</span>
+        <span class="n">actions</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">grounded_problem</span><span class="o">.</span><span class="n">instantaneous_actions</span><span class="p">)</span>
+
+        <span class="n">smt_manager</span> <span class="o">=</span> <span class="n">ProblemManager</span><span class="p">(</span>
+            <span class="n">grounded_problem</span><span class="p">,</span>
+            <span class="n">smt_planner</span><span class="o">.</span><span class="n">parallelism</span><span class="p">,</span>
+            <span class="n">smt_planner</span><span class="o">.</span><span class="n">use_incremental_solving</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># If no valid plan length is set then disable it</span>
+        <span class="n">max_plan_length</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">smt_planner</span><span class="o">.</span><span class="n">max_length</span><span class="p">)</span>
+            <span class="c1"># Allow assertion that plans have length 0, meaning no actions are required</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">smt_planner</span><span class="o">.</span><span class="n">max_length</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">smt_planner</span><span class="o">.</span><span class="n">max_length</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span> <span class="kc">None</span>
+        <span class="p">)</span>
+        <span class="k">with</span> <span class="n">env</span><span class="o">.</span><span class="n">factory</span><span class="o">.</span><span class="n">PlanValidator</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;sequential_plan_validator&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pv</span><span class="p">:</span>
+            <span class="c1"># Plan length variable</span>
+            <span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="p">(</span><span class="n">max_plan_length</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">t</span> <span class="o">&lt;=</span> <span class="n">max_plan_length</span><span class="p">):</span>
+                <span class="c1"># Check for solution with plan length = t</span>
+                <span class="n">smt_manager</span><span class="o">.</span><span class="n">check_sat</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+                <span class="c1"># Record performance metrics</span>
+                <span class="k">if</span> <span class="n">smt_planner</span><span class="o">.</span><span class="n">stats_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">smt_manager</span><span class="o">.</span><span class="n">get_eval_data</span><span class="p">(</span><span class="n">smt_planner</span><span class="o">.</span><span class="n">eval_data</span><span class="p">)</span>
+                    <span class="n">smt_manager</span><span class="o">.</span><span class="n">get_formula_data</span><span class="p">(</span><span class="n">smt_planner</span><span class="o">.</span><span class="n">formula_data</span><span class="p">)</span>
+                <span class="c1"># If solved create a unified-planning API based plan from the SMT Model</span>
+                <span class="k">if</span> <span class="n">smt_manager</span><span class="o">.</span><span class="n">is_solved</span><span class="p">():</span>
+                    <span class="c1"># Convert SAT model() to sequence of actions from the grounded_problem</span>
+                    <span class="n">action_sequence</span> <span class="o">=</span> <span class="n">get_goal_actions_list</span><span class="p">(</span>
+                        <span class="n">smt_manager</span><span class="o">.</span><span class="n">get_results</span><span class="p">(),</span> <span class="n">actions</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">smt_planner</span><span class="o">.</span><span class="n">parallelism</span>
+                    <span class="p">)</span>
+                    <span class="c1"># Return action_sequence for use with unit testing</span>
+                    <span class="k">if</span> <span class="n">smt_planner</span><span class="o">.</span><span class="n">unit_test</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">return_queue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">return_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">action_sequence</span><span class="p">)</span>
+                            <span class="k">return</span> <span class="kc">None</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="k">return</span> <span class="n">action_sequence</span>
+                    <span class="c1"># Order the sequence of actions into a plan for the expected PlanGenerationResult output</span>
+                    <span class="n">plan</span> <span class="o">=</span> <span class="n">convert_action_sequence_to_plan</span><span class="p">(</span>
+                        <span class="n">action_sequence</span><span class="p">,</span>
+                        <span class="n">smt_planner</span><span class="o">.</span><span class="n">parallelism</span><span class="p">,</span>
+                        <span class="n">smt_planner</span><span class="o">.</span><span class="n">ForAll_get_sets</span><span class="p">,</span>
+                        <span class="n">smt_manager</span><span class="o">.</span><span class="n">get_ordered_actions</span><span class="p">(),</span>
+                    <span class="p">)</span>
+                    <span class="c1"># If the user wants to see the sets of parallel actions executed at each step we preserve these using a PartialOrderPlan</span>
+                    <span class="k">if</span> <span class="n">smt_planner</span><span class="o">.</span><span class="n">ForAll_get_sets</span><span class="p">:</span>
+                        <span class="c1"># Check that the sequential representation of this partial order plan is valid. n.b. This does not check if the plan is correct</span>
+                        <span class="k">assert</span> <span class="n">pv</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">grounded_problem</span><span class="p">,</span> <span class="n">plan</span><span class="o">.</span><span class="n">to_sequential_plan</span><span class="p">())</span>
+                        <span class="c1"># Un-ground the action instances</span>
+                        <span class="c1"># The replace_action_instances method of the PartialOrderPlan class is broken, so use a custom function</span>
+                        <span class="n">resplan</span> <span class="o">=</span> <span class="n">custom_replace_action_instances</span><span class="p">(</span>
+                            <span class="n">plan</span><span class="p">,</span> <span class="n">grounding_result</span><span class="o">.</span><span class="n">map_back_action_instance</span>
+                        <span class="p">)</span>
+                        <span class="c1"># Check that the un-grounded plan is valid</span>
+                        <span class="k">assert</span> <span class="n">pv</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">resplan</span><span class="o">.</span><span class="n">to_sequential_plan</span><span class="p">())</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Check that the plan is valid. n.b. This does not check if the plan is correct</span>
+                        <span class="k">assert</span> <span class="n">pv</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">grounded_problem</span><span class="p">,</span> <span class="n">plan</span><span class="p">)</span>
+                        <span class="c1"># Un-ground the action instances</span>
+                        <span class="n">resplan</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">replace_action_instances</span><span class="p">(</span>
+                            <span class="n">grounding_result</span><span class="o">.</span><span class="n">map_back_action_instance</span>
+                        <span class="p">)</span>
+                        <span class="c1"># Check that the un-grounded plan is valid</span>
+                        <span class="k">assert</span> <span class="n">pv</span><span class="o">.</span><span class="n">validate</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="n">resplan</span><span class="p">)</span>
+                    <span class="c1"># Check if a timeout has been set, which determines where the output is expected</span>
+                    <span class="k">if</span> <span class="n">return_queue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">return_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">resplan</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="kc">None</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="n">resplan</span>
+                <span class="n">t</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="c1"># Plan length limit reached, return None which results in Timeout</span>
+            <span class="k">if</span> <span class="n">return_queue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">return_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="kc">None</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="c1"># Add an item to the return queue to avoid locking the parent thread which may expect a value in the queue</span>
+        <span class="k">if</span> <span class="n">return_queue</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">return_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SMTPlanner"><a class="viewcode-back" href="../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.SMTPlanner">[docs]</a><span class="k">class</span> <span class="nc">SMTPlanner</span><span class="p">(</span><span class="n">engines</span><span class="o">.</span><span class="n">Engine</span><span class="p">,</span> <span class="n">engines</span><span class="o">.</span><span class="n">mixins</span><span class="o">.</span><span class="n">OneshotPlannerMixin</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Main engine class, used to handle user options and to call run_smt_planner.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">options</span><span class="p">):</span>
+        <span class="c1"># Read known user-options and store them for using in the `solve` method</span>
+        <span class="c1"># Set a maximum plan length bound</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_length</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_length&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># Option choosing the type of parallalelism. Chooses between &#39;sequential&#39;, &#39;ForAll&#39;, &#39;ThereExists&#39; and &#39;relaxed_relaxed_ThereExists&#39;</span>
+        <span class="c1"># &#39;sequential&#39; corresponds to a traditional approach, choosing one action per timestep</span>
+        <span class="c1"># &#39;ForAll&#39; corresponds to temporal parallelism, choosing a set of non-interfering actions per timestep</span>
+        <span class="c1"># &#39;ThereExists&#39; chooses a set of actions for each timestep such that there is at least one valid sequential ordering. This corresponds to sequential plans and aims to improve performance</span>
+        <span class="c1"># &#39;relaxed_relaxed_ThereExists&#39; is a relaxation of ThereExists, and aims to increase the number of possible actions per step further, at the cost of individual steps becoming more expensive</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;parallelism&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># Option choosing whether to output a partial order plan for ForAll parallelism to see the parallel action sets</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ForAll_get_sets</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ForAll_get_sets&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># Option choosing the whether to use SMT&#39;s incremental solving or not</span>
+        <span class="c1"># Incremental solving preserves learned clauses after a plan length has been found unsatisfiable, reducing search for the next step at the cost of requiring more clauses maintained</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_incremental_solving</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;use_incremental_solving&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># If a string is provided then generate statistics, and save to file, using stats_output as filepath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stats_output</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;stats_output&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="c1"># Get action sequence for unit tests</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unit_test</span> <span class="o">=</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;unit_test&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s2">&quot;SMTPlanner&quot;</span>
+
+    <span class="c1"># This planner supports numeric planning</span>
+<div class="viewcode-block" id="SMTPlanner.supported_kind"><a class="viewcode-back" href="../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.SMTPlanner.supported_kind">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">supported_kind</span><span class="p">():</span>
+        <span class="n">supported_kind</span> <span class="o">=</span> <span class="n">ProblemKind</span><span class="p">()</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;NEGATIVE_CONDITIONS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;DISJUNCTIVE_CONDITIONS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;EQUALITY&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;EXISTENTIAL_CONDITIONS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_conditions_kind</span><span class="p">(</span><span class="s2">&quot;UNIVERSAL_CONDITIONS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_effects_kind</span><span class="p">(</span><span class="s2">&quot;CONDITIONAL_EFFECTS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_effects_kind</span><span class="p">(</span><span class="s2">&quot;INCREASE_EFFECTS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_effects_kind</span><span class="p">(</span><span class="s2">&quot;DECREASE_EFFECTS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_fluents_type</span><span class="p">(</span><span class="s2">&quot;NUMERIC_FLUENTS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_fluents_type</span><span class="p">(</span><span class="s2">&quot;OBJECT_FLUENTS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_numbers</span><span class="p">(</span><span class="s2">&quot;CONTINUOUS_NUMBERS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_numbers</span><span class="p">(</span><span class="s2">&quot;DISCRETE_NUMBERS&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_problem_class</span><span class="p">(</span><span class="s2">&quot;ACTION_BASED&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_problem_type</span><span class="p">(</span><span class="s2">&quot;GENERAL_NUMERIC_PLANNING&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;FLAT_TYPING&quot;</span><span class="p">)</span>
+        <span class="n">supported_kind</span><span class="o">.</span><span class="n">set_typing</span><span class="p">(</span><span class="s2">&quot;HIERARCHICAL_TYPING&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">supported_kind</span></div>
+
+<div class="viewcode-block" id="SMTPlanner.supports"><a class="viewcode-back" href="../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.SMTPlanner.supports">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">supports</span><span class="p">(</span><span class="n">problem_kind</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">problem_kind</span> <span class="o">&lt;=</span> <span class="n">SMTPlanner</span><span class="o">.</span><span class="n">supported_kind</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SMTPlanner.solve"><a class="viewcode-back" href="../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.SMTPlanner.solve">[docs]</a>    <span class="k">def</span> <span class="nf">solve</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">problem</span><span class="p">:</span> <span class="s2">&quot;up.model.Problem&quot;</span><span class="p">,</span>
+        <span class="n">callback</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">[[</span><span class="s2">&quot;up.engines.PlanGenerationResult&quot;</span><span class="p">],</span> <span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">output_stream</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">IO</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;up.engines.results.PlanGenerationResult&quot;</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;_summary_</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            problem (up.model.Problem): A unified-planning API based problem to solve</span>
+<span class="sd">            callback (Optional[Callable[[&amp;quot;up.engines.PlanGenerationResult&amp;quot;], None]], optional): Not currently implemented.</span>
+<span class="sd">            timeout (Optional[float], optional): Timeout in seconds for the solver. Defaults to -1, representing no timeout.</span>
+<span class="sd">            output_stream (Optional[IO[str]], optional): New output stream. Defaults to None.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            up.engines.results.PlanGenerationResult: Represents either a TIMEOUT, or a satisfying plan</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">output_stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">standard_stdout</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">output_stream</span> <span class="o">=</span> <span class="n">StringIO</span><span class="p">()</span>
+        <span class="c1"># Ensure output redirection is restored</span>
+        <span class="k">try</span><span class="p">:</span>
+
+            <span class="c1"># Handle option sanitation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;sequential&quot;</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ForAll_get_sets</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="kc">True</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ForAll_get_sets</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ForAll_get_sets</span> <span class="o">==</span> <span class="kc">True</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span> <span class="o">==</span> <span class="s2">&quot;ForAll&quot;</span>
+                <span class="p">)</span>
+                <span class="k">else</span> <span class="kc">False</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_incremental_solving</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="kc">False</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">use_incremental_solving</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_incremental_solving</span> <span class="o">==</span> <span class="kc">False</span>
+                <span class="p">)</span>
+                <span class="k">else</span> <span class="kc">True</span>
+            <span class="p">)</span>
+            <span class="c1"># If using a timeout create a manager for handling the Process running the solver</span>
+            <span class="k">if</span> <span class="n">timeout</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">manager</span> <span class="o">=</span> <span class="n">Manager</span><span class="p">()</span>
+
+            <span class="c1"># Filepath for statistics</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">stats_output</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stats_output</span>
+                <span class="k">if</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">stats_output</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="k">else</span> <span class="kc">None</span>
+            <span class="p">)</span>
+
+            <span class="c1"># Handle datastructures for storing statistics</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">eval_data</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">timeout</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="c1"># If using a timeout we generate datastructures in a Process, and need to use a dictionary in shared memory for each</span>
+                    <span class="c1"># eval_data is concerned with time per step, time to check for satisfiability for each plan length, total time, and number of steps.</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">eval_data</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+                    <span class="c1"># formula_data is concerned with the number of variables, clauses and mutexes (constraining parallel actions) per step</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;variables_per_step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;clauses_per_step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;mutexes_per_step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">list</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># eval_data is concerned with time per step used to solve the problem, this includes time taken to build the SMT problem</span>
+                    <span class="c1"># because Z3 performs preprocessing in this phase</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">eval_data</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span> <span class="o">=</span> <span class="p">{}</span>
+                    <span class="c1"># formula_data is concerned with the number of variables, clauses and mutexes (constraining parallel actions) per step</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;variables_per_step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;clauses_per_step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span><span class="p">[</span><span class="s2">&quot;mutexes_per_step&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">if</span> <span class="n">timeout</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># If using a timeout run the smt solver as a process</span>
+                <span class="c1"># Use a shared memory queue to retrieve the plan from the Process</span>
+                <span class="n">return_queue</span> <span class="o">=</span> <span class="n">manager</span><span class="o">.</span><span class="n">Queue</span><span class="p">()</span>
+
+                <span class="n">smt_process</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span>
+                    <span class="n">target</span><span class="o">=</span><span class="n">run_smt_planner</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="n">return_queue</span><span class="p">)</span>
+                <span class="p">)</span>
+                <span class="c1"># Start the solver Process</span>
+                <span class="n">smt_process</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+                <span class="c1"># Try to join the Process before a timeout</span>
+                <span class="n">smt_process</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+                <span class="c1"># If the Process hasn&#39;t been joined then the timeout has been reached</span>
+                <span class="k">if</span> <span class="n">smt_process</span><span class="o">.</span><span class="n">is_alive</span><span class="p">():</span>
+                    <span class="c1"># Terminate the Process and return Timeout</span>
+                    <span class="n">smt_process</span><span class="o">.</span><span class="n">terminate</span><span class="p">()</span>
+                    <span class="n">smt_process</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="n">up</span><span class="o">.</span><span class="n">engines</span><span class="o">.</span><span class="n">PlanGenerationResult</span><span class="p">(</span>
+                        <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># If Process is completed then expect complete stats, or plan length based timeout</span>
+                    <span class="c1"># Queue first value is either None, or a plan. If None then plan length based timeout has occurred</span>
+                    <span class="n">plan</span> <span class="o">=</span> <span class="n">return_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Run without time based timeout, plan length based &#39;timeout&#39; is still possible</span>
+                <span class="n">plan</span> <span class="o">=</span> <span class="n">run_smt_planner</span><span class="p">(</span><span class="n">problem</span><span class="p">,</span> <span class="bp">self</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">up</span><span class="o">.</span><span class="n">engines</span><span class="o">.</span><span class="n">PlanGenerationResult</span><span class="p">(</span>
+                    <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">TIMEOUT</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+                <span class="p">)</span>
+            <span class="c1"># If expecting stats output:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stats_output</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="kc">False</span><span class="p">:</span>
+                    <span class="n">print_formula_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span><span class="p">)</span>
+                    <span class="n">print_eval_data</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval_data</span><span class="p">)</span>
+                <span class="n">save_stats_to_file</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">formula_data</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">eval_data</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">stats_output</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">parallelism</span><span class="p">,</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">use_incremental_solving</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="c1"># If unit testing is done we return the raw action sets for examination</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">unit_test</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">plan</span>
+            <span class="k">return</span> <span class="n">up</span><span class="o">.</span><span class="n">engines</span><span class="o">.</span><span class="n">PlanGenerationResult</span><span class="p">(</span>
+                <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">SOLVED_SATISFICING</span><span class="p">,</span> <span class="n">plan</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+            <span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">output_stream</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span> <span class="o">=</span> <span class="n">standard_stdout</span></div>
+
+<div class="viewcode-block" id="SMTPlanner.destroy"><a class="viewcode-back" href="../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.SMTPlanner.destroy">[docs]</a>    <span class="k">def</span> <span class="nf">destroy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">delete_this</span> <span class="o">=</span> <span class="n">SMTPlanner</span><span class="p">()</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.SMTPlanner</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

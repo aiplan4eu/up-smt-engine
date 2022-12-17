@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>up_SMT_engine.fluents.BaseFluent &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="up_SMT_engine.fluents.R2ExistsFluent" href="up_SMT_engine.fluents.R2ExistsFluent.html" />
+    <link rel="prev" title="up_SMT_engine.fluents" href="up_SMT_engine.fluents.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.fluents.R2ExistsFluent.html" title="up_SMT_engine.fluents.R2ExistsFluent"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.fluents.html" title="up_SMT_engine.fluents"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.fluents.html" accesskey="U">up_SMT_engine.fluents</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.fluents.BaseFluent</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-up_SMT_engine.fluents.BaseFluent">
+<span id="up-smt-engine-fluents-basefluent"></span><h1>up_SMT_engine.fluents.BaseFluent<a class="headerlink" href="#module-up_SMT_engine.fluents.BaseFluent" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent" title="up_SMT_engine.fluents.BaseFluent.BaseFluent"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BaseFluent</span></code></a>(name, API_fluent)</p></td>
+<td><p>Custom fluent object used to generate Frame Axiom constraints, value bound constraints and to handle variables and chained variables for Fluents.</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.fluents.BaseFluent.</span></span><span class="sig-name descname"><span class="pre">BaseFluent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">API_fluent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Custom fluent object used to generate Frame Axiom constraints, value bound constraints and to handle variables and chained variables for Fluents.
+Able to handle all methods for sequential, and therefore most parallel plans</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.check_name_match">
+<span class="sig-name descname"><span class="pre">check_name_match</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.check_name_match"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.check_name_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return true/false if name matches this fluent’s base name</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>name (String): name to match</p>
+</dd>
+<dt>Returns:</dt><dd><p>Bool: True if match, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_predicate_at_t">
+<span class="sig-name descname"><span class="pre">__get_predicate_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_predicate_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to generate this fluent’s Bool representing its state at t = ‘timestep’</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Timestep value for the variable</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3.Real or z3.Int or z3.Bool: Variable expression of value of Fluent at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.get_fluents_up_to_t">
+<span class="sig-name descname"><span class="pre">get_fluents_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.get_fluents_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_fluents_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method for finding the list of state predicates corresponding to this fluent’s variables in each state from t = 0, to t = timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Last timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List: List of variables expressing this fluent’s values from timestep 0 to timestep</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.add_action_condition">
+<span class="sig-name descname"><span class="pre">add_action_condition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">action</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">condition</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.add_action_condition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.add_action_condition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used by actions to register as effecting this fluent</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>action (BaseAction or BaseAction subclass): Action which may affect this fluent when executed
+condition (FNODE): FNODE expression for action’s effect condition affecting this fluent</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.get_action_conditions">
+<span class="sig-name descname"><span class="pre">get_action_conditions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.get_action_conditions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_action_conditions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return set of actions that may affect this fluent, with their conditions</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>List: List of (BaseAction or BaseAction subclass, FNODE) pairs. The Action is an action which affects this fluent as part of its effects. The FNODE is the condition of the effect, if it has one</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_bound_constraints_at_t">
+<span class="sig-name descname"><span class="pre">__get_bound_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_lower</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_bound_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to generate bound constraints for either upper, or lower bound at timestep t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Timestep value
+bound (Numeric type): upper or lower bound value
+is_lower (bool): True if is lower, False if is upper bound</p>
+</dd>
+<dt>Returns:</dt><dd><p>_type_: _description_</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">get_bound_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.get_bound_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used to generate all bound constraints up to timestep t, can be called if no constraints are needed</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): Last timestep value</p>
+</dd>
+<dt>Returns:</dt><dd><p>List: List of bound constraints up to t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_at_t">
+<span class="sig-name descname"><span class="pre">get_bound_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.get_bound_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns bound constraints at t. Used for incremental solving.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expression for bound constraints at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.__generate_frame_axiom_constraints_at_t">
+<span class="sig-name descname"><span class="pre">__generate_frame_axiom_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__generate_frame_axiom_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method used internally to generate the frame axiom constraints for this fluent at time timestep</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expression for Frame axiom constraints at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_up_to_t">
+<span class="sig-name descname"><span class="pre">generate_frame_axiom_constraints_up_to_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.generate_frame_axiom_constraints_up_to_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_up_to_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate frame axiom constraints for each timestep point up to t</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): final timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>List(z3 expression): List of z3 expressions for frame axiom constraints up to timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_at_t">
+<span class="sig-name descname"><span class="pre">generate_frame_axiom_constraints_at_t</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/fluents/BaseFluent.html#BaseFluent.generate_frame_axiom_constraints_at_t"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_at_t" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns frame axioms at t. Used for incremental solving.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>timestep (int): current timestep</p>
+</dd>
+<dt>Returns:</dt><dd><p>z3 expression: z3 expressions for frame axiom constraints at timestep t</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">up_SMT_engine.fluents.BaseFluent</a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent"><code class="docutils literal notranslate"><span class="pre">BaseFluent</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.check_name_match"><code class="docutils literal notranslate"><span class="pre">BaseFluent.check_name_match()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_predicate_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.__get_predicate_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_fluents_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.get_fluents_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.add_action_condition"><code class="docutils literal notranslate"><span class="pre">BaseFluent.add_action_condition()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_action_conditions"><code class="docutils literal notranslate"><span class="pre">BaseFluent.get_action_conditions()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__get_bound_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.__get_bound_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.get_bound_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.get_bound_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.get_bound_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.__generate_frame_axiom_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.__generate_frame_axiom_constraints_at_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_up_to_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.generate_frame_axiom_constraints_up_to_t()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.fluents.BaseFluent.BaseFluent.generate_frame_axiom_constraints_at_t"><code class="docutils literal notranslate"><span class="pre">BaseFluent.generate_frame_axiom_constraints_at_t()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="up_SMT_engine.fluents.html"
+                          title="previous chapter">up_SMT_engine.fluents</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="up_SMT_engine.fluents.R2ExistsFluent.html"
+                          title="next chapter">up_SMT_engine.fluents.R2ExistsFluent</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/up_SMT_engine.fluents.BaseFluent.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.fluents.R2ExistsFluent.html" title="up_SMT_engine.fluents.R2ExistsFluent"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.fluents.html" title="up_SMT_engine.fluents"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.fluents.html" >up_SMT_engine.fluents</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.fluents.BaseFluent</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

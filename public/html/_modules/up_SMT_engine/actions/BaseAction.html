@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>up_SMT_engine.actions.BaseAction &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.actions.BaseAction</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for up_SMT_engine.actions.BaseAction</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">Implies</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.FNODEHelperFunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_FNODE_to_Z3</span><span class="p">,</span>
+    <span class="n">search_fluents_list</span><span class="p">,</span>
+    <span class="n">create_fluent_condition_tuple</span><span class="p">,</span>
+    <span class="n">convert_effect_to_Z3</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="BaseAction"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction">[docs]</a><span class="k">class</span> <span class="nc">BaseAction</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;Simple action class, used to handle all methods for sequential plans&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">grounded_action</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">=</span> <span class="n">grounded_action</span><span class="o">.</span><span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preconditions</span> <span class="o">=</span> <span class="n">grounded_action</span><span class="o">.</span><span class="n">preconditions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">effects</span> <span class="o">=</span> <span class="n">grounded_action</span><span class="o">.</span><span class="n">effects</span>
+
+<div class="viewcode-block" id="BaseAction.get_name"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_name">[docs]</a>    <span class="k">def</span> <span class="nf">get_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return action basename</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            String: action basename</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span></div>
+
+<div class="viewcode-block" id="BaseAction.check_name_match"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.check_name_match">[docs]</a>    <span class="k">def</span> <span class="nf">check_name_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other_action_name</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if the action basename matches this action&#39;s basename</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            other_action_name (String): other action&#39;s Basename</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Bool: True if matching, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">==</span> <span class="n">other_action_name</span></div>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Define two action objects as equal if they share the same grounded name, and are BaseActions or inherit from BaseAction. If two distinct actions happen to share the same grounded name</span>
+<span class="sd">        an error has occurred</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            other_action (BaseAction or BaseAction subclass): Other action to compare against</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Bool: True if matching, False otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseAction</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">BaseAction</span><span class="p">):</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">get_name</span><span class="p">()</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1"># Something went wrong, most likely an incompatible type</span>
+            <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">hash</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+
+<div class="viewcode-block" id="BaseAction.get_action_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_action_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_action_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to create an action at timestep t</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 Bool: z3 variable representing whether an action is executed at timstep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">stated_action_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">+</span> <span class="s2">&quot;_@t&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Bool</span><span class="p">(</span><span class="n">stated_action_name</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_effects_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Each effect has three FNODE structures, the condition (optional, makes effect conditional), fluent (the stated variable to be changed)</span>
+<span class="sd">        and the value (the new fluent value). These are separately converted into Z3, and returned as Implies(condition, (fluent == value))</span>
+<span class="sd">        These statements are And&#39;d together, as the set of effects of the action.</span>
+<span class="sd">        n.b. The fluents in the &#39;fluent&#39; part of the effect are in the next state (time + 1), because they are the result of</span>
+<span class="sd">        the current action, while all other fluents are in the current state</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): A list of z3 expressions representing the effects of this action at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">effects_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">effects</span><span class="p">:</span>
+            <span class="n">effects_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">convert_effect_to_Z3</span><span class="p">(</span><span class="n">effect</span><span class="p">,</span> <span class="n">timestep</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">effects_list</span>
+
+    <span class="k">def</span> <span class="nf">__get_causal_axioms_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The causal axioms assert the effects, given the action occurs</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: A z3 expression representing the causal axioms of this action at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">effects_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_effects_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="n">axiom</span> <span class="o">=</span> <span class="n">Implies</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_action_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">),</span> <span class="n">And</span><span class="p">(</span><span class="n">effects_list</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">axiom</span>
+
+<div class="viewcode-block" id="BaseAction.get_causal_axioms_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_causal_axioms_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_causal_axioms_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate the list of causal axioms for a problem of length up to timestep t</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Final timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): A list of z3 expressions representing the causal axioms of this action up to timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timestep</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">causal_axioms</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># We don&#39;t consider actions occurring in the final state (at timestep &#39;timestep&#39;) because their effects cannot influence</span>
+            <span class="c1"># the final state</span>
+            <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+                <span class="n">causal_axioms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_causal_axioms_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+            <span class="k">return</span> <span class="n">causal_axioms</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+    <span class="c1"># Returns causal axioms at t without adding to memory. Used for incremental solving.</span>
+<div class="viewcode-block" id="BaseAction.get_causal_axioms_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_causal_axioms_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_causal_axioms_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get causal axioms for the final timestep</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Final timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: A z3 expression representing the causal axioms of this action at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timestep</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Use timestep - 1 because we don&#39;t consider actions in final timestep</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_causal_axioms_at_t</span><span class="p">(</span><span class="n">timestep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[]</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_precondition_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate the precondition constraints for this action at timestep t</span>
+<span class="sd">        Precondition constraint is: action occuring at timestep t implies preconditions are true at timestep t</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: A z3 expression representing the precondition constraints for this action at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># First parses FNODEs for each precondition, converts into a list of Z3 statements, then uses And to join them</span>
+        <span class="n">precondition_constraint_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">precondition</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preconditions</span><span class="p">:</span>
+            <span class="n">precondition_constraint_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">convert_FNODE_to_Z3</span><span class="p">(</span><span class="n">precondition</span><span class="p">,</span> <span class="n">timestep</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="n">preconditions</span> <span class="o">=</span> <span class="n">And</span><span class="p">(</span><span class="n">precondition_constraint_list</span><span class="p">)</span>
+        <span class="c1"># Uses (action@t implies preconditions@t) to bind actions to preconditions</span>
+        <span class="k">return</span> <span class="n">Implies</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_action_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">),</span> <span class="n">preconditions</span><span class="p">)</span>
+
+<div class="viewcode-block" id="BaseAction.get_precondition_constraints_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_precondition_constraints_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_precondition_constraints_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Generate the list of precondition constraints for a problem of length up to timestep t</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Final timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): A list of z3 expressions representing the precondition constraints of this action up to timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">precondition_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># We don&#39;t consider actions occurring in the final state (at timestep &#39;timestep&#39;) because their effects cannot influence</span>
+        <span class="c1"># the final state</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+            <span class="n">precondition_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_precondition_constraints_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">precondition_constraints</span></div>
+
+    <span class="c1"># Returns precondition constraints at t without adding to memory. Used for incremental solving.</span>
+<div class="viewcode-block" id="BaseAction.get_precondition_constraints_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_precondition_constraints_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_precondition_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get precondition constraints for the final timestep</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Final timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: A z3 expression representing the precondition constraints of this action at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timestep</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># We don&#39;t consider actions occurring in the final state (at timestep &#39;timestep&#39;) because their effects cannot influence</span>
+            <span class="c1"># the final state</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_precondition_constraints_at_t</span><span class="p">(</span><span class="n">timestep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="BaseAction.get_effected_fluent_basename_condition_tuples"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.get_effected_fluent_basename_condition_tuples">[docs]</a>    <span class="k">def</span> <span class="nf">get_effected_fluent_basename_condition_tuples</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to get a list of all effected fluents, and the conditions for the effect</span>
+<span class="sd">        This is part of the process for sharing the information &#39;which actions affect which fluents&#39; with fluent objects</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Tuple(String, FNODE): A tuple of a fluent basename, and a FNODE expressing the condition for that fluent being affected</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tuple_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">effect</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">effects</span><span class="p">:</span>
+            <span class="n">tuple_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">create_fluent_condition_tuple</span><span class="p">(</span><span class="n">effect</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">tuple_list</span></div>
+
+<div class="viewcode-block" id="BaseAction.deliver_effect_tuples_to_Fluents"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.actions.ThereExistsAction.html#up_SMT_engine.ProblemManager.ProblemManager.BaseAction.deliver_effect_tuples_to_Fluents">[docs]</a>    <span class="k">def</span> <span class="nf">deliver_effect_tuples_to_Fluents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to deliver effect-fluent tupes for frame-axioms to the appropriate Fluent object. Should only be called once</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            Exception: Raise an exception if an unknown fluent is affected by an action</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tuple_list</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_effected_fluent_basename_condition_tuples</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">effect_tuple</span> <span class="ow">in</span> <span class="n">tuple_list</span><span class="p">:</span>
+            <span class="n">matched_fluent</span> <span class="o">=</span> <span class="n">search_fluents_list</span><span class="p">(</span><span class="n">fluents_list</span><span class="p">,</span> <span class="n">effect_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">matched_fluent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">):</span>
+                <span class="n">matched_fluent</span><span class="o">.</span><span class="n">add_action_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">effect_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">effect_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                    <span class="s2">&quot;Fluent name not recognised, has the fluent list been initialised?&quot;</span>
+                <span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.actions.BaseAction</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

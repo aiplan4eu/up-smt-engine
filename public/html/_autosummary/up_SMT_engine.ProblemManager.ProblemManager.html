@@ -1,0 +1,285 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>up_SMT_engine.ProblemManager.ProblemManager &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/classic.css" />
+    
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="up_SMT_engine.SMTPlanner" href="up_SMT_engine.SMTPlanner.html" />
+    <link rel="prev" title="up_SMT_engine.ProblemManager" href="up_SMT_engine.ProblemManager.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.SMTPlanner.html" title="up_SMT_engine.SMTPlanner"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.ProblemManager.html" title="up_SMT_engine.ProblemManager"
+             accesskey="P">previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.ProblemManager.html" accesskey="U">up_SMT_engine.ProblemManager</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.ProblemManager.ProblemManager</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-up_SMT_engine.ProblemManager.ProblemManager">
+<span id="up-smt-engine-problemmanager-problemmanager"></span><h1>up_SMT_engine.ProblemManager.ProblemManager<a class="headerlink" href="#module-up_SMT_engine.ProblemManager.ProblemManager" title="Permalink to this heading">¶</a></h1>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager" title="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ProblemManager</span></code></a>(grounded_problem[, ...])</p></td>
+<td><p>Class used to handle Action and Fluent classes used to generate the clauses describing the problem for a SMT solver</p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py class">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">up_SMT_engine.ProblemManager.ProblemManager.</span></span><span class="sig-name descname"><span class="pre">ProblemManager</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">grounded_problem</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parallel_choice</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sequential'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_incremental</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Class used to handle Action and Fluent classes used to generate the clauses describing the problem for a SMT solver</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_ordered_actions">
+<span class="sig-name descname"><span class="pre">get_ordered_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.get_ordered_actions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_ordered_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>The ThereExists implementation uses an arbitrary total ordering over all actions. The ordering used is the
+index of each action in smt_action</p>
+<blockquote>
+<div><dl class="simple">
+<dt>Returns:</dt><dd><p>List: Ordered list of actions</p>
+</dd>
+</dl>
+</div></blockquote>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.is_solved">
+<span class="sig-name descname"><span class="pre">is_solved</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.is_solved"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.is_solved" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if a satisfying model has been found</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Boolean: True if found, False otherwise</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.print_results">
+<span class="sig-name descname"><span class="pre">print_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.print_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.print_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the satisfying model if one exists</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_results">
+<span class="sig-name descname"><span class="pre">get_results</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.get_results"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_results" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the satisfying model if one exists</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>z3.Model: The satisfying model</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_formula_data">
+<span class="sig-name descname"><span class="pre">get_formula_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">formula_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.get_formula_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_formula_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the formula data (part of the performance statistics) for the most recent step to a dictionary</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>formula_data (Dictionary): The dictionary of lists for formula data</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_eval_data">
+<span class="sig-name descname"><span class="pre">get_eval_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eval_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.get_eval_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_eval_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Save the evaluation data (part of the performance statistics) for the most recent step to a dictionary</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>eval_data (List): The evaluation data list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_fluents">
+<span class="sig-name descname"><span class="pre">__initialise_fluents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_fluents" title="Permalink to this definition">¶</a></dt>
+<dd><p>For each ungrounded fluent create a grounded fluent, using either the BaseFluent or R2ExistsFluent class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_actions">
+<span class="sig-name descname"><span class="pre">__initialise_actions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_actions" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts grounded unified-planning actions into BaseAction, ForAllAction, ThereExistsAction or R2ExistsAction objects, depending on the parallel choice</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__share_effect_info">
+<span class="sig-name descname"><span class="pre">__share_effect_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__share_effect_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles sharing effect info from actions to fluents to enable fluents generating frame axiom constraitns</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__populate_all_fluents_sets">
+<span class="sig-name descname"><span class="pre">__populate_all_fluents_sets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__populate_all_fluents_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles creating the set of fluents relevant to each action. This is only used for parallel encodings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__populate_affecting_fluents_sets">
+<span class="sig-name descname"><span class="pre">__populate_affecting_fluents_sets</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__populate_affecting_fluents_sets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles creating the set of fluents affected by each action. This is only used for ThereExists encodings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_chained_variables">
+<span class="sig-name descname"><span class="pre">__initialise_chained_variables</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_chained_variables" title="Permalink to this definition">¶</a></dt>
+<dd><p>Initialise chained variables for all fluents. This is only used for relaxed relaxed ThereExists encodings</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__create_initial_values">
+<span class="sig-name descname"><span class="pre">__create_initial_values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__create_initial_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles initial values, initial_values does computation so only call once</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__create_goals">
+<span class="sig-name descname"><span class="pre">__create_goals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_timestep</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__create_goals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handles goals, time must be equal to the final state considered for the current problem</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>final_timestep (int): Final timestep of the problem</p>
+</dd>
+<dt>Returns:</dt><dd><p>Clause: Clause repreesnting all goals</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.check_sat">
+<span class="sig-name descname"><span class="pre">check_sat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">final_timestep</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/up_SMT_engine/ProblemManager/ProblemManager.html#ProblemManager.check_sat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.check_sat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Populates SMT problem instance and checks if the instance is satisfiable</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>time (int): Plan length</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <div>
+    <h3><a href="../index.html">Table of Contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">up_SMT_engine.ProblemManager.ProblemManager</a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager"><code class="docutils literal notranslate"><span class="pre">ProblemManager</span></code></a><ul>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_ordered_actions"><code class="docutils literal notranslate"><span class="pre">ProblemManager.get_ordered_actions()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.is_solved"><code class="docutils literal notranslate"><span class="pre">ProblemManager.is_solved()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.print_results"><code class="docutils literal notranslate"><span class="pre">ProblemManager.print_results()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_results"><code class="docutils literal notranslate"><span class="pre">ProblemManager.get_results()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_formula_data"><code class="docutils literal notranslate"><span class="pre">ProblemManager.get_formula_data()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.get_eval_data"><code class="docutils literal notranslate"><span class="pre">ProblemManager.get_eval_data()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_fluents"><code class="docutils literal notranslate"><span class="pre">ProblemManager.__initialise_fluents()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_actions"><code class="docutils literal notranslate"><span class="pre">ProblemManager.__initialise_actions()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__share_effect_info"><code class="docutils literal notranslate"><span class="pre">ProblemManager.__share_effect_info()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__populate_all_fluents_sets"><code class="docutils literal notranslate"><span class="pre">ProblemManager.__populate_all_fluents_sets()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__populate_affecting_fluents_sets"><code class="docutils literal notranslate"><span class="pre">ProblemManager.__populate_affecting_fluents_sets()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__initialise_chained_variables"><code class="docutils literal notranslate"><span class="pre">ProblemManager.__initialise_chained_variables()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__create_initial_values"><code class="docutils literal notranslate"><span class="pre">ProblemManager.__create_initial_values()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.__create_goals"><code class="docutils literal notranslate"><span class="pre">ProblemManager.__create_goals()</span></code></a></li>
+<li><a class="reference internal" href="#up_SMT_engine.ProblemManager.ProblemManager.ProblemManager.check_sat"><code class="docutils literal notranslate"><span class="pre">ProblemManager.check_sat()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="up_SMT_engine.ProblemManager.html"
+                          title="previous chapter">up_SMT_engine.ProblemManager</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="up_SMT_engine.SMTPlanner.html"
+                          title="next chapter">up_SMT_engine.SMTPlanner</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/_autosummary/up_SMT_engine.ProblemManager.ProblemManager.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.SMTPlanner.html" title="up_SMT_engine.SMTPlanner"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="up_SMT_engine.ProblemManager.html" title="up_SMT_engine.ProblemManager"
+             >previous</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="up_SMT_engine.html" >up_SMT_engine</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="up_SMT_engine.ProblemManager.html" >up_SMT_engine.ProblemManager</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.ProblemManager.ProblemManager</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

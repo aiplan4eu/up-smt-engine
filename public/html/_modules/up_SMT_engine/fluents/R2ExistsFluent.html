@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>up_SMT_engine.fluents.R2ExistsFluent &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.fluents.R2ExistsFluent</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for up_SMT_engine.fluents.R2ExistsFluent</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">z3</span> <span class="kn">import</span> <span class="n">And</span><span class="p">,</span> <span class="n">Or</span><span class="p">,</span> <span class="n">Implies</span><span class="p">,</span> <span class="n">Real</span><span class="p">,</span> <span class="n">Int</span><span class="p">,</span> <span class="n">Bool</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.helper_functions.FNODEHelperFunctions</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_FNODE_to_Z3</span><span class="p">,</span>
+    <span class="n">createR2ExistsTuple</span><span class="p">,</span>
+    <span class="n">getR2ExistsTupleValue</span><span class="p">,</span>
+    <span class="n">create_stated_action_instance</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">up_SMT_engine.fluents.BaseFluent</span> <span class="kn">import</span> <span class="n">BaseFluent</span>
+
+
+<div class="viewcode-block" id="R2ExistsFluent"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent">[docs]</a><span class="k">class</span> <span class="nc">R2ExistsFluent</span><span class="p">(</span><span class="n">BaseFluent</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;R2ExistsFluent inherits methods from BaseFluent, it handles fluents for relaxed relaxed ThereExists parallelism. This subclass extends BaseFluent by adding chained variables.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">API_fluent</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">API_fluent</span><span class="p">)</span>
+        <span class="c1"># We require the &#39;action_condition_pairs&#39; set to be populated so we know the set of actions which may</span>
+        <span class="c1"># affect this value. Do nothing for now.</span>
+        <span class="c1"># Array of (chained_fluent_name, action) tuples. Only used for relaxed relaxed ThereExists encoding</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Array of ordered actions affecting this variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ordered_actions</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="nf">__check_action_is_affecting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if an action affects this fluent according to the action_condition tuples list</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (BaseAction or BaseAction subclass): Action to check for</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Bool: True if affecting, false otherwise</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">action_tuple</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_condition_pairs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="n">action_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="R2ExistsFluent.init_chained_vars"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.init_chained_vars">[docs]</a>    <span class="k">def</span> <span class="nf">init_chained_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered_actions</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create a chained variable for each affecting action, plus one initial chained var.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            ordered_actions (List): Ordered list of actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create an ordered array of actions which affect this fluent</span>
+        <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="n">ordered_actions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">__check_action_is_affecting</span><span class="p">(</span><span class="n">action</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ordered_actions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+        <span class="c1"># 1 chained variable for each affecting action + 1 chained variable for start of timestep state</span>
+        <span class="n">initial_chained_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">+</span> <span class="s2">&quot;_0&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">initial_chained_var</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ordered_actions</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="c1"># Identify chained variable by index in list of chained variables</span>
+            <span class="n">chained_var_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chained_var_name</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_chained_var_instance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used internally to create/reference a chained variable</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            name (String): chained variable name</span>
+<span class="sd">            timestep (int): current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 variable for chained variable at timestep &#39;time&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">predicate_name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_@t&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluent_type</span> <span class="o">==</span> <span class="s2">&quot;Real&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Real</span><span class="p">(</span><span class="n">predicate_name</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">fluent_type</span> <span class="o">==</span> <span class="s2">&quot;Int&quot;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Int</span><span class="p">(</span><span class="n">predicate_name</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Bool</span><span class="p">(</span><span class="n">predicate_name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="R2ExistsFluent.get_chained_var"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_var">[docs]</a>    <span class="k">def</span> <span class="nf">get_chained_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r2exists_tuple</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Return chained variable corresponding to calling action. Returns previous chained variable if not for an effect</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            r2exists_tuple (Tuple): Tuple of values required for handling chained variables for relaxed relaxed ThereExists parallelism.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 variable: Chained variable</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">is_effect</span> <span class="o">=</span> <span class="n">getR2ExistsTupleValue</span><span class="p">(</span><span class="n">r2exists_tuple</span><span class="p">,</span> <span class="s2">&quot;is_effect&quot;</span><span class="p">)</span>
+        <span class="n">action_index</span> <span class="o">=</span> <span class="n">getR2ExistsTupleValue</span><span class="p">(</span><span class="n">r2exists_tuple</span><span class="p">,</span> <span class="s2">&quot;action_index&quot;</span><span class="p">)</span>
+        <span class="n">ordered_actions_list</span> <span class="o">=</span> <span class="n">getR2ExistsTupleValue</span><span class="p">(</span><span class="n">r2exists_tuple</span><span class="p">,</span> <span class="s2">&quot;actions_list&quot;</span><span class="p">)</span>
+        <span class="c1"># If this is part of an effect expression then the action will be part of ordered_actions.</span>
+        <span class="k">if</span> <span class="n">is_effect</span><span class="p">:</span>
+            <span class="n">action</span> <span class="o">=</span> <span class="n">ordered_actions_list</span><span class="p">[</span><span class="n">action_index</span><span class="p">]</span>
+            <span class="c1"># sublist index + 1 corresponds to the relevant chained variable index</span>
+            <span class="n">sublist_action_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_actions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">[</span><span class="n">sublist_action_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Find action in ordered sublist with greatest index, where overall list index is closest to but before</span>
+            <span class="c1"># the calling action&#39;s index</span>
+            <span class="c1"># Index in ordered sublist</span>
+            <span class="n">sublist_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="c1"># Index in ordered list of all actions</span>
+            <span class="n">closest_index</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">action</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_actions</span><span class="p">:</span>
+                <span class="n">current_index</span> <span class="o">=</span> <span class="n">ordered_actions_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">current_index</span> <span class="o">&gt;</span> <span class="n">closest_index</span> <span class="ow">and</span> <span class="n">current_index</span> <span class="o">&lt;</span> <span class="n">action_index</span><span class="p">:</span>
+                    <span class="n">closest_index</span> <span class="o">=</span> <span class="n">current_index</span>
+                    <span class="n">sublist_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_actions</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">action</span><span class="p">)</span>
+            <span class="c1"># If no actions in the sublist have lower indexes than the calling action this means the calling action</span>
+            <span class="c1"># is executed before any of the sublist actions. Therefore it uses the initial chained variable</span>
+            <span class="k">if</span> <span class="n">closest_index</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Corresponding chained variable index for an affecting action = sublist_index + 1</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">[</span><span class="n">sublist_index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_chained_vars_bound_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns chained variable bound constraints at t.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expressions for bound constraints at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">bound_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">chained_variable</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">:</span>
+                    <span class="n">chained_var_at_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_chained_var_instance</span><span class="p">(</span>
+                        <span class="n">chained_variable</span><span class="p">,</span> <span class="n">timestep</span>
+                    <span class="p">)</span>
+                    <span class="n">constraint</span> <span class="o">=</span> <span class="n">chained_var_at_t</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_bound</span>
+                    <span class="n">bound_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">chained_var_at_t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_chained_var_instance</span><span class="p">(</span>
+                    <span class="n">chained_variable</span><span class="p">,</span> <span class="n">timestep</span>
+                <span class="p">)</span>
+                <span class="n">constraint</span> <span class="o">=</span> <span class="n">chained_var_at_t</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_bound</span>
+                <span class="n">bound_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constraint</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">And</span><span class="p">(</span><span class="n">bound_constraints</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+<div class="viewcode-block" id="R2ExistsFluent.get_chained_vars_bound_constraints_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_vars_bound_constraints_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_chained_vars_bound_constraints_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">last_timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Method used to generate all bound constraints for chained variables up to time t, can be called if no constraints are needed</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            last_timestep (int): Final timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): List of z3 expressions for bound constraints up to timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">last_timestep</span><span class="p">):</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__get_chained_vars_bound_constraints_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">constraints</span></div>
+
+<div class="viewcode-block" id="R2ExistsFluent.get_chained_vars_bound_constraints_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.get_chained_vars_bound_constraints_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">get_chained_vars_bound_constraints_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns chained variable bound constraints at t. Used for incremental solving.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expressions for bound constraints at timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_chained_vars_bound_constraints_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__get_action_specific_action_condition_pairs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get action condition pairs corresponding to a specific action</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            action (BaseAction or BaseAction subclass): Action to search for in pairs</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(Tuple(BaseAction or BaseAction subclass, condition)): List of pairs with matching actions</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pairs_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">action_condition_pairs</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">action</span><span class="p">:</span>
+                <span class="n">pairs_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pair</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pairs_list</span>
+
+    <span class="k">def</span> <span class="nf">__assert_explanatory_axioms_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">,</span> <span class="n">actions_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assert explanatory axioms at t (these replace frame axioms for r2ThereExists parallelism) over chained variables</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+<span class="sd">            fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</span>
+<span class="sd">            actions_list (List(BaseAction or BaseAction subclass): List of actions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expression for explanatory axioms at t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">axioms</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">current_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_chained_var_instance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">timestep</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">)):</span>
+            <span class="n">prev_value</span> <span class="o">=</span> <span class="n">current_value</span>
+            <span class="n">current_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_chained_var_instance</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">timestep</span>
+            <span class="p">)</span>
+            <span class="n">relevant_action_condition_pairs</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__get_action_specific_action_condition_pairs</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ordered_actions</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">action_bool</span> <span class="o">=</span> <span class="n">create_stated_action_instance</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ordered_actions</span><span class="p">[</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_name</span><span class="p">(),</span> <span class="n">timestep</span>
+            <span class="p">)</span>
+            <span class="c1"># List of effects relevant to this fluent, owned by the same action.</span>
+            <span class="n">explanatory_effects_list</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="n">relevant_action_condition_pairs</span><span class="p">:</span>
+                <span class="n">r2Exists_tuple</span> <span class="o">=</span> <span class="n">createR2ExistsTuple</span><span class="p">(</span>
+                    <span class="n">actions_list</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">pair</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="kc">False</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">,</span> <span class="n">actions_list</span>
+                <span class="p">)</span>
+                <span class="n">constraint_as_Z3</span> <span class="o">=</span> <span class="n">convert_FNODE_to_Z3</span><span class="p">(</span>
+                    <span class="n">pair</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">r2Exists_tuple</span>
+                <span class="p">)</span>
+                <span class="n">explanatory_effects_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">And</span><span class="p">(</span><span class="n">constraint_as_Z3</span><span class="p">,</span> <span class="n">action_bool</span><span class="p">))</span>
+            <span class="n">explanatory_axiom</span> <span class="o">=</span> <span class="n">Implies</span><span class="p">(</span>
+                <span class="p">(</span><span class="n">prev_value</span> <span class="o">!=</span> <span class="n">current_value</span><span class="p">),</span> <span class="n">Or</span><span class="p">(</span><span class="n">explanatory_effects_list</span><span class="p">)</span>
+            <span class="p">)</span>
+            <span class="n">axioms</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">explanatory_axiom</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">And</span><span class="p">(</span><span class="n">axioms</span><span class="p">)</span>
+
+<div class="viewcode-block" id="R2ExistsFluent.generate_explanatory_axioms_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.generate_explanatory_axioms_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">generate_explanatory_axioms_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">,</span> <span class="n">actions_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assert explanatory axioms up to the final timestep (these replace frame axioms) over chained variables</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Final timestep</span>
+<span class="sd">            fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</span>
+<span class="sd">            actions_list (List(BaseAction or BaseAction subclass): List of actions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): List of z3 expressions for explanatory axioms up to timestep t</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Explanatory axioms are used to link chained variables in a timestep. These are only needed when</span>
+        <span class="c1"># actions are executed in that timestep. We only permit actions to be executed up to timestep t-1</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">__assert_explanatory_axioms_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">,</span> <span class="n">actions_list</span><span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="n">constraints</span></div>
+
+<div class="viewcode-block" id="R2ExistsFluent.generate_explanatory_axioms_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.generate_explanatory_axioms_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">generate_explanatory_axioms_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">,</span> <span class="n">actions_list</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns explanatory axioms at t. Used for incremental solving.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+<span class="sd">            fluents_list (List(BaseFluent or BaseFluent subclass)): List of fluents</span>
+<span class="sd">            actions_list (List(BaseAction or BaseAction subclass): List of actions</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expression for explanatory axioms at timestep t - 1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timestep</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Explanatory axioms are used to link chained variables in a timestep. These are only needed when</span>
+            <span class="c1"># actions are executed in that timestep. We only permit actions to be executed up to timestep t-1</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__assert_explanatory_axioms_at_t</span><span class="p">(</span>
+                <span class="n">timestep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fluents_list</span><span class="p">,</span> <span class="n">actions_list</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+    <span class="k">def</span> <span class="nf">__link_chained_vars_to_majors_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assert initial and final chained variables are linked with major timestep variables</span>
+<span class="sd">        Even if no actions affect this, because of the 0th chained variable independent of an affecting</span>
+<span class="sd">        action this method is valid, and equivalent to current_state_var == next_state_var</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Current timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expression for linking chained variables to major variables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># link first chained var to current major timestep variable</span>
+        <span class="n">current_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_BaseFluent__get_predicate_at_t</span><span class="p">(</span><span class="n">timestep</span><span class="p">)</span>
+        <span class="n">first_chained_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_chained_var_instance</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">timestep</span>
+        <span class="p">)</span>
+        <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_state</span> <span class="o">==</span> <span class="n">first_chained_var</span><span class="p">)</span>
+        <span class="c1"># link last chained var to next major timestep variable</span>
+        <span class="n">next_state</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_BaseFluent__get_predicate_at_t</span><span class="p">(</span><span class="n">timestep</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">last_chained_var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__get_chained_var_instance</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">chained_vars</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="n">timestep</span>
+        <span class="p">)</span>
+        <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">next_state</span> <span class="o">==</span> <span class="n">last_chained_var</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">And</span><span class="p">(</span><span class="n">constraints</span><span class="p">)</span>
+
+<div class="viewcode-block" id="R2ExistsFluent.link_chained_vars_to_majors_up_to_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.link_chained_vars_to_majors_up_to_t">[docs]</a>    <span class="k">def</span> <span class="nf">link_chained_vars_to_majors_up_to_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Assert all initial and final chained variables are linked with major timestep variables.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Final timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List(z3 expression): List of z3 expressions for linking chained variables to major variables</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># Explanatory axioms are used to link chained variables in a timestep. These are only needed when</span>
+        <span class="c1"># actions are executed in that timestep. We only permit actions to be executed up to timestep t-1</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+            <span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__link_chained_vars_to_majors_at_t</span><span class="p">(</span><span class="n">t</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">constraints</span></div>
+
+<div class="viewcode-block" id="R2ExistsFluent.link_chained_vars_to_majors_at_t"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.helper_functions.FluentHelperFunctions.html#up_SMT_engine.fluents.R2ExistsFluent.R2ExistsFluent.link_chained_vars_to_majors_at_t">[docs]</a>    <span class="k">def</span> <span class="nf">link_chained_vars_to_majors_at_t</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timestep</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns constraints linking chained variables at t. Used for incremental solving.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            timestep (int): Final timestep</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            z3 expression: z3 expression for linking chained variables to major variables at time &#39;timestep - 1&#39;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">timestep</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># Explanatory axioms are used to link chained variables in a timestep. These are only needed when</span>
+            <span class="c1"># actions are executed in that timestep. We only permit actions to be executed up to timestep t-1</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__link_chained_vars_to_majors_at_t</span><span class="p">(</span><span class="n">timestep</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">up_SMT_engine.fluents.R2ExistsFluent</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>

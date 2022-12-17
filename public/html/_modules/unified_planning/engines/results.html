@@ -1,0 +1,276 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>unified_planning.engines.results &#8212; up_SMT_engine  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/classic.css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/jquery.js"></script>
+    <script src="../../../_static/underscore.js"></script>
+    <script src="../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">unified_planning.engines.results</a></li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for unified_planning.engines.results</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Copyright 2021 AIPlan4EU project</span>
+<span class="c1">#</span>
+<span class="c1"># Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);</span>
+<span class="c1"># you may not use this file except in compliance with the License.</span>
+<span class="c1"># You may obtain a copy of the License at</span>
+<span class="c1">#</span>
+<span class="c1">#     http://www.apache.org/licenses/LICENSE-2.0</span>
+<span class="c1">#</span>
+<span class="c1"># Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1"># distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span>
+<span class="c1"># See the License for the specific language governing permissions and</span>
+<span class="c1"># limitations under the License.</span>
+<span class="c1">#</span>
+<span class="sd">&quot;&quot;&quot;This module defines the PlanGenerationResult class.&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">unified_planning</span> <span class="k">as</span> <span class="nn">up</span>
+<span class="kn">from</span> <span class="nn">unified_planning.exceptions</span> <span class="kn">import</span> <span class="n">UPUsageError</span>
+<span class="kn">from</span> <span class="nn">unified_planning.model</span> <span class="kn">import</span> <span class="n">AbstractProblem</span>
+<span class="kn">from</span> <span class="nn">unified_planning.plans</span> <span class="kn">import</span> <span class="n">ActionInstance</span>
+<span class="kn">from</span> <span class="nn">dataclasses</span> <span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">field</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span><span class="p">,</span> <span class="n">auto</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span>
+
+
+<span class="k">class</span> <span class="nc">ValidationResultStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enum representing the 2 possible values in the `status` field of a :class:`~unified_planning.engines.ValidationResult`:</span>
+<span class="sd">    VALID or INVALID.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">VALID</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">auto</span><span class="p">()</span>
+    <span class="p">)</span>  <span class="c1"># The plan is valid for the problem, it satisfies all the hard constraints</span>
+    <span class="n">INVALID</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">auto</span><span class="p">()</span>
+    <span class="p">)</span>  <span class="c1"># The plan is invalid for the problem, it does not satisfy all the hard constraints</span>
+
+
+<div class="viewcode-block" id="PlanGenerationResultStatus"><a class="viewcode-back" href="../../../_autosummary/up_SMT_engine.SMTPlanner.html#up_SMT_engine.SMTPlanner.PlanGenerationResultStatus">[docs]</a><span class="k">class</span> <span class="nc">PlanGenerationResultStatus</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enum representing the 9 possible values in the status field of a :class:`~unified_planning.engines.PlanGenerationResult`:</span>
+<span class="sd">    SOLVED_SATISFICING        -&gt; Valid plan found.</span>
+<span class="sd">    SOLVED_OPTIMALLY          -&gt; Optimal plan found.</span>
+<span class="sd">    UNSOLVABLE_PROVEN         -&gt; The problem is impossible, no valid plan exists.</span>
+<span class="sd">    UNSOLVABLE_INCOMPLETELY   -&gt; The planner could not find a plan, but it&#39;s not sure that</span>
+<span class="sd">                                 the problem is impossible (The planner is incomplete)</span>
+<span class="sd">    TIMEOUT                   -&gt; The planner ran out of time</span>
+<span class="sd">    MEMOUT                    -&gt; The planner ran out of memory</span>
+<span class="sd">    INTERNAL_ERROR            -&gt; The planner had an internal error</span>
+<span class="sd">    UNSUPPORTED_PROBLEM       -&gt; The problem given is not supported by the planner</span>
+<span class="sd">    INTERMEDIATE              -&gt; The report is not a final one but it&#39;s given through the callback function</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">SOLVED_SATISFICING</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>  <span class="c1"># Valid plan found.</span>
+    <span class="n">SOLVED_OPTIMALLY</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>  <span class="c1"># Optimal plan found.</span>
+    <span class="n">UNSOLVABLE_PROVEN</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>  <span class="c1"># The problem is impossible, no valid plan exists.</span>
+    <span class="n">UNSOLVABLE_INCOMPLETELY</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">auto</span><span class="p">()</span>
+    <span class="p">)</span>  <span class="c1"># The planner could not find a plan, but it&#39;s not sure that the problem is impossible (The planner is incomplete)</span>
+    <span class="n">TIMEOUT</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>  <span class="c1"># The planner ran out of time</span>
+    <span class="n">MEMOUT</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>  <span class="c1"># The planner ran out of memory</span>
+    <span class="n">INTERNAL_ERROR</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>  <span class="c1"># The planner had an internal error</span>
+    <span class="n">UNSUPPORTED_PROBLEM</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>  <span class="c1"># The problem given is not supported by the planner</span>
+    <span class="n">INTERMEDIATE</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">auto</span><span class="p">()</span>
+    <span class="p">)</span>  <span class="c1"># The report is not a final one but it&#39;s given through the callback function</span></div>
+
+
+<span class="n">POSITIVE_OUTCOMES</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">SOLVED_SATISFICING</span><span class="p">,</span>
+        <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">SOLVED_OPTIMALLY</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">NEGATIVE_OUTCOMES</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">UNSOLVABLE_PROVEN</span><span class="p">,</span>
+        <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">UNSOLVABLE_INCOMPLETELY</span><span class="p">,</span>
+        <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">UNSUPPORTED_PROBLEM</span><span class="p">,</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">LogLevel</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Enum representing the 4 possible values in the verbosity level of a :class:`~unified_planning.engines.LogMessage`:</span>
+<span class="sd">    DEBUG, INFO, WARNING and ERROR</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">DEBUG</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">INFO</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">WARNING</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+    <span class="n">ERROR</span> <span class="o">=</span> <span class="n">auto</span><span class="p">()</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">LogMessage</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is composed by a message and the Enum LogLevel indicating</span>
+<span class="sd">    this message level, like Debug, Info, Warning or Error.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">level</span><span class="p">:</span> <span class="n">LogLevel</span>
+    <span class="n">message</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">Result</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;This class represents the base class for results given by the engines to the user.&quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">is_definitive_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="sd">&quot;&quot;&quot;This predicate should state if the Result is definitive or if it can be improved.&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">PlanGenerationResult</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class that represents the result of a plan generation call.&quot;&quot;&quot;</span>
+
+    <span class="n">status</span><span class="p">:</span> <span class="n">PlanGenerationResultStatus</span>
+    <span class="n">plan</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="s2">&quot;up.plans.Plan&quot;</span><span class="p">]</span>
+    <span class="n">engine_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">metrics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">log_messages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">LogMessage</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">__post__init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Checks that plan and status are consistent</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">POSITIVE_OUTCOMES</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UPUsageError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The Result status is </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">)</span><span class="si">}</span><span class="s2"> but no plan is set.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="ow">in</span> <span class="n">NEGATIVE_OUTCOMES</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">plan</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UPUsageError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The Result status is </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">status</span><span class="p">)</span><span class="si">}</span><span class="s2"> but the plan is </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">plan</span><span class="p">)</span><span class="si">}</span><span class="s2">.</span><span class="se">\n</span><span class="s2">With this status the plan must be None.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="nf">is_definitive_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">optimality_required</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">optimality_required</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">quality_metrics</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+            <span class="p">)</span>  <span class="c1"># Require optimality if the problem has at least one quality metric.</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">SOLVED_OPTIMALLY</span>
+            <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">UNSOLVABLE_PROVEN</span>
+            <span class="ow">or</span> <span class="p">(</span>
+                <span class="n">optimality_required</span>
+                <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="n">PlanGenerationResultStatus</span><span class="o">.</span><span class="n">SOLVED_SATISFICING</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">ValidationResult</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class that represents the result of a validate call.&quot;&quot;&quot;</span>
+
+    <span class="n">status</span><span class="p">:</span> <span class="n">ValidationResultStatus</span>
+    <span class="n">engine_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">log_messages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">LogMessage</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_definitive_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span>
+
+
+<span class="nd">@dataclass</span>
+<span class="k">class</span> <span class="nc">CompilerResult</span><span class="p">(</span><span class="n">Result</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Class that represents the result of a compile call.&quot;&quot;&quot;</span>
+
+    <span class="n">problem</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">AbstractProblem</span><span class="p">]</span>
+    <span class="n">map_back_action_instance</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+        <span class="n">Callable</span><span class="p">[[</span><span class="n">ActionInstance</span><span class="p">],</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ActionInstance</span><span class="p">]]</span>
+    <span class="p">]</span>
+    <span class="n">engine_name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">log_messages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">LogMessage</span><span class="p">]]</span> <span class="o">=</span> <span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_post_init</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Check that compiled problem and map_back_action_instance are consistent with each other</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">problem</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_back_action_instance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UPUsageError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The compiled Problem is None but the map_back_action_instance Callable is not None.&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">problem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">map_back_action_instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">UPUsageError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;The compiled Problem is </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">problem</span><span class="p">)</span><span class="si">}</span><span class="s2"> but the map_back_action_instance Callable is None.&quot;</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_definitive_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">problem</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">up_SMT_engine  documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">unified_planning.engines.results</a></li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2022, Ben Pathak.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 5.3.0.
+    </div>
+  </body>
+</html>
