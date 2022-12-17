@@ -7,4 +7,4 @@ pages:
     - echo Do nothing
   artifacts:
     paths:
-    - public/html
+    - public/html/index.html
