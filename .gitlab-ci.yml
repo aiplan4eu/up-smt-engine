@@ -1,0 +1,10 @@
+image: python:3.8-slim
+
+pages:
+    script:
+        mv docs/_build/html public
+    artifacts:
+        paths:
+            public
+    only:
+        master
