@@ -1,2 +1,10 @@
 # The Docker image that will be used to build your app
-image: python:3.11.0-slim-bullseye
+image: alpine:latest
+
+pages:
+	stage: deploy
+	artifacts:
+		paths:
+		- public
+	only:
+	- master
