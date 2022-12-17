@@ -1,8 +1,9 @@
 # The Docker image that will be used to build your app
-image: alpine:latest
+image: python:3.8-slim
 
 pages:
-  stage: deploy
+  script:
+    - echo Do nothing
   artifacts:
     paths:
     - public
