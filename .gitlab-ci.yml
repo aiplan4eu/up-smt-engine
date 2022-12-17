@@ -2,9 +2,9 @@
 image: alpine:latest
 
 pages:
-	stage: deploy
-	artifacts:
-		paths:
-		- public
-	only:
-	- master
+  stage: deploy
+  artifacts:
+    paths:
+    - public
+  only:
+    - master
