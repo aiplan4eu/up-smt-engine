@@ -14,7 +14,7 @@ from up_SMT_engine.ProblemBuilder.ThereExistsProblemBuilder import (
     ThereExistsProblemBuilder,
 )
 from up_SMT_engine.ProblemBuilder.R2EProblemBuilder import R2EProblemBuilder
-from z3 import And, sat, Solver
+from z3 import And, sat, Solver, Bool
 
 
 class ProblemManager:
@@ -267,12 +267,17 @@ class ProblemManager:
             else:
                 # Create a problem instance for time t
                 self.solver_instance = Solver()
-
+        current_goal_clause = self.__create_goals(final_timestep)
         # Use ProblemBuilder class tailored to parallelism choice to add the appropriate clauses to the problem
         self.problem_builder.build(
-            self.solver_instance, final_timestep, self.__create_goals(final_timestep)
+            self.solver_instance, final_timestep, current_goal_clause
         )
-        # Solve
-        self.results = self.solver_instance.check()
+        if self.incremental:
+            current_goal_bool = Bool("goal_@t" + str(final_timestep))
+            # Solve
+            self.results = self.solver_instance.check(current_goal_bool)
+        else:
+            # Solve
+            self.results = self.solver_instance.check()
 
         self.run_time = system_time.process_time() - start_time

@@ -109,5 +109,5 @@ class R2EProblemBuilder(BaseProblemBuilder):
             self.add_action_constraints(problem_instance, plan_len)
             # No mutexes required
 
-        self.add_goal(problem_instance, goal_clause)
+        self.add_goal(problem_instance, goal_clause, plan_len)
         return

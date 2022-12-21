@@ -54,5 +54,5 @@ class ThereExistsProblemBuilder(BaseProblemBuilder):
             mutexes = self.__generate_parallelism_mutexes(plan_len)
             super().add_mutexes(problem_instance, mutexes)
 
-        self.add_goal(problem_instance, goal_clause)
+        self.add_goal(problem_instance, goal_clause, plan_len)
         return
