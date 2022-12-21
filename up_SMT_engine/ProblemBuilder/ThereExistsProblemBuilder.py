@@ -19,7 +19,7 @@ class ThereExistsProblemBuilder(BaseProblemBuilder):
         # If index < i, then add clause constraining with condition.
         # No need to check the first action
         for i in range(1, len(self.actions)):
-            if self.incremental:
+            if not self.reset_solver_between_runs:
                 later_action = self.actions[i]
                 constraints.append(
                     later_action.get_ThereExists_constraints_at_t(

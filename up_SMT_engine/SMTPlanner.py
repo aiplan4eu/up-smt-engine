@@ -57,6 +57,7 @@ def run_smt_planner(problem, smt_planner, return_queue):
             grounded_problem,
             smt_planner.parallelism,
             smt_planner.use_incremental_solving,
+            smt_planner.reset_solver,
         )
 
         # If no valid plan length is set then disable it
@@ -195,7 +196,7 @@ class SMTPlanner(engines.Engine, engines.mixins.OneshotPlannerMixin):
         timeout: Optional[float] = -1,
         output_stream: Optional[IO[str]] = None,
     ) -> "up.engines.results.PlanGenerationResult":
-        """_summary_
+        """Parse engine run parameters and run the run_smt_planner function
 
         Args:
             problem (up.model.Problem): A unified-planning API based problem to solve
@@ -225,14 +226,12 @@ class SMTPlanner(engines.Engine, engines.mixins.OneshotPlannerMixin):
                 )
                 else False
             )
-            self.use_incremental_solving = (
-                False
-                if (
-                    self.use_incremental_solving is not None
-                    and self.use_incremental_solving == False
-                )
-                else True
-            )
+            self.reset_solver = False
+            if self.use_incremental_solving is None:
+                self.use_incremental_solving = True
+            elif self.use_incremental_solving == "reset_solver":
+                self.use_incremental_solving = False
+                self.reset_solver = True
             # If using a timeout create a manager for handling the Process running the solver
             if timeout > 0:
                 manager = Manager()

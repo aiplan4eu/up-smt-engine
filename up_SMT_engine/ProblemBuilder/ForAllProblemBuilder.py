@@ -16,7 +16,7 @@ class ForAllProblemBuilder(BaseProblemBuilder):
         """
         constraints = []
         for action in self.actions:
-            if self.incremental:
+            if not self.reset_solver_between_runs:
                 constraints.append(action.get_ForAll_constraints_at_t(plan_len))
             else:
                 constraints.append(action.get_ForAll_constraints_up_to_t(plan_len))
