@@ -14,14 +14,18 @@ from up_SMT_engine.ProblemBuilder.ThereExistsProblemBuilder import (
     ThereExistsProblemBuilder,
 )
 from up_SMT_engine.ProblemBuilder.R2EProblemBuilder import R2EProblemBuilder
-from z3 import And, sat, Solver
+from z3 import And, sat, Solver, Bool
 
 
 class ProblemManager:
     """Class used to handle Action and Fluent classes used to generate the clauses describing the problem for a SMT solver"""
 
     def __init__(
-        self, grounded_problem, parallel_choice="sequential", run_incremental=True
+        self,
+        grounded_problem,
+        parallel_choice="sequential",
+        run_incremental=True,
+        reset_solver_between_runs=False,
     ):
         """Initialisation function used to generate the necessary classes. Actions, Fluents, and the ProblemBuilder have specialised subclasses for specific types of parallelism.
 
@@ -68,6 +72,7 @@ class ProblemManager:
                 self.smt_action,
                 self.smt_fluent,
                 self.incremental,
+                reset_solver_between_runs,
                 self.__create_initial_values(),
             )
         elif parallel_choice == "ThereExists":
@@ -80,6 +85,7 @@ class ProblemManager:
                 self.smt_action,
                 self.smt_fluent,
                 self.incremental,
+                reset_solver_between_runs,
                 self.__create_initial_values(),
             )
         elif parallel_choice == "relaxed_relaxed_ThereExists":
@@ -91,6 +97,7 @@ class ProblemManager:
                 self.smt_action,
                 self.smt_fluent,
                 self.incremental,
+                reset_solver_between_runs,
                 self.__create_initial_values(),
             )
         else:
@@ -98,6 +105,7 @@ class ProblemManager:
                 self.smt_action,
                 self.smt_fluent,
                 self.incremental,
+                reset_solver_between_runs,
                 self.__create_initial_values(),
             )
 
@@ -260,19 +268,19 @@ class ProblemManager:
                 + (len(self.smt_action) * (self.max_steps - 1))
             )
             print(len(self.solver_instance.assertions()))
-        if final_timestep == 0 or not self.incremental:
-            if self.solver_instance is not None:
-                # Reset the solver
-                self.solver_instance.reset()
-            else:
-                # Create a problem instance for time t
-                self.solver_instance = Solver()
-
+        if final_timestep == 0:
+            self.solver_instance = Solver()
+        current_goal_clause = self.__create_goals(final_timestep)
         # Use ProblemBuilder class tailored to parallelism choice to add the appropriate clauses to the problem
         self.problem_builder.build(
-            self.solver_instance, final_timestep, self.__create_goals(final_timestep)
+            self.solver_instance, final_timestep, current_goal_clause
         )
-        # Solve
-        self.results = self.solver_instance.check()
+        if self.incremental:
+            current_goal_bool = Bool("goal_@t" + str(final_timestep))
+            # Solve
+            self.results = self.solver_instance.check(current_goal_bool)
+        else:
+            # Solve
+            self.results = self.solver_instance.check()
 
         self.run_time = system_time.process_time() - start_time

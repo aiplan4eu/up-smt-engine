@@ -14,7 +14,7 @@ class R2EProblemBuilder(BaseProblemBuilder):
         if plan_len > 0:
             # Generate explanatory axioms, these are responsible for linking each fluent to the next similar to frame axioms
             for fluent in self.fluents:
-                if self.incremental:
+                if not self.reset_solver_between_runs:
                     problem_instance.add(
                         fluent.generate_explanatory_axioms_at_t(
                             plan_len, self.fluents, self.actions
@@ -35,7 +35,7 @@ class R2EProblemBuilder(BaseProblemBuilder):
 
             # Generate bound constraints over chained variables
             for fluent in self.fluents:
-                if self.incremental:
+                if not self.reset_solver_between_runs:
                     problem_instance.add(
                         fluent.get_chained_vars_bound_constraints_at_t(plan_len)
                     )
@@ -49,7 +49,7 @@ class R2EProblemBuilder(BaseProblemBuilder):
 
         # Generate bound constraints over non-chained fluents
         for fluent in self.fluents:
-            if self.incremental:
+            if not self.reset_solver_between_runs:
                 problem_instance.add(fluent.get_bound_constraints_at_t(plan_len))
             else:
                 bound_constraints = fluent.get_bound_constraints_up_to_t(plan_len)
@@ -66,7 +66,7 @@ class R2EProblemBuilder(BaseProblemBuilder):
         """
         # Generate all causal constraints over all actions. These require that an action occurring causes the correct effects
         for action in self.actions:
-            if self.incremental:
+            if not self.reset_solver_between_runs:
                 problem_instance.add(
                     action.get_causal_axioms_at_t(plan_len, self.fluents, self.actions)
                 )
@@ -79,7 +79,7 @@ class R2EProblemBuilder(BaseProblemBuilder):
 
         # Generate all precondition constraints over all actions. These require that an action occurring only happens when preconditions are satisfied
         for action in self.actions:
-            if self.incremental:
+            if not self.reset_solver_between_runs:
                 problem_instance.add(
                     action.get_precondition_constraints_at_t(
                         plan_len, self.fluents, self.actions
@@ -109,5 +109,5 @@ class R2EProblemBuilder(BaseProblemBuilder):
             self.add_action_constraints(problem_instance, plan_len)
             # No mutexes required
 
-        self.add_goal(problem_instance, goal_clause)
+        self.add_goal(problem_instance, goal_clause, plan_len)
         return

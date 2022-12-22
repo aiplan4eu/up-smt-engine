@@ -1,4 +1,4 @@
-from z3 import And, Not, Or
+from z3 import And, Not, Or, Bool, Implies
 
 
 class BaseProblemBuilder:
@@ -6,10 +6,11 @@ class BaseProblemBuilder:
     Suitable for sequential planning
     """
 
-    def __init__(self, actions, fluents, is_incremental, initial_values):
+    def __init__(self, actions, fluents, is_incremental, reset_solver, initial_values):
         self.actions = actions
         self.fluents = fluents
         self.incremental = is_incremental
+        self.reset_solver_between_runs = reset_solver
         self.initial_values = initial_values
         self.num_mutexes = 0
 
@@ -29,7 +30,7 @@ class BaseProblemBuilder:
             Array of constraint clauses: Array of constraint clauses. If using incremental solving this only covers the penultimate timestep. Otherwise the array covers the first to penultimate timesteps
         """
         constraints = []
-        if self.incremental:
+        if not self.reset_solver_between_runs:
             t = plan_len - 1
             actions_at_t = []
             for i in range(0, len(self.actions)):
@@ -60,7 +61,7 @@ class BaseProblemBuilder:
             instance (z3.Solver): Current Solver to which clauses can be added
             mutex_array (Array of constraint clauses): Array of mutex clauses to add
         """
-        if self.incremental:
+        if not self.reset_solver_between_runs:
             # Expect a 1d array of constraints
             self.num_mutexes += len(mutex_array)
             for constraint in mutex_array:
@@ -81,7 +82,7 @@ class BaseProblemBuilder:
         """
         # Generate all causal constraints over all actions
         for action in self.actions:
-            if self.incremental:
+            if not self.reset_solver_between_runs:
                 problem_instance.add(action.get_causal_axioms_at_t(plan_len))
             else:
                 axioms = action.get_causal_axioms_up_to_t(plan_len)
@@ -90,7 +91,7 @@ class BaseProblemBuilder:
 
         # Generate all precondition constraints over all actions
         for action in self.actions:
-            if self.incremental:
+            if not self.reset_solver_between_runs:
                 problem_instance.add(action.get_precondition_constraints_at_t(plan_len))
             else:
                 constraints = action.get_precondition_constraints_up_to_t(plan_len)
@@ -106,7 +107,7 @@ class BaseProblemBuilder:
         """
         # Generate bound constraints over all fluents
         for fluent in self.fluents:
-            if self.incremental:
+            if not self.reset_solver_between_runs:
                 problem_instance.add(fluent.get_bound_constraints_at_t(plan_len))
             else:
                 bound_constraints = fluent.get_bound_constraints_up_to_t(plan_len)
@@ -116,7 +117,7 @@ class BaseProblemBuilder:
         if plan_len > 0:
             # Generate frame axiom constraints over all fluents
             for fluent in self.fluents:
-                if self.incremental:
+                if not self.reset_solver_between_runs:
                     problem_instance.add(
                         fluent.generate_frame_axiom_constraints_at_t(plan_len)
                     )
@@ -132,17 +133,21 @@ class BaseProblemBuilder:
             problem_instance (z3.Solver): The current solver to which clauses are added
             plan_len (int): The plan length
         """
-        if plan_len == 0 or not self.incremental:
-            # Reset mutex count
-            self.num_mutexes = 0
-            # Add initial state constraints
-            for init_value in self.initial_values:
-                problem_instance.add(init_value)
-        elif problem_instance is not None and self.incremental:
+        if plan_len > 0 and not (self.incremental or self.reset_solver_between_runs):
             # Pop previous goal clause
             problem_instance.pop()
+        if not self.incremental or plan_len == 0:
+            if self.reset_solver_between_runs:
+                # Reset mutex count
+                self.num_mutexes = 0
+                # Reset the solver
+                self.solver_instance.reset()
+            if plan_len == 0 or self.reset_solver_between_runs:
+                # Add initial state constraints
+                for init_value in self.initial_values:
+                    problem_instance.add(init_value)
 
-    def add_goal(self, problem_instance, goal_clause):
+    def add_goal(self, problem_instance, goal_clause, plan_len):
         """Add the goal value to the solver, and create a checkpoint if using incremental solving
 
         Args:
@@ -150,10 +155,14 @@ class BaseProblemBuilder:
             goal_clause (Clause): The clause representing all goal conditions
         """
         if self.incremental:
-            # Create a breakpoint, allowing the current goals to be removed if they are unsatisfiable
-            # Using push automatically turns on incremental mode for the solver
-            problem_instance.push()
-        problem_instance.add(goal_clause)
+            # Add goal as an implication of a boolean, this boolean can then be checked for satisfiability using check()
+            current_goal_bool = Bool("goal_@t" + str(plan_len))
+            problem_instance.add(Implies(current_goal_bool, goal_clause))
+        else:
+            if not self.reset_solver_between_runs:
+                problem_instance.push()
+            # pushing is only necessary if the solver is not reset
+            problem_instance.add(goal_clause)
 
     def build(self, problem_instance, plan_len, goal_clause):
         """Using clauses generated by actions and fluents build the problem in the z3 Solver
@@ -174,4 +183,4 @@ class BaseProblemBuilder:
             mutexes = self.__generate_parallelism_mutexes(plan_len)
             self.add_mutexes(problem_instance, mutexes)
 
-        self.add_goal(problem_instance, goal_clause)
+        self.add_goal(problem_instance, goal_clause, plan_len)
