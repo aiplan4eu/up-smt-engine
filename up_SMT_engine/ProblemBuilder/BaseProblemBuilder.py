@@ -133,18 +133,19 @@ class BaseProblemBuilder:
             problem_instance (z3.Solver): The current solver to which clauses are added
             plan_len (int): The plan length
         """
-        if self.reset_solver_between_runs:
-            # Reset mutex count
-            self.num_mutexes = 0
-            if self.solver_instance is not None:
-                # Reset the solver
-                self.solver_instance.reset()
-            # Add initial state constraints
-            for init_value in self.initial_values:
-                problem_instance.add(init_value)
-        elif not self.incremental:
+        if plan_len > 0 and not (self.incremental or self.reset_solver_between_runs):
             # Pop previous goal clause
             problem_instance.pop()
+        if not self.incremental or plan_len == 0:
+            if self.reset_solver_between_runs:
+                # Reset mutex count
+                self.num_mutexes = 0
+                # Reset the solver
+                self.solver_instance.reset()
+            if plan_len == 0 or self.reset_solver_between_runs:
+                # Add initial state constraints
+                for init_value in self.initial_values:
+                    problem_instance.add(init_value)
 
     def add_goal(self, problem_instance, goal_clause, plan_len):
         """Add the goal value to the solver, and create a checkpoint if using incremental solving
