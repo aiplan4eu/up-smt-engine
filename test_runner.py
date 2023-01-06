@@ -240,10 +240,11 @@ def main(
             options = {
                 "parallelism": test_choice,
                 "use_incremental_solving": incremental,
-                "stats_output": generate_stats_path(
-                    statistics_path, test_choice, incremental
-                ),
             }
+            if statistics_path is not None:
+                options["stats_output"] = generate_stats_path(
+                    statistics_path, test_choice, incremental
+                )
             run_one(env, options, problem, True, write_solution, solution_path, timeout)
 
 
