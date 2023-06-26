@@ -1,11 +1,21 @@
+import unittest
 import unified_planning as up
-from up_SMT_engine.helper_functions.IOHelperFunctions import (
+import sys
+
+from up_SMT_engine.SMTPlanner import SMTPlanner
+from up_SMT_engine.helper_functions.IOHelperFunctions import  (
     PDDLToProblem,
     writeSolutionToFile,
 )
+
 from api_tests.CustomAPITests import CustomAPITests
-from up_SMT_engine.SMTPlanner import SMTPlanner
-import sys
+
+# from ..src.up_SMT_engine.helper_functions.IOHelperFunctions import (
+#     PDDLToProblem,
+#     writeSolutionToFile,
+# )
+
+# from ..src.up_SMT_engine.SMTPlanner import SMTPlanner
 
 # Install commands required:
 # pip install z3-solver
@@ -240,10 +250,9 @@ def run_stacking_blocks(env):
 
     return failed_string
 
-
 # These tests simply look at the shape of action sets in order to decide whether each parallel implementation is behaving correctly, and specifically distinctly from other implementations
 # We use a separate bash script with VAL to test whether plans are valid, as part of performance testing.
-if __name__ == "__main__":
+def run_all_tests():
     failed_string = ""
     env = up.environment.get_environment()
     env.factory.add_engine("SMTPlanner", __name__, "SMTPlanner")
@@ -259,5 +268,13 @@ if __name__ == "__main__":
     if len(failed_string) > 0:
         print("Runs failed:")
         print(failed_string)
+        return False
     else:
         print("All tests passed")
+        return True
+
+class TestEngine(unittest.TestCase):
+    def test_all(self):
+        self.assertTrue(run_all_tests())
+if __name__ == '__main__':
+    unittest.main()

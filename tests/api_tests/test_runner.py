@@ -1,11 +1,13 @@
 import unified_planning as up
-from up_SMT_engine.helper_functions.IOHelperFunctions import (
+import sys
+
+from up_SMT_engine.SMTPlanner import SMTPlanner
+from up_SMT_engine.helper_functions.IOHelperFunctions import  (
     PDDLToProblem,
     writeSolutionToFile,
 )
+
 from api_tests.CustomAPITests import CustomAPITests
-from up_SMT_engine.SMTPlanner import SMTPlanner
-import sys
 
 # Install commands required:
 # pip install z3-solver
