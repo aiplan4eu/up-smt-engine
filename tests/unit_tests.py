@@ -3,17 +3,8 @@ import unified_planning as up
 import sys
 
 from up_SMT_engine.SMTPlanner import SMTPlanner
-from up_SMT_engine.helper_functions.IOHelperFunctions import  (
-    PDDLToProblem,
-    writeSolutionToFile,
-)
 
 from api_tests.CustomAPITests import *
-
-# from ..src.up_SMT_engine.helper_functions.IOHelperFunctions import (
-#     PDDLToProblem,
-#     writeSolutionToFile,
-# )
 
 # from ..src.up_SMT_engine.SMTPlanner import SMTPlanner
 

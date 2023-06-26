@@ -4,7 +4,8 @@
 An engine using satisfiability modulo theories to solve planning problems. This engine uses z3 as an out of the box solver.
 
 ### Status
-pip integration incomplete
+pypi project at: https://pypi.org/project/upSmtEngine/
+
 Solver tested and functional
     Solver capable of sequential, ForAll, ThereExists and relaxed relaxed ThereExists parallelism
 Solver accepts and returns the expected unified-planning problem and PlanGenerationResult
@@ -36,13 +37,20 @@ Get action sequence for unit tests
 
 
 ## Installing
-TODO implement pip method
+You can install this engine with pip: 
+    pip install upSmtEngine
 
-Clone from https://gitlab.com/BPat123/up-smt-engine
-Dependencies: unified-planning, z3
+    After installing import the engine with:
+        from up_SMT_engine.SMTPlanner import SMTPlanner
+    
+    See 'tests/unit_tests.py' for usage examples
+
+Otherwise:
+    Clone from https://gitlab.com/BPat123/up-smt-engine
+    Dependencies: unified-planning, z3
 
 ## Usage
-See 'test_runner.py' and 'unit_tests.py' for usage examples
+See 'tests/unit_tests.py' for usage examples
 
 To run all options against a PDDL file use this command:
 python3 test_runner.py -timeout "$TIMEOUT_VAL" -test_all -use_PDDL -domain_path "$domain_string" -problem_path "$problem_string" -solution_path "$problem_results_path"
