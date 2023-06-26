@@ -8,7 +8,7 @@ from up_SMT_engine.helper_functions.IOHelperFunctions import  (
     writeSolutionToFile,
 )
 
-from api_tests.CustomAPITests import CustomAPITests
+from api_tests.CustomAPITests import *
 
 # from ..src.up_SMT_engine.helper_functions.IOHelperFunctions import (
 #     PDDLToProblem,

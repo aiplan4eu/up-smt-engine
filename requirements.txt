@@ -1,0 +1,2 @@
+unified-planning >= 0.4.2
+z3-solver
