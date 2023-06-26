@@ -2,7 +2,6 @@ import unified_planning as up
 from up_SMT_engine.helper_functions.IOHelperFunctions import (
     PDDLToProblem,
     writeSolutionToFile,
-    deleteFile,
 )
 from api_tests.CustomAPITests import CustomAPITests
 from up_SMT_engine.SMTPlanner import SMTPlanner
@@ -246,7 +245,7 @@ def run_stacking_blocks(env):
 # We use a separate bash script with VAL to test whether plans are valid, as part of performance testing.
 if __name__ == "__main__":
     failed_string = ""
-    env = up.environment.get_env()
+    env = up.environment.get_environment()
     env.factory.add_engine("SMTPlanner", __name__, "SMTPlanner")
     # Test that ForAll and Sequential use three timesteps to solve, while ThereExists and relaxed relaxed ThereExists are capable of more parallelism, and therefore only need one step in this case
     # This demonstrates the increased parallelism expected

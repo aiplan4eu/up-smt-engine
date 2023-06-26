@@ -202,7 +202,7 @@ def main(
     write_solution,
     statistics_path,
 ):
-    env = up.environment.get_env()
+    env = up.environment.get_environment()
     env.factory.add_engine("SMTPlanner", __name__, "SMTPlanner")
     if use_PDDL:
         problem = PDDLToProblem(domain_path, problem_path)

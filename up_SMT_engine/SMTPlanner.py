@@ -40,7 +40,7 @@ def run_smt_planner(problem, smt_planner, return_queue):
     """
     # Use try and finally to ensure something is added to the Queue to avoid deadlock
     try:
-        env = problem.env
+        env = problem.environment
         # First we ground the problem. This doesn't ground the fluents, but does ground the actions.
         with env.factory.Compiler(
             problem_kind=problem.kind,
@@ -140,6 +140,9 @@ class SMTPlanner(engines.Engine, engines.mixins.OneshotPlannerMixin):
     """Main engine class, used to handle user options and to call run_smt_planner."""
 
     def __init__(self, **options):
+        engines.Engine.__init__(self)
+        engines.mixins.OneshotPlannerMixin.__init__(self)
+
         # Read known user-options and store them for using in the `solve` method
         # Set a maximum plan length bound
         self.max_length = options.get("max_length", None)
@@ -169,7 +172,7 @@ class SMTPlanner(engines.Engine, engines.mixins.OneshotPlannerMixin):
         supported_kind = ProblemKind()
         supported_kind.set_conditions_kind("NEGATIVE_CONDITIONS")
         supported_kind.set_conditions_kind("DISJUNCTIVE_CONDITIONS")
-        supported_kind.set_conditions_kind("EQUALITY")
+        supported_kind.set_conditions_kind("EQUALITIES")
         supported_kind.set_conditions_kind("EXISTENTIAL_CONDITIONS")
         supported_kind.set_conditions_kind("UNIVERSAL_CONDITIONS")
         supported_kind.set_effects_kind("CONDITIONAL_EFFECTS")
@@ -189,7 +192,7 @@ class SMTPlanner(engines.Engine, engines.mixins.OneshotPlannerMixin):
     def supports(problem_kind):
         return problem_kind <= SMTPlanner.supported_kind()
 
-    def solve(
+    def _solve(
         self,
         problem: "up.model.Problem",
         callback: Optional[Callable[["up.engines.PlanGenerationResult"], None]] = None,
@@ -324,7 +327,3 @@ class SMTPlanner(engines.Engine, engines.mixins.OneshotPlannerMixin):
 
     def destroy(self):
         pass
-
-
-if __name__ == "__main__":
-    delete_this = SMTPlanner()
