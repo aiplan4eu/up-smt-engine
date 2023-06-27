@@ -1,7 +1,9 @@
 # SMT based engine implementation for unified-planning
 
 ## Introduction
-An engine using satisfiability modulo theories to solve planning problems. This engine uses z3 as an out of the box solver.
+This project provides an SMT engine for the [Unified Planning library](https://github.com/aiplan4eu/unified-planning). The engine uses satisfiability modulo theories to solve planning problems with a variety of encodings available. This engine uses z3 as an out of the box solver.
+
+This project was part of my [dissertation](https://docs.google.com/document/d/1vN7SqLNLoxB4vI8lc05FvGb0I0W2rcUOo2atDi4U-_M/edit?usp=sharing)
 
 ### Status
 pypi project at: https://pypi.org/project/upSmtEngine/
